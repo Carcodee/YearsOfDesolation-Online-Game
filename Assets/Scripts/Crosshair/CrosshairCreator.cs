@@ -1,0 +1,86 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class CrosshairCreator : MonoBehaviour
+{
+    public CrosshairScriptableObj crosshairScriptableObj;
+    public CrossHair crossHair;
+    public CrosshairItem playerCrosshair;
+    public float currentGapPrecision;
+    
+    public PlayerController playerController;
+
+    void Start()
+    {
+        crossHair = new CrossHair(crosshairScriptableObj.width,  crosshairScriptableObj.length, 
+            crosshairScriptableObj.gap,crosshairScriptableObj.isStatic, crosshairScriptableObj.color);
+        LoadCrosshair(crossHair);
+        playerController = GetComponentInParent<PlayerController>();
+    }
+
+    void Update()
+    {
+        currentGapPrecision = playerController.currentAimShootPercentage;
+        LoadCrosshair(crossHair);
+
+    }
+
+    void LoadCrosshair(CrossHair crossHair)
+    {
+        playerCrosshair.SetLenght(crossHair.length);
+        playerCrosshair.SetWidth(crossHair.width);
+        crossHair.SetRecoilGap(currentGapPrecision);
+        playerCrosshair.SetGap(crossHair.gap);
+        playerCrosshair.SetColor(crossHair.color);
+        
+    }
+    void SetCrosshairExpansion(float expansion)
+    {
+
+    }
+}
+
+[System.Serializable]
+public class CrossHair
+{
+    public float width;
+    public float gap;
+    public float length;
+    public bool isStatic;
+    public float gapBuffer;
+    public Color color;
+    public CrossHair(float width, float length, float gap, bool isStatic, Color color)
+    {
+        this.width = width;
+        this.gap = gap;
+        this.length = length;
+        this.isStatic = isStatic;
+        this.color = color;
+        gapBuffer = gap;
+    }
+
+    public void SetWidth(float newWidth)
+    {
+        this.width = width;
+    }
+    public void SetGap(float gap)
+    {
+        this.gap = gap;
+    }
+    public void SetLength(float newLength)
+    {
+        this.length = length;
+    }
+
+    public void SetRecoilGap(float currentGapPrecision)
+    {
+        if (!isStatic)
+        {
+            gap =  gapBuffer * currentGapPrecision ;
+        }
+        
+    }
+
+}
