@@ -2,20 +2,24 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!21 &2100000
 Material:
-  serializedVersion: 6
+  serializedVersion: 8
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: TitleFX_V8
   m_Shader: {fileID: 4800000, guid: 5aeb7503c199c794b8e8a713c03678d7, type: 3}
-  m_ShaderKeywords: 
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -32,7 +36,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Main:
-        m_Texture: {fileID: 2800000, guid: 34de50cf6ca011947934be8912cde9ba, type: 3}
+        m_Texture: {fileID: 2800000, guid: 69ef4284a45434f4aaad7487d760a379, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainMASK:
@@ -48,7 +52,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Outline:
-        m_Texture: {fileID: 2800000, guid: 5134b3a1e5f04d04e90c4913010a32ca, type: 3}
+        m_Texture: {fileID: 2800000, guid: b1a727dca11df46439f722f58177075e, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Texture0:
@@ -91,8 +95,11 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    m_Ints: []
     m_Floats:
     - PixelSnap: 0
+    - _Animation_Factor: 0
+    - _AutoManualAnimation: 0
     - _ColorMask: 15
     - _DetailsMaskDistortionMult: 1
     - _DetailsMaskDit: 0.25
@@ -119,3 +126,4 @@ Material:
     - _Color0: {r: 1, g: 0.235066, b: 0, a: 0}
     - _MainColor: {r: 0, g: 0.4657087, b: 0.98833734, a: 1}
     - _OutlineColor: {r: 81.759155, g: 270.74344, b: 325.6963, a: 1}
+  m_BuildTextureStacks: []
