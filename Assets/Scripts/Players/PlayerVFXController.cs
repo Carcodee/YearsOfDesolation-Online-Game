@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using Players.PlayerStates;
 using Unity.Netcode;
 using UnityEngine;
@@ -53,6 +54,7 @@ public class PlayerVFXController : NetworkBehaviour
     void Start()
     {
         playerController = GetComponent<PlayerController>();
+        playerStatsController = GetComponent<PlayerStatsController>();
         playerController.OnPlyerShoot += ShootEffect;
         playerController.OnBulletHit += HitEffect;
         playerStatsController.OnLevelUp += LevelUpEffect;
@@ -87,6 +89,13 @@ public class PlayerVFXController : NetworkBehaviour
             skinnedMeshRenderer.SetPropertyBlock(mPB);
 
         }
+    }
+    public override void OnNetworkDespawn() {
+
+        if (IsOwner) {
+            playerStatsController.GetComponent<PlayerController>().OnPlyerShoot -= ShootEffect;
+            playerStatsController.OnLevelUp -= LevelUpEffect;
+        } 
     }
 
     private void OnDisable()

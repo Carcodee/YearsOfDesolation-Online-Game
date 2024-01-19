@@ -16,13 +16,18 @@ public class CoinBehaivor : NetworkBehaviour
 
     void Start()
     {
-        //playerStatsController= NetworkManager.Singleton.SpawnManager.SpawnedObjects[networkPlayerID.Value].GetComponent<PlayerStatsController>();
 
     }
 
 
     void Update()
     {
+        if (playerStatsController!= null) {
+            if (playerStatsController.OwnerClientId != networkPlayerID.Value && IsServer) {
+                gameObject.SetActive(false);
+            }
+        }
+        
 
     }
     
@@ -38,22 +43,21 @@ public class CoinBehaivor : NetworkBehaviour
                     //something happens
                     playerRef.OnLevelUp?.Invoke();
                     playerRef.RefillAmmo();
-                    Instantiate(coinEffectPrefab, transform.position, Quaternion.identity);
+                    CoinCollectedClientRpc();
                     Debug.Log("Coin Collected" + "Player Level: " + playerRef.GetLevel());
 
 
                 }
             }
-        }
-        else
-        {
-            if (other.TryGetComponent(out PlayerStatsController playerRef)) {
-                if (playerRef.OwnerClientId == networkPlayerID.Value) {
-                    //something happens
-                    Instantiate(coinEffectPrefab, transform.position, Quaternion.identity);
-                    Debug.Log("Coin Collected"+ "Player Level: "+ playerRef.GetLevel());
-                }
-            }
+        } else {
+            //if (other.TryGetComponent(out PlayerStatsController playerRef)) {
+            //    if (playerRef.OwnerClientId == networkPlayerID.Value) {
+            //        //something happens
+            //        CoinCollectedClientRpc();
+
+            //        Debug.Log("Coin Collected" + "Player Level: " + playerRef.GetLevel());
+            //    }
+            //}
         }
 
 
@@ -64,5 +68,7 @@ public class CoinBehaivor : NetworkBehaviour
     public void CoinCollectedClientRpc()
     {
         OnCoinCollected?.Invoke(gameObject.GetComponent<CoinBehaivor>());
+        Instantiate(coinEffectPrefab, transform.position, Quaternion.identity);
+
     }
 }

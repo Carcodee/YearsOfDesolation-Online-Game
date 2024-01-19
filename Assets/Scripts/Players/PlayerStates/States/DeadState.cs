@@ -17,11 +17,15 @@ namespace Players.PlayerStates.States
         public override void StateEnter()
         {
             currentRespawnTimer= 0;
-        
+            playerRef.sprintFactor = 1f;
+            playerRef.move = Vector3.zero;
+
         }
 
         public override void StateExit()
         {
+            playerRef.sprintFactor = 1f;
+
             this.playerRef.ActivatePlayer();
             playerRef.playerStats.SetHealth(playerRef.playerStats.GetMaxHealth());
             playerRef.playerStats.OnStatsChanged?.Invoke();

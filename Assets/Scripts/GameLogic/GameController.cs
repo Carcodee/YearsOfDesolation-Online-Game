@@ -193,6 +193,7 @@ public class GameController : NetworkBehaviour
                     //this represent the zone where the coin is
                     //myCoin.transform.position = zoneControllers[coinIndex].spawnCoinPoint.position;
                     myCoin.zoneAssigned.Value =coinSpawned;
+                    myCoin.playerStatsController = players[coinSpawned].GetComponent<PlayerStatsController>();
                     SetCoinsOnClientRpc(coinSpawned, coinIndex, myCoin.GetComponent<NetworkObject>().NetworkObjectId);
 
                     coinSpawned++;

@@ -46,7 +46,8 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
     public PlayerZoneController playerZoneController;
     public float currentOutsideTimerTick;
     public float outsideTimerTick=1;
-
+    private bool _IsInitizalized=false;
+    private bool _isInNetwork=false;
 
     [Header("Interfaces")]
     private IDamageable iDamageable;
@@ -70,6 +71,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
             isPlayerInsideTheZone = true;
             OnSpawnPlayer?.Invoke();
             OnStatsChanged?.Invoke();
+            _isInNetwork = true;
             Debug.Log("Player Spawned");
         }
     }
@@ -87,6 +89,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
             OnLevelUp += LevelUp;
             iDamageable = GetComponent<IDamageable>();
             isPlayerInsideTheZone = true;
+            _isInNetwork = true;
             OnSpawnPlayer?.Invoke();
             OnStatsChanged?.Invoke();
         }
@@ -94,15 +97,23 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
 
     private void Update()
     {
-        if (health.Value <= 0)
-        {
-            OnPlayerDead?.Invoke();
-        }
-        if (IsOwner)
-        {
+        if (IsOwner) {
+            if (!_IsInitizalized && health.Value==0) {
+                OnSpawnPlayer?.Invoke();
+                SetHealth(GetMaxHealth());
+                OnStatsChanged?.Invoke();
+
+                _IsInitizalized = true;
+            }
+
             OutsideZoneDamage();
+
         }
-        
+        if (health.Value <= 0 && GameController.instance.zoneControllers.Count > 0) {
+            GameController.instance.OnPlayerDead((int)zoneAsigned.Value);
+            OnPlayerDead?.Invoke();
+
+        }
     }
     public override void OnNetworkDespawn()
     {
