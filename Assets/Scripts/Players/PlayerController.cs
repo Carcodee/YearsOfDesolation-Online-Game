@@ -12,8 +12,7 @@ public class PlayerController : NetworkBehaviour
     [Header("Player Stats")]
     public PlayerStatsController playerStats;
     
-    public Action OnPlyerShoot;
-    public Action <Vector3> OnBulletHit;
+    // public Action <MyVfxType, Vector3 > OnPlayerVfxAction;
     
     [Header("Player Components")]
     public GameObject cameraPrefab;
@@ -321,14 +320,18 @@ public class PlayerController : NetworkBehaviour
 
                 StartCoroutine(playerStats.playerComponentsHandler.ShakeCamera(0.1f, .9f, .7f));
                 playerStats.currentBullets--;
-                OnPlyerShoot?.Invoke();
+                // OnPlayerVfxAction?.Invoke(MyVfxType.shoot ,spawnBulletPoint.position);
+                PlayerVFXController.shootEffectHandle.CreateVFX(spawnBulletPoint.position, IsServer);
                 shootTimer = 0;
                 Vector3 shotDirection = new Vector3(cameraRef.transform.forward.x + randomRefraction, cameraRef.transform.forward.y + randomRefraction, cameraRef.transform.forward.z);
                 
                 if (Physics.Raycast(cameraRef.transform.position, shotDirection, out RaycastHit hit, 
                         distanceFactor))
                 {
-                    OnBulletHit?.Invoke(hit.point);
+                    
+                    // OnPlayerVfxAction?.Invoke(MyVfxType.hit ,hit.point);
+                    PlayerVFXController.hitEffectHandle.CreateVFX(hit.point, IsServer);
+
                     hit.collider.gameObject.TryGetComponent<PlayerStatsController>(out PlayerStatsController enemyRef);
                     if (enemyRef)
                     {
@@ -345,8 +348,10 @@ public class PlayerController : NetworkBehaviour
                 }
                 else
                 {
-                    OnBulletHit?.Invoke(hit.point);
+                    PlayerVFXController.hitEffectHandle.CreateVFX(hit.point, IsServer);
 
+                    // OnPlayerVfxAction?.Invoke(MyVfxType.hit ,hit.point);
+                    
                 }
                 // if (IsServer)
                 // {

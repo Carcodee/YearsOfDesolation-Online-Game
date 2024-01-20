@@ -102,12 +102,9 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
                 OnSpawnPlayer?.Invoke();
                 SetHealth(GetMaxHealth());
                 OnStatsChanged?.Invoke();
-
                 _IsInitizalized = true;
             }
-
             OutsideZoneDamage();
-
         }
         if (health.Value <= 0 && GameController.instance.zoneControllers.Count > 0) {
             GameController.instance.OnPlayerDead((int)zoneAsigned.Value);

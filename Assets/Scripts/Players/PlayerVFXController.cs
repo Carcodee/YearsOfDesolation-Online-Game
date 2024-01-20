@@ -1,12 +1,15 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using Players.PlayerStates;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class PlayerVFXController : NetworkBehaviour
 {
+
     public StateMachineController stateMachineController;
     public PlayerStatsController playerStatsController;
     [Header("MeshTrail")]
@@ -48,21 +51,26 @@ public class PlayerVFXController : NetworkBehaviour
     public SkinnedMeshRenderer skinnedMeshRenderer; 
     protected MaterialPropertyBlock mPB;
     
-    
+    [Header("VFXNetAPI")]
+     public static HandleVFX shootEffectHandle;
+     public static HandleVFX hitEffectHandle;
+    public EmbededNetwork embededNetwork;
 
 
     void Start()
     {
         playerController = GetComponent<PlayerController>();
         playerStatsController = GetComponent<PlayerStatsController>();
-        playerController.OnPlyerShoot += ShootEffect;
-        playerController.OnBulletHit += HitEffect;
         playerStatsController.OnLevelUp += LevelUpEffect;
-        
-
         if (IsOwner)
         {
-
+            
+            // playerController.OnBulletHit += BulletHitEffect;
+            // playerController.OnPlyerShoot += ShootEffect;
+             shootEffectHandle = new HandleVFX(ShootVFX, ShootEffectPrefab, HandleVFX.VfxType.Net,0);
+             hitEffectHandle = new HandleVFX(HitVFX, hitEffectPrefab, HandleVFX.VfxType.Net,1);
+            //
+            // playerController.OnPlayerVfxAction += AddVFXOnNet;
             stateMachineController = GetComponent<StateMachineController>();
             playerStatsController = GetComponent<PlayerStatsController>();
 
@@ -75,6 +83,7 @@ public class PlayerVFXController : NetworkBehaviour
     {
         if (IsOwner)
         {
+
             stateMachineController = GetComponent<StateMachineController>();
             playerStatsController = GetComponent<PlayerStatsController>();
             playerStatsController.OnLevelUp += LevelUpEffect;
@@ -93,7 +102,7 @@ public class PlayerVFXController : NetworkBehaviour
     public override void OnNetworkDespawn() {
 
         if (IsOwner) {
-            playerStatsController.GetComponent<PlayerController>().OnPlyerShoot -= ShootEffect;
+            // playerStatsController.GetComponent<PlayerController>().OnPlyerShoot -= ShootEffect;
             playerStatsController.OnLevelUp -= LevelUpEffect;
         } 
     }
@@ -102,7 +111,7 @@ public class PlayerVFXController : NetworkBehaviour
     {
         if (IsOwner)
         {
-            playerStatsController.GetComponent<PlayerController>().OnPlyerShoot -= ShootEffect;
+            // playerStatsController.GetComponent<PlayerController>().OnPlyerShoot -= ShootEffect;
             playerStatsController.OnLevelUp -= LevelUpEffect;
 
 
@@ -136,6 +145,7 @@ public class PlayerVFXController : NetworkBehaviour
         
     }
 
+   
     public void ApplyPointsEffect()
     {
         Instantiate(applyPointsEffectPrefabVFX, transform.position, Quaternion.identity, transform);
@@ -144,12 +154,76 @@ public class PlayerVFXController : NetworkBehaviour
 
         Instantiate(levelUpEffectPrefabVFX, transform.position, Quaternion.identity, transform);
     }
-
-    public void ShootEffect()
+    public void ShootVFX(Vector3 pos)
     {
-        Instantiate(ShootEffectPrefab, ShootEffectPosition.position, Quaternion.identity);
+        Instantiate(ShootEffectPrefab, pos, Quaternion.identity);
     }   
-    public void HitEffect(Vector3 position)
+
+    public void HitVFX(Vector3 position)
+    {
+        Instantiate(hitEffectPrefab, position, Quaternion.identity);
+    }
+    
+    public void AddVFXOnNet(MyVfxType vfxType, Vector3 pos)
+    {
+        switch (vfxType)
+        {
+            case MyVfxType.shoot:
+                ShootEffect(pos);
+                break;
+            case MyVfxType.hit:
+                BulletHitEffect(pos);
+                break;
+            
+        }
+    }
+    public void ShootEffect(Vector3 pos)
+    {
+        if (IsServer)
+        {
+            ShootEffectClientRpc(pos);
+        }
+        else
+        {
+            CallShootEffectServerRpc(pos);
+        }
+    }
+    
+    public void BulletHitEffect(Vector3 pos)
+    {
+        if (IsServer)
+        {
+            HitEffectClientRpc(pos);
+        }
+        else
+        {
+            CallHitEffectServerRpc(pos);
+        }
+    }
+    
+
+
+    [ServerRpc]
+    public void CallShootEffectServerRpc(Vector3 pos)
+    {
+        ShootEffectClientRpc(pos);
+    }
+    
+    [ServerRpc]
+    public void CallHitEffectServerRpc(Vector3 position)
+    {
+        HitEffectClientRpc(position);
+    }
+    
+    [ClientRpc]
+    public void ShootEffectClientRpc(Vector3 pos)
+    {
+        Instantiate(ShootEffectPrefab, pos, Quaternion.identity);
+    }   
+
+
+    [ClientRpc]
+    public void HitEffectClientRpc(Vector3 position)
     {
         Instantiate(hitEffectPrefab, position, Quaternion.identity);
     }
@@ -198,5 +272,101 @@ public class PlayerVFXController : NetworkBehaviour
             yield return new WaitForSeconds(refreshRate);
         }
     }
-   
+
+
+    
+}
+
+public class HandleVFX 
+{
+    private Action <Vector3> _serverRpcActions;
+    private Action <Vector3> _clientRpcActions;
+    public EmbededNetwork embededNetwork;
+    private int id;
+    VfxType _vfxType;
+    
+
+    //create a constructor that takes an action with a Vector3 parameter
+    public HandleVFX(Action<Vector3> actions, GameObject vfx,VfxType vfxType, int id)
+    {
+        this.id = id;
+        embededNetwork = EmbededNetwork.Instance;
+        embededNetwork.actionToCallAtPos.Add(actions);
+        _clientRpcActions += actions;
+        embededNetwork.actionToCallAtPos[id] = _clientRpcActions;
+
+        _vfxType = vfxType;
+    }
+    
+    public void CreateVFX(Vector3 value, bool isServer)
+    {
+        HandleActions(_vfxType, value, isServer);
+    }
+    public void CreateLocalVFX(Vector3 value)
+    {
+        _clientRpcActions.Invoke(value);
+    }
+    
+    
+    public void CallClientServerRpc(Vector3 value)
+    {
+        embededNetwork.CallMyCustomClient_ServerRPC(value,id);
+    }
+    public void ActionClientRpc(Vector3 value)
+    {
+        embededNetwork.MyCustomClientRpc(value, id);
+    }
+    public void GenerateVFXOnNet(Vector3 parameter, bool isServer)
+    {
+        if (isServer)
+        {
+            ActionClientRpc(parameter);
+        }
+        else
+        {
+            CallClientServerRpc(parameter);
+        }
+    }
+    
+    public void HandleActions(VfxType bitFlagType, Vector3 value, bool isServer)
+    {
+        VfxType checkType = bitFlagType;
+        
+        if ((checkType & VfxType.AtPoint) == VfxType.AtPoint)
+        {
+            
+        }
+        if ((checkType & VfxType.LocalOnly) == VfxType.LocalOnly)
+        {
+            CreateLocalVFX(value);
+        }
+        if ((checkType & VfxType.Net) == VfxType.Net)
+        {
+            GenerateVFXOnNet(value, isServer);
+
+        }
+        
+        
+    } 
+
+    
+    [Flags]
+    public enum VfxType
+    {
+        AtPoint=0,
+        LocalOnly=1 << 1,
+        Net=1 << 2,
+    }
+    
+
+}
+public enum MyVfxType
+{
+    hit,
+    shoot,
+    jump,
+    levelUp,
+    applyPoints,
+    trail,
+    
 }
