@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,7 +7,11 @@ using UnityEngine.UI;
 public class CrosshairItem : MonoBehaviour
 {
     public Image[] crosshairImages;
+    public CanvasGroup damageImages;
     bool posRefreshed;
+
+
+
     void Start()
     {
         
@@ -42,8 +47,14 @@ public class CrosshairItem : MonoBehaviour
         crosshairImages[3].rectTransform.anchoredPosition = new Vector2(-gap, crosshairImages[3].rectTransform.anchoredPosition.y);
 
     }
-    void Update()
+    public IEnumerator DisplayDamage(float time)
     {
-        
+        damageImages.alpha = 1;
+        while (damageImages.alpha>0)
+        {
+            damageImages.alpha -= Time.deltaTime / time;
+            yield return null;
+        }
+        damageImages.alpha = 0;
     }
 }

@@ -21,6 +21,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
     public NetworkVariable <int> statsTemplateSelected;
     public PlayerComponentsHandler playerComponentsHandler;
     public StateMachineController stateMachineController;
+    public Transform takeDamagePosition;
     [Header("Stats")]
     [SerializeField] private NetworkVariable<int> haste = new NetworkVariable<int>();
     [SerializeField] private NetworkVariable<int> health = new NetworkVariable<int>();
@@ -254,11 +255,15 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
                     //this is wrong stat holder is controlling the health
                     health.Value -= (damage);
                     StartCoroutine(playerComponentsHandler.ShakeCamera(0.3f, 5, 5));
+                    PlayerVFXController.bloodEffectHandle.CreateVFX(takeDamagePosition.position,  Quaternion.identity,IsServer);
+
                 }
                 else
                 {
                     SetHealthServerRpc(health.Value - (damage));  
                     StartCoroutine(playerComponentsHandler.ShakeCamera(0.3f, 5, 5));
+                    PlayerVFXController.bloodEffectHandle.CreateVFX(takeDamagePosition.position,  Quaternion.identity,IsServer);
+
 
                 }
                 OnStatsChanged?.Invoke();
@@ -295,12 +300,13 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
                     //this is wrong stat holder is controlling the health
                     health.Value -= (myDamage);
                     StartCoroutine(playerComponentsHandler.ShakeCamera(0.3f, 5, 5));
+                    PlayerVFXController.bloodEffectHandle.CreateVFX(takeDamagePosition.position, Quaternion.identity ,IsServer);
                 }
                 else
                 {
                     SetHealthServerRpc(health.Value - (myDamage));  
                     StartCoroutine(playerComponentsHandler.ShakeCamera(0.3f, 5, 5));
-
+                    PlayerVFXController.bloodEffectHandle.CreateVFX(takeDamagePosition.position, Quaternion.identity , IsServer);
                 }
                 OnStatsChanged?.Invoke();
             }

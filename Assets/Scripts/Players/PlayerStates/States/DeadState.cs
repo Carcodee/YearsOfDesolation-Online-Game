@@ -13,12 +13,17 @@ namespace Players.PlayerStates.States
 
         bool isBattleRoyale;
         float currentRespawnTimer;
+        
     
         public override void StateEnter()
         {
             currentRespawnTimer= 0;
             playerRef.sprintFactor = 1f;
             playerRef.move = Vector3.zero;
+            if (PlayerVFXController.respawningEffectHandle!=null)
+            {
+                PlayerVFXController.respawningEffectHandle.CreateVFX(playerRef.transform.position, Quaternion.identity, false);
+            }
 
         }
 
@@ -29,6 +34,11 @@ namespace Players.PlayerStates.States
             this.playerRef.ActivatePlayer();
             playerRef.playerStats.SetHealth(playerRef.playerStats.GetMaxHealth());
             playerRef.playerStats.OnStatsChanged?.Invoke();
+            if (PlayerVFXController.OnRespawnEffectHandle!=null)
+            {           
+                PlayerVFXController.OnRespawnEffectHandle.CreateVFX(playerRef.transform.position, Quaternion.identity, false);
+            }
+
             //respawn
         }
 

@@ -19,7 +19,7 @@ public class EmbededNetwork : NetworkBehaviour
         }
     }
     public Action actionToCall;
-    public List<Action<Vector3>> actionToCallAtPos = new List<Action<Vector3>>();
+    public List<Action<Vector3, Quaternion>> actionToCallAtPos = new List<Action<Vector3, Quaternion>>();
     
     /// <summary>
     /// ///////////////////////////////////////// SERVER RPC
@@ -32,10 +32,10 @@ public class EmbededNetwork : NetworkBehaviour
         actionToCall?.Invoke();
     }
     [ServerRpc]
-    public void MyCustomServerRpc(Vector3 pos, int id)
+    public void MyCustomServerRpc(Vector3 pos, Quaternion rotation,int id)
     {
 
-        actionToCallAtPos[id]?.Invoke(pos);
+        actionToCallAtPos[id]?.Invoke(pos, rotation);
     }
     [ServerRpc]
     public void CallMyCustomClient_ServerRPC()
@@ -44,10 +44,10 @@ public class EmbededNetwork : NetworkBehaviour
         MyCustomClientRpc();
     }
     [ServerRpc (RequireOwnership = false)]
-    public void CallMyCustomClient_ServerRPC(Vector3 pos, int id)
+    public void CallMyCustomClient_ServerRPC(Vector3 pos,Quaternion rotation , int id)
     {
 
-        MyCustomClientRpc(pos,id);
+        MyCustomClientRpc(pos,rotation,id);
     }
     
     
@@ -62,9 +62,9 @@ public class EmbededNetwork : NetworkBehaviour
         actionToCall?.Invoke();
     }
     [ClientRpc]
-    public void MyCustomClientRpc(Vector3 pos, int id)
+    public void MyCustomClientRpc(Vector3 pos,Quaternion rotation, int id)
     {
-        actionToCallAtPos[id]?.Invoke(pos);
+        actionToCallAtPos[id]?.Invoke(pos,rotation);
     }
 
     public override void OnDestroy()

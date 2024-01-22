@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,9 +10,19 @@ public class CrosshairCreator : MonoBehaviour
     public CrossHair crossHair;
     public CrosshairItem playerCrosshair;
     public float currentGapPrecision;
-    
-    public PlayerController playerController;
+    public static Action OnHitDetected;
+    public float time = 0.5f;
 
+    public PlayerController playerController;
+    private void OnEnable()
+    {
+        OnHitDetected += DisplayDamage;
+    }
+
+    private void OnDisable()
+    {
+        OnHitDetected -= DisplayDamage;
+    }
     void Start()
     {
         crossHair = new CrossHair(crosshairScriptableObj.width,  crosshairScriptableObj.length, 
@@ -20,13 +31,17 @@ public class CrosshairCreator : MonoBehaviour
         playerController = GetComponentInParent<PlayerController>();
     }
 
+
     void Update()
     {
         currentGapPrecision = playerController.currentAimShootPercentage;
         LoadCrosshair(crossHair);
 
     }
-
+    public void DisplayDamage()
+    {
+        StartCoroutine(playerCrosshair.DisplayDamage(time));
+    }
     void LoadCrosshair(CrossHair crossHair)
     {
         playerCrosshair.SetLenght(crossHair.length);

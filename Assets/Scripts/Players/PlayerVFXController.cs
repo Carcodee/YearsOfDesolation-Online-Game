@@ -42,6 +42,13 @@ public class PlayerVFXController : NetworkBehaviour
     public GameObject hitEffectPrefab;
     public Transform ShootEffectPosition;
     
+    [Header("TakeDamage")]
+    public GameObject takeDamageEffectPrefab;
+    
+    [Header("Respawn")]
+    public GameObject respawingEffectPrefab;
+    public GameObject OnRespawnEffectPrefab;
+
     [Header("Cartoon")]
     public Material cartoonMat;
     public Color enemyOutlineColor;
@@ -54,6 +61,11 @@ public class PlayerVFXController : NetworkBehaviour
     [Header("VFXNetAPI")]
      public static HandleVFX shootEffectHandle;
      public static HandleVFX hitEffectHandle;
+     public static HandleVFX bloodEffectHandle;
+     public static HandleVFX respawningEffectHandle;
+     public static HandleVFX OnRespawnEffectHandle;
+
+
     public EmbededNetwork embededNetwork;
 
 
@@ -69,6 +81,10 @@ public class PlayerVFXController : NetworkBehaviour
             // playerController.OnPlyerShoot += ShootEffect;
              shootEffectHandle = new HandleVFX(ShootVFX, ShootEffectPrefab, HandleVFX.VfxType.Net,0);
              hitEffectHandle = new HandleVFX(HitVFX, hitEffectPrefab, HandleVFX.VfxType.Net,1);
+             bloodEffectHandle= new HandleVFX(BloodVFX, takeDamageEffectPrefab, HandleVFX.VfxType.Net,2);
+             respawningEffectHandle= new HandleVFX(RespawnVFX, respawingEffectPrefab, HandleVFX.VfxType.Net,3);
+             OnRespawnEffectHandle= new HandleVFX(OnRespawnVFX, OnRespawnEffectPrefab, HandleVFX.VfxType.Net,4);
+
             //
             // playerController.OnPlayerVfxAction += AddVFXOnNet;
             stateMachineController = GetComponent<StateMachineController>();
@@ -154,14 +170,26 @@ public class PlayerVFXController : NetworkBehaviour
 
         Instantiate(levelUpEffectPrefabVFX, transform.position, Quaternion.identity, transform);
     }
-    public void ShootVFX(Vector3 pos)
+    public void ShootVFX(Vector3 pos, Quaternion rotation)
     {
         Instantiate(ShootEffectPrefab, pos, Quaternion.identity);
     }   
 
-    public void HitVFX(Vector3 position)
+    public void HitVFX(Vector3 position, Quaternion rotation)
     {
         Instantiate(hitEffectPrefab, position, Quaternion.identity);
+    }
+    public void BloodVFX(Vector3 position, Quaternion rotation)
+    {
+        Instantiate(takeDamageEffectPrefab, position, rotation);
+    }
+    public void RespawnVFX(Vector3 position, Quaternion rotation)
+    {
+        Instantiate(respawingEffectPrefab, position, rotation);
+    }
+    public void OnRespawnVFX(Vector3 position, Quaternion rotation)
+    {
+        Instantiate(OnRespawnEffectPrefab, position, rotation);
     }
     
     public void AddVFXOnNet(MyVfxType vfxType, Vector3 pos)
@@ -279,15 +307,15 @@ public class PlayerVFXController : NetworkBehaviour
 
 public class HandleVFX 
 {
-    private Action <Vector3> _serverRpcActions;
-    private Action <Vector3> _clientRpcActions;
-    public EmbededNetwork embededNetwork;
+    private Action <Vector3, Quaternion> _serverRpcActions;
+    private Action <Vector3, Quaternion> _clientRpcActions;
+    private EmbededNetwork embededNetwork;
     private int id;
     VfxType _vfxType;
     
 
     //create a constructor that takes an action with a Vector3 parameter
-    public HandleVFX(Action<Vector3> actions, GameObject vfx,VfxType vfxType, int id)
+    public HandleVFX(Action<Vector3, Quaternion> actions, GameObject vfx,VfxType vfxType, int id)
     {
         this.id = id;
         embededNetwork = EmbededNetwork.Instance;
@@ -297,38 +325,39 @@ public class HandleVFX
 
         _vfxType = vfxType;
     }
+ 
+    public void CreateVFX(Vector3 value, Quaternion rotation,bool isServer)
+    {
+        HandleActions(_vfxType, value, rotation, isServer);
+    }
+    public void CreateLocalVFX(Vector3 value, Quaternion rotation)
+    {
+     
+        _clientRpcActions.Invoke(value, rotation);
+    }
     
-    public void CreateVFX(Vector3 value, bool isServer)
-    {
-        HandleActions(_vfxType, value, isServer);
-    }
-    public void CreateLocalVFX(Vector3 value)
-    {
-        _clientRpcActions.Invoke(value);
-    }
     
-    
-    public void CallClientServerRpc(Vector3 value)
+    public void CallClientServerRpc(Vector3 value, Quaternion rotation)
     {
-        embededNetwork.CallMyCustomClient_ServerRPC(value,id);
+        embededNetwork.CallMyCustomClient_ServerRPC(value,rotation,id);
     }
-    public void ActionClientRpc(Vector3 value)
+    public void ActionClientRpc(Vector3 value, Quaternion rotation)
     {
-        embededNetwork.MyCustomClientRpc(value, id);
+        embededNetwork.MyCustomClientRpc(value,rotation ,id);
     }
-    public void GenerateVFXOnNet(Vector3 parameter, bool isServer)
+    public void GenerateVFXOnNet(Vector3 parameter, Quaternion rotation,bool isServer)
     {
         if (isServer)
         {
-            ActionClientRpc(parameter);
+            ActionClientRpc(parameter, rotation);
         }
         else
         {
-            CallClientServerRpc(parameter);
+            CallClientServerRpc(parameter, rotation);
         }
     }
     
-    public void HandleActions(VfxType bitFlagType, Vector3 value, bool isServer)
+    public void HandleActions(VfxType bitFlagType, Vector3 value, Quaternion rotation,bool isServer)
     {
         VfxType checkType = bitFlagType;
         
@@ -338,11 +367,11 @@ public class HandleVFX
         }
         if ((checkType & VfxType.LocalOnly) == VfxType.LocalOnly)
         {
-            CreateLocalVFX(value);
+            CreateLocalVFX(value, rotation);
         }
         if ((checkType & VfxType.Net) == VfxType.Net)
         {
-            GenerateVFXOnNet(value, isServer);
+            GenerateVFXOnNet(value,rotation, isServer);
 
         }
         

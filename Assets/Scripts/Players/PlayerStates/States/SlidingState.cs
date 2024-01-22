@@ -110,17 +110,7 @@ namespace Players.PlayerStates.States
             this.networkAnimator.Animator.SetFloat("Y", playerRef.move.z);
             networkAnimator.Animator.SetBool("Crouch", true);
 
-            if (Input.GetKey(KeyCode.Mouse1))
-            {
-                this.networkAnimator.Animator.SetFloat("X", this.playerRef.move.x);
-                this.networkAnimator.Animator.SetFloat("Y", this.playerRef.move.z);
-                //this.playerRef.AimAinimation(ref aimAnimation,networkAnimator);
-                networkAnimator.Animator.SetFloat("Aiming", 1);
-            }
-            else
-            {
-                networkAnimator.Animator.SetFloat("Aiming", 0);
-            }
+
 
         }
         public override void StatePhysicsUpdate()

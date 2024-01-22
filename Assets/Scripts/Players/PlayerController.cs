@@ -101,6 +101,7 @@ public class PlayerController : NetworkBehaviour
         if (IsOwner)
         {
             SetSpeedStateServerRpc(5);
+            stateMachineController= GetComponent<StateMachineController>();
             stateMachineController.Initializate();
             playerStats = GetComponent<PlayerStatsController>();
             playerStats.OnPlayerDead += PlayerDeadCallback;
@@ -122,6 +123,18 @@ public class PlayerController : NetworkBehaviour
             Reloading();
             CreateAimTargetPos();
             stateMachineController.StateUpdate();
+            if (Input.GetKey(KeyCode.Mouse1))
+            {
+                this.stateMachineController.networkAnimator.Animator.SetFloat("X", this.move.x);
+                this.stateMachineController.networkAnimator.Animator.SetFloat("Y", this.move.z);
+                //this.playerRef.AimAinimation(ref aimAnimation,networkAnimator);
+                stateMachineController.networkAnimator.Animator.SetFloat("Aiming", 1);
+            }
+            else
+            {
+                stateMachineController.networkAnimator.Animator.SetFloat("Aiming", 0);
+            }
+
             if (Input.GetKeyDown(KeyCode.Mouse1))
             {
                 shootRefraction = 0.01f;
@@ -321,7 +334,7 @@ public class PlayerController : NetworkBehaviour
                 StartCoroutine(playerStats.playerComponentsHandler.ShakeCamera(0.1f, .9f, .7f));
                 playerStats.currentBullets--;
                 // OnPlayerVfxAction?.Invoke(MyVfxType.shoot ,spawnBulletPoint.position);
-                PlayerVFXController.shootEffectHandle.CreateVFX(spawnBulletPoint.position, IsServer);
+                PlayerVFXController.shootEffectHandle.CreateVFX(spawnBulletPoint.position, transform.rotation ,IsServer);
                 shootTimer = 0;
                 Vector3 shotDirection = new Vector3(cameraRef.transform.forward.x + randomRefraction, cameraRef.transform.forward.y + randomRefraction, cameraRef.transform.forward.z);
                 
@@ -330,7 +343,7 @@ public class PlayerController : NetworkBehaviour
                 {
                     
                     // OnPlayerVfxAction?.Invoke(MyVfxType.hit ,hit.point);
-                    PlayerVFXController.hitEffectHandle.CreateVFX(hit.point, IsServer);
+                    PlayerVFXController.hitEffectHandle.CreateVFX(hit.point, transform.rotation ,IsServer);
 
                     hit.collider.gameObject.TryGetComponent<PlayerStatsController>(out PlayerStatsController enemyRef);
                     if (enemyRef)
@@ -338,17 +351,21 @@ public class PlayerController : NetworkBehaviour
                         if (IsServer)
                         {
                             enemyRef.TakeDamageClientRpc(playerStats.GetDamageDone());
+                            CrosshairCreator.OnHitDetected?.Invoke();
+
                         }
                         if (IsClient)
                         {
                             enemyRef.TakeDamageServerRpc(playerStats.GetDamageDone());
+                            CrosshairCreator.OnHitDetected?.Invoke();
+
                         }
                         Debug.Log(enemyRef.name);
                     }
                 }
                 else
                 {
-                    PlayerVFXController.hitEffectHandle.CreateVFX(hit.point, IsServer);
+                    PlayerVFXController.hitEffectHandle.CreateVFX(hit.point, transform.rotation,IsServer);
 
                     // OnPlayerVfxAction?.Invoke(MyVfxType.hit ,hit.point);
                     
