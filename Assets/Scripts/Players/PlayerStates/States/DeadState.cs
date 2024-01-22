@@ -34,10 +34,7 @@ namespace Players.PlayerStates.States
             this.playerRef.ActivatePlayer();
             playerRef.playerStats.SetHealth(playerRef.playerStats.GetMaxHealth());
             playerRef.playerStats.OnStatsChanged?.Invoke();
-            if (PlayerVFXController.OnRespawnEffectHandle!=null)
-            {           
-                PlayerVFXController.OnRespawnEffectHandle.CreateVFX(playerRef.transform.position, Quaternion.identity, false);
-            }
+
 
             //respawn
         }

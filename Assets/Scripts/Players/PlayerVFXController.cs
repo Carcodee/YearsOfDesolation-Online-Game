@@ -65,6 +65,7 @@ public class PlayerVFXController : NetworkBehaviour
      public static HandleVFX respawningEffectHandle;
      public static HandleVFX OnRespawnEffectHandle;
 
+     public static HandleVFX[] vfxHandles= new HandleVFX[5];
 
     public EmbededNetwork embededNetwork;
 
@@ -84,7 +85,11 @@ public class PlayerVFXController : NetworkBehaviour
              bloodEffectHandle= new HandleVFX(BloodVFX, takeDamageEffectPrefab, HandleVFX.VfxType.Net,2);
              respawningEffectHandle= new HandleVFX(RespawnVFX, respawingEffectPrefab, HandleVFX.VfxType.Net,3);
              OnRespawnEffectHandle= new HandleVFX(OnRespawnVFX, OnRespawnEffectPrefab, HandleVFX.VfxType.Net,4);
-
+            vfxHandles[0] = shootEffectHandle;
+            vfxHandles[1] = hitEffectHandle;
+            vfxHandles[2] = bloodEffectHandle;
+            vfxHandles[3] = respawningEffectHandle;
+            vfxHandles[4] = OnRespawnEffectHandle;
             //
             // playerController.OnPlayerVfxAction += AddVFXOnNet;
             stateMachineController = GetComponent<StateMachineController>();
@@ -160,8 +165,16 @@ public class PlayerVFXController : NetworkBehaviour
         }
         
     }
-
-   
+    
+    public static HandleVFX GetVFXHandle(int id)
+    {
+        for (int i = 0; i < vfxHandles.Length; i++)
+        {
+            if(vfxHandles[i].GetId()==id)
+                return vfxHandles[i];
+        }
+        return null;
+    }
     public void ApplyPointsEffect()
     {
         Instantiate(applyPointsEffectPrefabVFX, transform.position, Quaternion.identity, transform);
@@ -304,7 +317,7 @@ public class PlayerVFXController : NetworkBehaviour
 
     
 }
-
+[System.Serializable]
 public class HandleVFX 
 {
     private Action <Vector3, Quaternion> _serverRpcActions;
@@ -326,6 +339,10 @@ public class HandleVFX
         _vfxType = vfxType;
     }
  
+    public int GetId()
+    {
+        return id;
+    }
     public void CreateVFX(Vector3 value, Quaternion rotation,bool isServer)
     {
         HandleActions(_vfxType, value, rotation, isServer);
