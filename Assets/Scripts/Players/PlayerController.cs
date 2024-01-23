@@ -19,6 +19,7 @@ public class PlayerController : NetworkBehaviour
     public BulletController bulletPrefab;
     public Transform cinemachineCameraTarget;
     public CharacterController characterController;
+    public PlayerComponentsHandler playerComponentsHandler;
     public Collider [] ragdollColliders;
     public Rigidbody[] ragdollRigidbodies;
     
@@ -104,6 +105,7 @@ public class PlayerController : NetworkBehaviour
             stateMachineController= GetComponent<StateMachineController>();
             stateMachineController.Initializate();
             playerStats = GetComponent<PlayerStatsController>();
+            playerComponentsHandler = GetComponent<PlayerComponentsHandler>();
             playerStats.OnPlayerDead += PlayerDeadCallback;
             DoRagdoll(false);
             shootRefraction = 0.1f;
@@ -114,14 +116,23 @@ public class PlayerController : NetworkBehaviour
 
     void Update()
     {
-        Shoot();
 
         if (IsOwner)
         {
 
+            
             isGroundedCheck();
             Reloading();
             CreateAimTargetPos();
+
+            if (playerComponentsHandler.IsPlayerLocked())
+            {
+                stateMachineController.SetState("Movement");
+                move = Vector3.zero;
+                return;
+            }
+            Shoot();
+
             stateMachineController.StateUpdate();
             if (Input.GetKey(KeyCode.Mouse1))
             {
@@ -323,83 +334,80 @@ public class PlayerController : NetworkBehaviour
     public void Shoot()
     {                
         Vector3 direction = Vector3.zero;
-
-        if (IsOwner)
+        float randomRefraction =Random.Range(-shootRefraction , shootRefraction);
+        shootTimer += Time.deltaTime;
+        if (Input.GetKey(KeyCode.Mouse0) && shootTimer > shootRate && playerStats.currentBullets > 0 && !isReloading)
         {
-            float randomRefraction =Random.Range(-shootRefraction , shootRefraction);
-            shootTimer += Time.deltaTime;
-            if (Input.GetKey(KeyCode.Mouse0) && shootTimer > shootRate && playerStats.currentBullets > 0 && !isReloading)
-            {
 
-                StartCoroutine(playerStats.playerComponentsHandler.ShakeCamera(0.1f, .9f, .7f));
-                playerStats.currentBullets--;
-                // OnPlayerVfxAction?.Invoke(MyVfxType.shoot ,spawnBulletPoint.position);
-                PlayerVFXController.shootEffectHandle.CreateVFX(spawnBulletPoint.position, transform.rotation ,IsServer);
-                shootTimer = 0;
-                Vector3 shotDirection = new Vector3(cameraRef.transform.forward.x + randomRefraction, cameraRef.transform.forward.y + randomRefraction, cameraRef.transform.forward.z);
+            StartCoroutine(playerStats.playerComponentsHandler.ShakeCamera(0.1f, .9f, .7f));
+            playerStats.currentBullets--;
+            // OnPlayerVfxAction?.Invoke(MyVfxType.shoot ,spawnBulletPoint.position);
+            PlayerVFXController.shootEffectHandle.CreateVFX(spawnBulletPoint.position, transform.rotation ,IsServer);
+            shootTimer = 0;
+            Vector3 shotDirection = new Vector3(cameraRef.transform.forward.x + randomRefraction, cameraRef.transform.forward.y + randomRefraction, cameraRef.transform.forward.z);
+            
+            if (Physics.Raycast(cameraRef.transform.position, shotDirection, out RaycastHit hit, 
+                    distanceFactor))
+            {
                 
-                if (Physics.Raycast(cameraRef.transform.position, shotDirection, out RaycastHit hit, 
-                        distanceFactor))
-                {
-                    
-                    // OnPlayerVfxAction?.Invoke(MyVfxType.hit ,hit.point);
-                    PlayerVFXController.hitEffectHandle.CreateVFX(hit.point, transform.rotation ,IsServer);
+                // OnPlayerVfxAction?.Invoke(MyVfxType.hit ,hit.point);
+                PlayerVFXController.hitEffectHandle.CreateVFX(hit.point, transform.rotation ,IsServer);
 
-                    hit.collider.gameObject.TryGetComponent<PlayerStatsController>(out PlayerStatsController enemyRef);
-                    if (enemyRef)
+                hit.collider.gameObject.TryGetComponent<PlayerStatsController>(out PlayerStatsController enemyRef);
+                if (enemyRef)
+                {
+                    if (IsServer)
                     {
-                        if (IsServer)
-                        {
-                            enemyRef.TakeDamageClientRpc(playerStats.GetDamageDone());
-                            CrosshairCreator.OnHitDetected?.Invoke();
+                        enemyRef.TakeDamageClientRpc(playerStats.GetDamageDone());
+                        CrosshairCreator.OnHitDetected?.Invoke();
 
-                        }
-                        if (IsClient)
-                        {
-                            enemyRef.TakeDamageServerRpc(playerStats.GetDamageDone());
-                            CrosshairCreator.OnHitDetected?.Invoke();
-
-                        }
-                        Debug.Log(enemyRef.name);
                     }
-                }
-                else
-                {
-                    PlayerVFXController.hitEffectHandle.CreateVFX(hit.point, transform.rotation,IsServer);
+                    if (IsClient)
+                    {
+                        enemyRef.TakeDamageServerRpc(playerStats.GetDamageDone());
+                        CrosshairCreator.OnHitDetected?.Invoke();
 
-                    // OnPlayerVfxAction?.Invoke(MyVfxType.hit ,hit.point);
-                    
+                    }
+                    Debug.Log(enemyRef.name);
                 }
-                // if (IsServer)
-                // {
-                BulletController bullet = Instantiate(bulletPrefab, spawnBulletPoint.position,
-                    cinemachineCameraTarget.rotation);
-                //     Physics.IgnoreCollision(bullet.GetComponent<Collider>(),characterController.GetComponent<Collider>());
-                //     Physics.IgnoreCollision(bullet.GetComponent<Collider>(),bullet.GetComponent<Collider>());
-                //
-                    bullet.Direction = shotDirection.normalized ;
-                    bullet.damage.Value = playerStats.GetDamageDone();
-                //     bullet.GetComponent<NetworkObject>().SpawnWithOwnership(NetworkManager.Singleton.LocalClientId, true);
-                // }
-                // else
-                // {
-                //     BulletController bullet = Instantiate(bulletPrefab, spawnBulletPoint.position, cinemachineCameraTarget.rotation);
-                //     Physics.IgnoreCollision(bullet.GetComponent<Collider>(),characterController.GetComponent<Collider>());
-                //     Physics.IgnoreCollision(bullet.GetComponent<Collider>(),bullet.GetComponent<Collider>());
-                //     bullet.Direction = direction.normalized + new Vector3(randomRefraction, randomRefraction, 0);
-                //     bullet.damage.Value = playerStats.GetDamageDone();
-                //     // bullet.GetComponent<NetworkObject>().SpawnWithOwnership(NetworkManager.Singleton.LocalClientId, true);
-                // }
-                // SpawnFakeBulletClientRpc(direction, playerStats.GetDamageDone(),randomRefraction);
-                currentShootRefraction = shootRefraction + Random.Range(0 , shootRefraction);
             }
-            else if(!(Input.GetKey(KeyCode.Mouse0) && shootTimer > shootRate && playerStats.currentBullets > 0 && !isReloading))
+            else
             {
-                currentShootRefraction = shootRefraction;
-            }
-   
+                PlayerVFXController.hitEffectHandle.CreateVFX(hit.point, transform.rotation,IsServer);
 
+                // OnPlayerVfxAction?.Invoke(MyVfxType.hit ,hit.point);
+                
+            }
+            // if (IsServer)
+            // {
+            BulletController bullet = Instantiate(bulletPrefab, spawnBulletPoint.position,
+                cinemachineCameraTarget.rotation);
+            //     Physics.IgnoreCollision(bullet.GetComponent<Collider>(),characterController.GetComponent<Collider>());
+            //     Physics.IgnoreCollision(bullet.GetComponent<Collider>(),bullet.GetComponent<Collider>());
+            //
+                bullet.Direction = shotDirection.normalized ;
+                bullet.damage.Value = playerStats.GetDamageDone();
+            //     bullet.GetComponent<NetworkObject>().SpawnWithOwnership(NetworkManager.Singleton.LocalClientId, true);
+            // }
+            // else
+            // {
+            //     BulletController bullet = Instantiate(bulletPrefab, spawnBulletPoint.position, cinemachineCameraTarget.rotation);
+            //     Physics.IgnoreCollision(bullet.GetComponent<Collider>(),characterController.GetComponent<Collider>());
+            //     Physics.IgnoreCollision(bullet.GetComponent<Collider>(),bullet.GetComponent<Collider>());
+            //     bullet.Direction = direction.normalized + new Vector3(randomRefraction, randomRefraction, 0);
+            //     bullet.damage.Value = playerStats.GetDamageDone();
+            //     // bullet.GetComponent<NetworkObject>().SpawnWithOwnership(NetworkManager.Singleton.LocalClientId, true);
+            // }
+            // SpawnFakeBulletClientRpc(direction, playerStats.GetDamageDone(),randomRefraction);
+            currentShootRefraction = shootRefraction + Random.Range(0 , shootRefraction);
         }
+        else if(!(Input.GetKey(KeyCode.Mouse0) && shootTimer > shootRate && playerStats.currentBullets > 0 && !isReloading))
+        {
+            currentShootRefraction = shootRefraction;
+        }
+
+
+        
         
     }
 

@@ -29,6 +29,8 @@ public class PlayerComponentsHandler : NetworkBehaviour
     [Header("UI")]
     public TextMeshProUGUI playerNameText;
     public StatsPanelController statsPanelController;
+    public PauseController pauseController;
+
     float timer = 0;
 
     [Header("Cinemachine Camera config")]
@@ -76,7 +78,7 @@ public class PlayerComponentsHandler : NetworkBehaviour
     {
         if (IsOwner)
         {
-            IsCurrentDeviceMouse = !statsPanelController.isPanelOpen;
+            IsCurrentDeviceMouse = !statsPanelController.isPanelOpen && !pauseController.pauseMenu.activeSelf ;
             if (IsCurrentDeviceMouse)
             {
                 //on game
@@ -84,25 +86,13 @@ public class PlayerComponentsHandler : NetworkBehaviour
                 Cursor.visible = false;
                 TransitionCamera();
             }
-            else
+            else 
             {
                 //on panel
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
             }
 
-            // if (Input.GetKeyDown(KeyCode.Mouse0))
-            // {
-            //     cinemachineVirtualCameraInstance.StartCameraShake(5, 5, 0.5f);
-            //     cinmachineCloseLookCameraIntance.StartCameraShake(5, 5, 0.5f);
-            //
-            // }
-            // if (Input.GetKeyUp(KeyCode.Mouse0))
-            // {
-            //     cinemachineVirtualCameraInstance.StopCameraShake();
-            //     cinmachineCloseLookCameraIntance.StopCameraShake();
-            //
-            // }
         }
     }
     private void LateUpdate()
@@ -124,7 +114,10 @@ public class PlayerComponentsHandler : NetworkBehaviour
         // Handle other actions as needed
     }
 
-
+    public bool IsPlayerLocked()
+    {
+        return !IsCurrentDeviceMouse;
+    }
 
     void InstanciateComponents()
     {
@@ -152,6 +145,7 @@ public class PlayerComponentsHandler : NetworkBehaviour
         canvas.GetComponentInChildren<Button>().onClick.AddListener(transform.GetComponent<PlayerStatsController>().OnSpawnPlayer);
         playerNameText = canvas.GetComponentInChildren<TextMeshProUGUI>();
         statsPanelController = GetComponentInChildren<StatsPanelController>();
+        pauseController = GetComponentInChildren<PauseController>();
 
 
         //rb = GetComponent<Rigidbody>();
@@ -164,8 +158,9 @@ public class PlayerComponentsHandler : NetworkBehaviour
         if (look.sqrMagnitude >= _threshold )
         {
             //Don't multiply mouse input by Time.deltaTime;
-            float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
-            
+
+            float deltaTimeMultiplier =(IsCurrentDeviceMouse) ? 1.0f : Time.deltaTime;
+
             _cinemachineTargetYaw += look.x * deltaTimeMultiplier;
             _cinemachineTargetPitch += look.y * deltaTimeMultiplier;
         }

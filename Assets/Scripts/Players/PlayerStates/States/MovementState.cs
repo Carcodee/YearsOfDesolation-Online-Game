@@ -30,7 +30,13 @@ namespace Players.PlayerStates.States
         {
             float x= Input.GetAxis("Horizontal");
             float y= Input.GetAxis("Vertical");
-            animInput=new Vector2(Input.GetAxis("Horizontal") * this.playerRef.moveAnimationSpeed, Input.GetAxis("Vertical") * this.playerRef.moveAnimationSpeed);
+            if (playerRef.playerComponentsHandler.IsPlayerLocked())
+            {
+                x = 0;
+                y = 0;
+            }
+            animInput=new Vector2(x * this.playerRef.moveAnimationSpeed, y * this.playerRef.moveAnimationSpeed);
+
             this.playerRef.Move(x, y);
         }
 
