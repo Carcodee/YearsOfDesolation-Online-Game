@@ -20,23 +20,18 @@ namespace Players.PlayerStates.States
             currentRespawnTimer= 0;
             playerRef.sprintFactor = 1f;
             playerRef.move = Vector3.zero;
-            if (PlayerVFXController.respawningEffectHandle!=null)
-            {
-                PlayerVFXController.respawningEffectHandle.CreateVFX(playerRef.transform.position, Quaternion.identity, false);
-            }
-
+            
+            playerRef.playerStats.health.OnValueChanged+=RespawnPlayer;
         }
 
         public override void StateExit()
         {
-            playerRef.sprintFactor = 1f;
-
-            this.playerRef.ActivatePlayer();
-            playerRef.playerStats.SetHealth(playerRef.playerStats.GetMaxHealth());
-            playerRef.playerStats.OnStatsChanged?.Invoke();
-
-
             //respawn
+            playerRef.sprintFactor = 1f;
+            this.playerRef.ActivatePlayer();
+            playerRef.playerStats.OnStatsChanged?.Invoke();
+            playerRef.playerStats.SetHealth(playerRef.playerStats.GetMaxHealth());
+            
         }
 
         public override void StateLateUpdate()
@@ -60,10 +55,15 @@ namespace Players.PlayerStates.States
         
             if (currentRespawnTimer>GameController.instance.respawnTime)
             {
+
                 stateMachineController.SetState("Movement");
+
             }
         }
+        public void RespawnPlayer(int oldValue,int newValue)
+        {
 
+        }
 
     }
 }

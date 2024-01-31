@@ -23,6 +23,7 @@ public class GameController : NetworkBehaviour
     public NetworkVariable<int> numberOfPlayersAlive = new NetworkVariable<int>();
     public NetworkVariable <Vector3> randomPoint = new NetworkVariable<Vector3>();
 
+    
     public int respawnTime=5;
     
     [Header("References")]
@@ -116,7 +117,7 @@ public class GameController : NetworkBehaviour
 
     public void OnPlayerDead(int index)
     {
-         SetPlayerPosClientRpc(zoneControllers[index].playerSpawn.position, index);
+         SetPlayerPosOnDeadClientRpc(zoneControllers[index].playerSpawn.position, index);
     }
     /// <summary>
     /// create the player zones with the player transforms
@@ -351,6 +352,23 @@ public class GameController : NetworkBehaviour
         players[playerIndex].position = pos;
         players[playerIndex].GetComponent<PlayerController>().characterController.enabled = true;
         players[playerIndex].GetComponent<PlayerStatsController>().OnStatsChanged?.Invoke();
+        
+        // players[playerIndex].GetComponent<PlayerStatsController>().SetHealth( players[playerIndex].GetComponent<PlayerStatsController>().GetMaxHealth());
+
+        Debug.Log("Called on client");
+    }
+    
+    [ClientRpc]
+    public void SetPlayerPosOnDeadClientRpc(Vector3 pos, int playerIndex)
+    {
+        players[playerIndex].GetComponent<PlayerController>().characterController.enabled = false;
+        players[playerIndex].position = pos;
+        players[playerIndex].GetComponent<PlayerController>().characterController.enabled = true;
+        players[playerIndex].GetComponent<PlayerStatsController>().OnStatsChanged?.Invoke();
+        if (PlayerVFXController.respawningEffectHandle!=null)
+        {
+            PlayerVFXController.respawningEffectHandle.CreateVFX(players[playerIndex].transform.position, Quaternion.identity, false);
+        }
         Debug.Log("Called on client");
     }
     [ClientRpc]

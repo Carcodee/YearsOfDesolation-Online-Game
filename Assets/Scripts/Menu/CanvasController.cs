@@ -42,26 +42,24 @@ public class CanvasController : MonoBehaviour
     [Header("Ref")]
     public PlayerStatsController playerAssigned;
     public PlayerController playerController;
+    
+    [Header("Animation")]
+    public GameObject stagesObject;
+    public TextMeshProUGUI stagesText;
+    public Animator stagesAnimator;
+    public bool stageObjectPlaying=false;
+    bool BattleRoyaleShowed = false;
+    bool FarmShowed = false;
 
 
-
-    private void OnEnable()
-    {
-    }
-
-    private void OnDisable()
-    {
-        playerAssigned.OnStatsChanged -= SetStats;
-    }
 
     void Start()
     {
-
+    
         GetComponents();
         timeToSpawnHolder = GameController.instance.respawnTime;
         timeToSpawnTimer = GameController.instance.respawnTime;
-        playerAssigned.OnStatsChanged += SetStats;
-        playerAssigned.OnStatsChanged?.Invoke(); 
+        playerAssigned.health.OnValueChanged += SetStats;
         
         
         //TODO: bullets are not being updated
@@ -73,6 +71,7 @@ public class CanvasController : MonoBehaviour
 
     void Update()
     {
+        stageObjectPlaying = stagesObject.activeSelf;
         SetTimer();
         DisplayPlayersConnected();
         if (playerController.stateMachineController.currentState.stateName== "Dead")
@@ -89,10 +88,10 @@ public class CanvasController : MonoBehaviour
     
     }
 
-    public void SetStats()
+    public void SetStats(int oldValue, int newValue)
     {
         /*(float) playerAssigned.maxHealth*10*/
-        healthBar.currentPercent =  playerAssigned.GetHealth()*10;
+        healthBar.currentPercent =  newValue *10;
         // while(healthBar.currentPercent>playerAssigned.GetHealth()*10)
         // {
         //     healthBar.currentPercent-=1;
@@ -117,17 +116,30 @@ public class CanvasController : MonoBehaviour
         if (!GameController.instance.started)
         {
             timeLeft.text = "Time to start: " + (GameController.instance.waitingTime - GameController.instance.netTimeToStart.Value).ToString("0.0");
-            return;
+    
         }
         //farm time
         if (GameController.instance.started&& !GameController.instance.mapLogic.Value.isBattleRoyale)
         {
+            if (!FarmShowed)
+            {
+                DoOnce.DoOnceMethod(()=> PlayStageAnimation("FARM STAGE"));
+                FarmShowed = true;                
+            }
+
             float temp =  GameController.instance.mapLogic.Value.totalTime - GameController.instance.farmStageTimer;
             timeLeft.text = "Farm time: " + temp.ToString("0.0");
         }
         //battle royale time
         else if(GameController.instance.started && GameController.instance.mapLogic.Value.isBattleRoyale)
         {
+            if (!BattleRoyaleShowed)
+            {
+                DoOnce.DoOnceMethod( ()=> PlayStageAnimation("BATTLE ROYALE"));
+
+                BattleRoyaleShowed = true;                
+            }
+
             timeLeft.text = "Battle Royale stage";
         }
 
@@ -158,4 +170,33 @@ public class CanvasController : MonoBehaviour
 
         level.text ="Current Level: " +playerAssigned.GetLevel().ToString();
     }
+
+    public void PlayStageAnimation(string stageText)
+    {
+        stagesObject.SetActive(true);
+        stagesText.text = stageText;
+    }
+   
+}
+
+public static class DoOnce
+{
+    private static bool isDone;
+    private static Action myAction;
+    
+    
+    public static void DoOnceMethod(Action action)
+    {
+        if (myAction!= action)
+        {
+            isDone = false;
+        }
+        if (!isDone)
+        {
+            myAction = action;
+            action?.Invoke();
+            isDone = true;
+        }
+    }
+
 }

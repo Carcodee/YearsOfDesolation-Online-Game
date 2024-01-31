@@ -24,7 +24,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
     public Transform takeDamagePosition;
     [Header("Stats")]
     [SerializeField] private NetworkVariable<int> haste = new NetworkVariable<int>();
-    [SerializeField] private NetworkVariable<int> health = new NetworkVariable<int>();
+    [SerializeField] public NetworkVariable<int> health = new NetworkVariable<int>();
     [SerializeField] private NetworkVariable<int> maxHealth = new NetworkVariable<int>();
 
     [SerializeField] private NetworkVariable<int> stamina = new NetworkVariable<int>();
@@ -34,6 +34,9 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
 
     [SerializeField] private NetworkVariable<int> playerLevel = new NetworkVariable<int>();
     [SerializeField] private NetworkVariable<int> avaliblePoints = new NetworkVariable<int>();
+    
+    public NetworkVariable<bool> isInvulnerable = new NetworkVariable<bool>();
+
     public int totalAmmo;
     public int totalBullets;
     public int currentBullets; 
@@ -61,9 +64,12 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
+        stateMachineController=GetComponent<StateMachineController>();
 
         if (IsOwner)
         {
+    
+            Debug.Log("OnNetworkSpawn called. IsOwner: " + IsOwner);
             OnSpawnPlayer += InitializateStats;
             // OnStatsChanged += UpdateStats;
             OnLevelUp += LevelUp;
@@ -71,9 +77,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
             iDamageable = GetComponent<IDamageable>();
             isPlayerInsideTheZone = true;
             OnSpawnPlayer?.Invoke();
-            OnStatsChanged?.Invoke();
             _isInNetwork = true;
-            Debug.Log("Player Spawned");
         }
     }
 
@@ -84,6 +88,8 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
 
         if (IsOwner)
         {
+            Debug.Log("OnNetworkSpawn called. IsOwner: " + IsOwner);
+
             OnSpawnPlayer += InitializateStats;
             // OnStatsChanged += UpdateStats;
             OnLevelUp += RefillAmmo;
@@ -91,8 +97,8 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
             iDamageable = GetComponent<IDamageable>();
             isPlayerInsideTheZone = true;
             _isInNetwork = true;
+            
             OnSpawnPlayer?.Invoke();
-            OnStatsChanged?.Invoke();
         }
     }
 
@@ -101,22 +107,19 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
         if (IsOwner) {
             if (!_IsInitizalized && health.Value==0) {
                 OnSpawnPlayer?.Invoke();
-                SetHealth(GetMaxHealth());
-                OnStatsChanged?.Invoke();
                 _IsInitizalized = true;
             }
             OutsideZoneDamage();
-        }
-        if (health.Value <= 0 && GameController.instance.zoneControllers.Count > 0) {
-            GameController.instance.OnPlayerDead((int)zoneAsigned.Value);
-            OnPlayerDead?.Invoke();
+            
 
+            
         }
+        //TODO: find some way to check if the player is dead with ownership
+
     }
     public override void OnNetworkDespawn()
     {
         OnSpawnPlayer -= InitializateStats;
-        OnStatsChanged -= UpdateStats;
 
     }
 
@@ -143,19 +146,11 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
         statHolder[5]= speed.Value;
     }
 
-    void UpdateStats()
-    {
-        SetHasteServerRpc(statHolder[0]);
-        SetHealthServerRpc(statHolder[1]);
-        SetStaminaServerRpc(statHolder[2]);
-        SetDamageServerRpc(statHolder[3]);
-        SetArmorServerRpc(statHolder[4]);
-        SetSpeedServerRpc(statHolder[5]);
-    }
+
 
     void InitializateStats()
     {
-
+        SetTemplate(0);
         playerObj = GetComponent<NetworkObject>();
         if (statsTemplates[statsTemplateSelected.Value] == null)
         {
@@ -163,18 +158,26 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
             return;
         }
         SetHasteServerRpc(statsTemplates[statsTemplateSelected.Value].haste);
-        SetHealthServerRpc(statsTemplates[statsTemplateSelected.Value].health);
+        SetHealth(10);
+        Debug.Log("Health called. hpValue: " + statsTemplates[statsTemplateSelected.Value].health);
+
         SetStaminaServerRpc(statsTemplates[statsTemplateSelected.Value].stamina);
         SetDamageServerRpc(statsTemplates[statsTemplateSelected.Value].damage);
         SetArmorServerRpc(statsTemplates[statsTemplateSelected.Value].armor);
         SetSpeedServerRpc(statsTemplates[statsTemplateSelected.Value].speed);
-        SetMaxHealthServerRpc(statsTemplates[statsTemplateSelected.Value].health);
+        
+        
+        
+        SetMaxHealthServerRpc(10);
+        
 
         SetLevelServerRpc(1);
         SetAvaliblePointsServerRpc(3);
+        health.OnValueChanged += SetPlayerOnPos;
         currentBullets=totalBullets;
         //Stats on controller player
         transform.GetComponent<PlayerController>().SetSpeedStateServerRpc(statsTemplates[statsTemplateSelected.Value].speed);
+        OnStatsChanged?.Invoke();
     }
 
     public void SetStats()
@@ -236,17 +239,18 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
     public void TakeDamage(int damage)
     {
         
-        if (health.Value <= 0 && IsServer)
-        {
-            GameController.instance.OnPlayerDead((int)zoneAsigned.Value);
-        }
 
         if (IsOwner)
         {
-            if (stateMachineController.currentState.stateName == "Dead")
+            if (stateMachineController.currentState.stateName == "Dead" || health.Value<=0)
             {
                 return;
             }
+            // if (health.Value<=0 && GameController.instance.zoneControllers.Count > 0 && stateMachineController.currentState.stateName!="Dead"){
+            //
+            //     CallServerOnDeadServerRpc((int)zoneAsigned.Value);
+            //     OnPlayerDead?.Invoke();
+            // }
             
             else
             {
@@ -276,19 +280,27 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
     {
         TakeDamageClientRpc(myDamage);
     }
+
+    [ServerRpc]
+    public void CallServerOnDeadServerRpc(int zoneAssigned)
+    {
+        GameController.instance.OnPlayerDead(zoneAssigned);
+    } 
     
+    public void SetPlayerOnPos(int oldVal, int newVal)
+    {
+        if (health.Value<=0 && GameController.instance.zoneControllers.Count > 0 && stateMachineController.currentState.stateName!="Dead"){
+            OnPlayerDead?.Invoke();
+            CallServerOnDeadServerRpc((int)zoneAsigned.Value);
+        }
+    }
     [ClientRpc]
     public void TakeDamageClientRpc(int myDamage)
     {
 
-        if (health.Value <= 0 && IsServer)
-        {
-            GameController.instance.OnPlayerDead((int)zoneAsigned.Value);
-        }
-
         if (IsOwner)
         {
-            if (stateMachineController.currentState.stateName == "Dead")
+            if (stateMachineController.currentState.stateName == "Dead" || health.Value<=0)
             {
                 return;
             }
@@ -307,6 +319,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
                     SetHealthServerRpc(health.Value - (myDamage));  
                     StartCoroutine(playerComponentsHandler.ShakeCamera(0.3f, 5, 5));
                     PlayerVFXController.bloodEffectHandle.CreateVFX(takeDamagePosition.position, Quaternion.identity , IsServer);
+
                 }
                 OnStatsChanged?.Invoke();
             }
@@ -314,7 +327,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
 
     }
     
-    
+
 
     public void AddValueFromButton(int index)
     {
@@ -390,15 +403,19 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
     [ServerRpc]
     public void SetHealthServerRpc(int healthPoint)
     {
-        
          health.Value = healthPoint;
-
     }
     [ServerRpc]
     public void SetHasteServerRpc(int hastePoint)
     {
         haste.Value = hastePoint;
     }
+    [ServerRpc]
+    public void SetIsInvulnerableServerRpc(bool isDead)
+    {
+        this.isInvulnerable.Value = isDead;
+    }
+    
     [ServerRpc]
     public void SetMaxHealthServerRpc(int maxHealth)
     {
@@ -426,6 +443,9 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
         speed.Value = speedPoint;
 
     }
+
+    
+
     //Level--------
     [ServerRpc]
     public void SetLevelServerRpc(int val)

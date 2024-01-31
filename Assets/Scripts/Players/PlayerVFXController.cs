@@ -366,10 +366,12 @@ public class HandleVFX
     {
         if (isServer)
         {
+            // CreateLocalVFX(parameter, rotation);
             ActionClientRpc(parameter, rotation);
         }
         else
         {
+            // CreateLocalVFX(parameter, rotation);
             CallClientServerRpc(parameter, rotation);
         }
     }

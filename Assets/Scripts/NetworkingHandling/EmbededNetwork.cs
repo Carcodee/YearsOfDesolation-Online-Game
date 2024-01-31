@@ -50,8 +50,7 @@ public class EmbededNetwork : NetworkBehaviour
         MyCustomClientRpc(pos,rotation,id);
     }
     
-    
-    
+        
     /// <summary>
     /// ///////////////////////////////// CLIENT RPC
     /// </summary>
@@ -64,6 +63,7 @@ public class EmbededNetwork : NetworkBehaviour
     [ClientRpc]
     public void MyCustomClientRpc(Vector3 pos,Quaternion rotation, int id)
     {
+  
         actionToCallAtPos[id]?.Invoke(pos,rotation);
     }
 
