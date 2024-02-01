@@ -20,6 +20,7 @@ namespace Players.PlayerStates.States
             currentRespawnTimer= 0;
             playerRef.sprintFactor = 1f;
             playerRef.move = Vector3.zero;
+            playerRef.playerStats.SetHealth(playerRef.playerStats.GetMaxHealth());
             
             playerRef.playerStats.health.OnValueChanged+=RespawnPlayer;
         }
@@ -30,7 +31,6 @@ namespace Players.PlayerStates.States
             playerRef.sprintFactor = 1f;
             this.playerRef.ActivatePlayer();
             playerRef.playerStats.OnStatsChanged?.Invoke();
-            playerRef.playerStats.SetHealth(playerRef.playerStats.GetMaxHealth());
             
         }
 

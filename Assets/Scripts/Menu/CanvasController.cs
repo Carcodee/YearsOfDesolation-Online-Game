@@ -18,6 +18,9 @@ public class CanvasController : MonoBehaviour
     public TextMeshProUGUI playersAlive;
     public TextMeshProUGUI playersConnected;
 
+    public Michsky.UI.Heat.ProgressBar timeLeftBar;
+    public TextMeshProUGUI timeLeftBarText;
+    
     [Header("Player")]
     public TextMeshProUGUI level;
     public TextMeshProUGUI totalAmmo;
@@ -116,7 +119,11 @@ public class CanvasController : MonoBehaviour
         if (!GameController.instance.started)
         {
             timeLeft.text = "Time to start: " + (GameController.instance.waitingTime - GameController.instance.netTimeToStart.Value).ToString("0.0");
-    
+            timeLeftBarText.text = "Current Stage: Waiting";
+            timeLeftBar.maxValue = GameController.instance.waitingTime;
+            timeLeftBar.currentValue = GameController.instance.waitingTime - GameController.instance.netTimeToStart.Value;
+            timeLeftBar.UpdateUI();
+
         }
         //farm time
         if (GameController.instance.started&& !GameController.instance.mapLogic.Value.isBattleRoyale)
@@ -129,6 +136,12 @@ public class CanvasController : MonoBehaviour
 
             float temp =  GameController.instance.mapLogic.Value.totalTime - GameController.instance.farmStageTimer;
             timeLeft.text = "Farm time: " + temp.ToString("0.0");
+
+            timeLeftBarText.text = "Current Stage: Farm";
+            timeLeftBar.maxValue = GameController.instance.mapLogic.Value.totalTime;
+            timeLeftBar.currentValue = temp;
+            timeLeftBar.UpdateUI();
+
         }
         //battle royale time
         else if(GameController.instance.started && GameController.instance.mapLogic.Value.isBattleRoyale)
@@ -141,6 +154,9 @@ public class CanvasController : MonoBehaviour
             }
 
             timeLeft.text = "Battle Royale stage";
+            timeLeftBarText.text = "Current Stage: Battle Royale";
+            timeLeftBar.gameObject.SetActive(false);
+
         }
 
     }
@@ -159,6 +175,7 @@ public class CanvasController : MonoBehaviour
     {
         totalAmmo.text = playerAssigned.totalAmmo.ToString();
         bulletsSlider.currentValue = playerAssigned.currentBullets;
+
     }
     private void DisplayHP()
     {
