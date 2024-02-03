@@ -490,6 +490,7 @@ MonoBehaviour:
     type: 3}
   cinemachineCameraTarget: {fileID: 2578975527992398695}
   characterController: {fileID: -7918970974976374508}
+  playerComponentsHandler: {fileID: 0}
   ragdollColliders:
   - {fileID: 1438393401186132506}
   - {fileID: 6011872441549726320}
@@ -528,6 +529,28 @@ MonoBehaviour:
   shootRefraction: 0.1
   currentShootRefraction: 0.1
   minShootRefraction: 0.01
+  currentWeapon:
+    weapon:
+      ammoBehaviour:
+        totalAmmo: 0
+        currentBullets: 0
+        totalBullets: 0
+        isReloading: 0
+        reloadTime: 0
+        reloadCurrentTime: 0
+      weaponName: 
+      shootRate: 0
+      shootTimer: 0
+      shootRefraction: 0
+      currentShootRefraction: 0
+      minShootRefraction: 0
+    ammoBehaviour:
+      totalAmmo: 0
+      currentBullets: 0
+      totalBullets: 0
+      isReloading: 0
+      reloadTime: 0
+      reloadCurrentTime: 0
   move: {x: 0, y: 0, z: 0}
   rotationFactor: 25
   rotationSmoothTime: 0.1
@@ -594,12 +617,57 @@ MonoBehaviour:
     m_InternalValue: 0
   avaliblePoints:
     m_InternalValue: 0
-  totalAmmo: 90
-  totalBullets: 30
-  currentBullets: 30
+  isInvulnerable:
+    m_InternalValue: 0
   statHolderNames: []
   statHolder: 
   isPlayerInsideTheZone: 0
+  currentWeaponSelected:
+    weapon:
+      ammoBehaviour:
+        totalAmmo: 0
+        currentBullets: 0
+        totalBullets: 0
+        isReloading: 0
+        reloadTime: 0
+        reloadCurrentTime: 0
+      weaponName: 
+      shootRate: 0
+      shootTimer: 0
+      shootRefraction: 0
+      currentShootRefraction: 0
+      minShootRefraction: 0
+    ammoBehaviour:
+      totalAmmo: 0
+      currentBullets: 0
+      totalBullets: 0
+      isReloading: 0
+      reloadTime: 0
+      reloadCurrentTime: 0
+  ak47:
+    weapon:
+      ammoBehaviour:
+        totalAmmo: 0
+        currentBullets: 0
+        totalBullets: 0
+        isReloading: 0
+        reloadTime: 0
+        reloadCurrentTime: 0
+      weaponName: 
+      shootRate: 0
+      shootTimer: 0
+      shootRefraction: 0
+      currentShootRefraction: 0
+      minShootRefraction: 0
+    ammoBehaviour:
+      totalAmmo: 0
+      currentBullets: 0
+      totalBullets: 0
+      isReloading: 0
+      reloadTime: 0
+      reloadCurrentTime: 0
+  weaponsData:
+  - {fileID: 11400000, guid: 8094bc5eafa57f148986c1b564d9bdff, type: 2}
   zoneAsigned:
     m_InternalValue: 0
   coinPosition: {fileID: 0}
@@ -649,6 +717,7 @@ MonoBehaviour:
     type: 3}
   playerNameText: {fileID: 0}
   statsPanelController: {fileID: 0}
+  pauseController: {fileID: 0}
   cinemachineCameraTarget: {fileID: 2578975527992398695}
   TopClamp: 70
   BottomClamp: -30

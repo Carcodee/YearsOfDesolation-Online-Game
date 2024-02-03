@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
-using Michsky.UI.ModernUIPack;
+using Michsky.UI.Heat;
 using Third_Party.Modern_UI_Pack.Scripts.Slider;
 using TMPro;
 using Unity.Netcode;
@@ -10,6 +10,8 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
 using UnityEditor;
+using ProgressBar = Michsky.UI.ModernUIPack.ProgressBar;
+
 public class CanvasController : MonoBehaviour
 {
     Canvas canvas;
@@ -27,7 +29,8 @@ public class CanvasController : MonoBehaviour
     public TextMeshProUGUI hp;
     public TextMeshProUGUI exp;
 
-    public RadialSlider bulletsSlider;
+    public TextMeshProUGUI currentBullets;
+    public QuestItem weaponName;
     public RadialSlider expSlider;
 
     [Header("DeadScreen")] 
@@ -64,9 +67,8 @@ public class CanvasController : MonoBehaviour
         timeToSpawnTimer = GameController.instance.respawnTime;
         playerAssigned.health.OnValueChanged += SetStats;
         
-        
         //TODO: bullets are not being updated
-        bulletsSlider.currentValue = playerAssigned.currentBullets;
+        currentBullets.text = playerAssigned.currentWeaponSelected.ammoBehaviour.currentBullets.ToString() ;
 
     }
 
@@ -77,6 +79,7 @@ public class CanvasController : MonoBehaviour
         stageObjectPlaying = stagesObject.activeSelf;
         SetTimer();
         DisplayPlayersConnected();
+        DisplayBullets();
         if (playerController.stateMachineController.currentState.stateName== "Dead")
         {
             timeToSpawn.gameObject.SetActive(true);
@@ -173,8 +176,9 @@ public class CanvasController : MonoBehaviour
     }
     public void DisplayBullets()
     {
-        totalAmmo.text = playerAssigned.totalAmmo.ToString();
-        bulletsSlider.currentValue = playerAssigned.currentBullets;
+        currentBullets.text = playerAssigned.currentWeaponSelected.ammoBehaviour.currentBullets.ToString() ;
+        totalAmmo.text = playerAssigned.currentWeaponSelected.ammoBehaviour.totalAmmo.ToString();
+        // currentBullets.text = playerAssigned.currentBullets.ToString();
 
     }
     private void DisplayHP()

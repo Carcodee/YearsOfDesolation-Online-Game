@@ -37,12 +37,14 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
     
     public NetworkVariable<bool> isInvulnerable = new NetworkVariable<bool>();
 
-    public int totalAmmo;
-    public int totalBullets;
-    public int currentBullets; 
     public string[] statHolderNames;
     public int[] statHolder;
     public bool isPlayerInsideTheZone;
+    
+    [Header("Weapons")]
+    public WeaponItem currentWeaponSelected;
+    public WeaponItem ak47;
+    public WeaponTemplate [] weaponsData;
     
     [Header("Current Gamelogic")]
     public NetworkVariable<zoneColors> zoneAsigned=new NetworkVariable<zoneColors>();
@@ -68,7 +70,6 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
 
         if (IsOwner)
         {
-    
             Debug.Log("OnNetworkSpawn called. IsOwner: " + IsOwner);
             OnSpawnPlayer += InitializateStats;
             // OnStatsChanged += UpdateStats;
@@ -174,10 +175,17 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
         SetLevelServerRpc(1);
         SetAvaliblePointsServerRpc(3);
         health.OnValueChanged += SetPlayerOnPos;
-        currentBullets=totalBullets;
+        // ak47= new Weapon(new AmmoBehaviour(90,30,90,false,0.5f,0.0f), )
         //Stats on controller player
+        ak47 = new WeaponItem(weaponsData[(int)WeaponType.Ak99]);
+        
+        SetWeapon(ak47);
         transform.GetComponent<PlayerController>().SetSpeedStateServerRpc(statsTemplates[statsTemplateSelected.Value].speed);
         OnStatsChanged?.Invoke();
+    }
+    public void SetWeapon(WeaponItem weapon)
+    {
+        currentWeaponSelected = weapon;
     }
 
     public void SetStats()
@@ -190,7 +198,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
 
     public void RefillAmmo()
     {
-        totalAmmo +=60;
+        currentWeaponSelected.weapon.ammoBehaviour.AddAmmo(60);
     }
 
     public void SetHealth(int value)
@@ -504,3 +512,4 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
 
     }
 }
+
