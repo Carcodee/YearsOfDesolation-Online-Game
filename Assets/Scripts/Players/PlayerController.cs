@@ -5,6 +5,7 @@ using Unity.Netcode;
 using Unity.Netcode.Components;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public class PlayerController : NetworkBehaviour
@@ -27,6 +28,7 @@ public class PlayerController : NetworkBehaviour
     public Camera cam;
     [SerializeField] private Transform body;
     [SerializeField] private Camera cameraRef;
+    public Camera topViewCamera;
     public StateMachineController stateMachineController;
 
     [Header("TargetConfigs")]
@@ -98,9 +100,11 @@ public class PlayerController : NetworkBehaviour
     {
         cam= GetComponentInChildren<Camera>();
         cam.enabled = IsOwner;
+        topViewCamera.enabled = IsOwner;
         if (!cam)
         {
             Destroy(cam);
+            Destroy(topViewCamera);
         }
         if (IsOwner)
         {
@@ -518,7 +522,7 @@ public class WeaponItem
 [System.Serializable]
 public class Weapon
 {
-    
+    public Sprite weaponImage;
     public AmmoBehaviour ammoBehaviour;
     public string weaponName;
     public float shootRate;
@@ -529,6 +533,7 @@ public class Weapon
  
     public Weapon(AmmoBehaviour ammoBehaviour, WeaponTemplate weaponTemplate)
     {
+        this.weaponImage = weaponTemplate.weaponImage;
         this.ammoBehaviour =ammoBehaviour;
         this.weaponName = weaponTemplate.weaponName;
         this.shootRate = weaponTemplate.shootRate;

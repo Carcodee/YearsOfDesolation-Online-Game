@@ -32,7 +32,9 @@ public class CanvasController : MonoBehaviour
     public TextMeshProUGUI currentBullets;
     public QuestItem weaponName;
     public RadialSlider expSlider;
-
+    public Image currentWeaponImage;
+    
+    
     [Header("DeadScreen")] 
     public TextMeshProUGUI timeToSpawn;
     float timeToSpawnTimer;
@@ -69,6 +71,7 @@ public class CanvasController : MonoBehaviour
         
         //TODO: bullets are not being updated
         currentBullets.text = playerAssigned.currentWeaponSelected.ammoBehaviour.currentBullets.ToString() ;
+        currentWeaponImage.sprite = playerAssigned.currentWeaponSelected.weapon.weaponImage;
 
     }
 
@@ -179,6 +182,8 @@ public class CanvasController : MonoBehaviour
         currentBullets.text = playerAssigned.currentWeaponSelected.ammoBehaviour.currentBullets.ToString() ;
         totalAmmo.text = playerAssigned.currentWeaponSelected.ammoBehaviour.totalAmmo.ToString();
         // currentBullets.text = playerAssigned.currentBullets.ToString();
+        currentWeaponImage.sprite = playerAssigned.currentWeaponSelected.weapon.weaponImage;
+
 
     }
     private void DisplayHP()
