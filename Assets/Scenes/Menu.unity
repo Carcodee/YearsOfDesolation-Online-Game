@@ -82711,10 +82711,11 @@ Transform:
   m_GameObject: {fileID: 1623480055}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.4699998, y: -5.49, z: -0.8100004}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1877002874}
   m_Father: {fileID: 2121507545}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!135 &1623480057
@@ -93527,7 +93528,7 @@ MeshRenderer:
   m_RenderingLayerMask: 257
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 512b973552b57a14998377366569b33c, type: 2}
+  - {fileID: 2100000, guid: ae94e54cb7634a94d91f3d441936ac7a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -93565,12 +93566,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1877002870}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.26, z: 0}
-  m_LocalScale: {x: 6.5773, y: 6.5773, z: 6.5773}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 200, y: 200, z: 200}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1623480056}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1878039781
 PrefabInstance:
@@ -108617,6 +108618,7 @@ MonoBehaviour:
     m_InternalValue: 0
   randomPoint:
     m_InternalValue: {x: 0, y: 0, z: 0}
+  sphereRadiusMesh: {fileID: 1877002874}
   respawnTime: 5
   coinPrefab: {fileID: 331007805235256181, guid: 8d81f148e89dcad4bbd1e53767679d49,
     type: 3}
@@ -110389,4 +110391,3 @@ SceneRoots:
   - {fileID: 1682985877}
   - {fileID: 208422689}
   - {fileID: 2694863702856528173}
-  - {fileID: 1877002874}

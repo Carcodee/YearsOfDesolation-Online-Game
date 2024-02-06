@@ -22,7 +22,7 @@ public class GameController : NetworkBehaviour
     public NetworkVariable<int> numberOfPlayers = new NetworkVariable<int>();
     public NetworkVariable<int> numberOfPlayersAlive = new NetworkVariable<int>();
     public NetworkVariable <Vector3> randomPoint = new NetworkVariable<Vector3>();
-
+    public Transform sphereRadiusMesh;
     
     public int respawnTime=5;
     
@@ -265,6 +265,8 @@ public class GameController : NetworkBehaviour
         if (sphereRadius.radius>0)
         {
             sphereRadius.radius -= mapLogic.Value.zoneRadiusExpandSpeed * Time.deltaTime;
+            float currentRadius = sphereRadius.radius * 2;
+            sphereRadiusMesh.localScale = new Vector3(currentRadius,currentRadius,currentRadius) ;
         }
     }
     #region ServerRpc

@@ -44,6 +44,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
     [Header("Weapons")]
     public WeaponItem currentWeaponSelected;
     public WeaponItem ak47;
+    public WeaponItem doublePistols;
     public WeaponTemplate [] weaponsData;
     
     [Header("Current Gamelogic")]
@@ -111,9 +112,9 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
                 _IsInitizalized = true;
             }
             OutsideZoneDamage();
-            
 
-            
+            HandleWeaponChange();
+
         }
         //TODO: find some way to check if the player is dead with ownership
 
@@ -178,7 +179,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
         // ak47= new Weapon(new AmmoBehaviour(90,30,90,false,0.5f,0.0f), )
         //Stats on controller player
         ak47 = new WeaponItem(weaponsData[(int)WeaponType.Ak99]);
-        
+        doublePistols = new WeaponItem(weaponsData[(int)WeaponType.Pistol]);
         SetWeapon(ak47);
         transform.GetComponent<PlayerController>().SetSpeedStateServerRpc(statsTemplates[statsTemplateSelected.Value].speed);
         OnStatsChanged?.Invoke();
@@ -226,6 +227,18 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
             SetTemplaterServerRpc(index);
         }
         
+    }
+
+    public void HandleWeaponChange()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            currentWeaponSelected = doublePistols;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            currentWeaponSelected = ak47;
+        }
     }
     public void OutsideZoneDamage()
     {
