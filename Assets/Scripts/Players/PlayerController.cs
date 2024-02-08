@@ -21,8 +21,8 @@ public class PlayerController : NetworkBehaviour
     public Transform cinemachineCameraTarget;
     public CharacterController characterController;
     public PlayerComponentsHandler playerComponentsHandler;
-    public Collider [] ragdollColliders;
-    public Rigidbody[] ragdollRigidbodies;
+    // public Collider [] ragdollColliders;
+    // public Rigidbody[] ragdollRigidbodies;
     
     //TODO : Refactor this cam thing
     public Camera cam;
@@ -122,7 +122,7 @@ public class PlayerController : NetworkBehaviour
             playerStats = GetComponent<PlayerStatsController>();
             playerComponentsHandler = GetComponent<PlayerComponentsHandler>();
             playerStats.OnPlayerDead += PlayerDeadCallback;
-            DoRagdoll(false);
+            // DoRagdoll(false);
             playerStats.currentWeaponSelected.weapon.shootRefraction = 0.1f;
 
         }
@@ -213,7 +213,7 @@ public class PlayerController : NetworkBehaviour
     {
 
             characterController.enabled = false;
-            DoRagdoll(false);
+            // DoRagdoll(false);
             body.gameObject.SetActive(false);
 
 
@@ -222,7 +222,7 @@ public class PlayerController : NetworkBehaviour
     {
             characterController.enabled = true;
             body.gameObject.SetActive(true);
-            DoRagdoll(false);
+            // DoRagdoll(false);
 
     }
     public void PlayerDeadCallback()
@@ -472,16 +472,16 @@ public class PlayerController : NetworkBehaviour
         // currentWeapon = weapon;
     }
     
-    public void DoRagdoll(bool value)
-    {
-        for (int i = 0; i < ragdollRigidbodies.Length; i++)
-        {
-            ragdollColliders[i].enabled = value;
-            ragdollRigidbodies[i].isKinematic = !value;
-            ragdollRigidbodies[i].useGravity = value;
-        }
-        stateMachineController.networkAnimator.Animator.enabled = !value;
-    }
+    // public void DoRagdoll(bool value)
+    // {
+    //     for (int i = 0; i < ragdollRigidbodies.Length; i++)
+    //     {
+    //         ragdollColliders[i].enabled = value;
+    //         ragdollRigidbodies[i].isKinematic = !value;
+    //         ragdollRigidbodies[i].useGravity = value;
+    //     }
+    //     stateMachineController.networkAnimator.Animator.enabled = !value;
+    // }
 
     private void OnDrawGizmosSelected()
     {

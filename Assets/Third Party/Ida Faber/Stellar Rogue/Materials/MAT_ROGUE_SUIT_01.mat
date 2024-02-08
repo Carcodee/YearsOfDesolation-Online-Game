@@ -1,0 +1,320 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-2941720240530006761
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 7
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: MAT_ROGUE_SUIT_01
+  m_Shader: {fileID: -6465566751694194690, guid: d052b9304be2b2546a02cffa1dd4d938,
+    type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - _DISABLE_SSR_TRANSPARENT
+  - _DOUBLESIDED_ON
+  - _FLIP_NORMAL_GREEN_CHANNEL
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 1
+  m_CustomRenderQueue: 2225
+  stringTagMap: {}
+  disabledShaderPasses:
+  - TransparentDepthPrepass
+  - TransparentDepthPostpass
+  - TransparentBackface
+  - RayTracingPrepass
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BaseColor_Map:
+        m_Texture: {fileID: 2800000, guid: 28939d9ac1f276846a93754baecb6bb2, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Blood_Mask:
+        m_Texture: {fileID: 2800000, guid: 0e0c9de1eff8bf44db425d9d1d004020, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BumpMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailAlbedoMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailNormalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Dirt_Mask:
+        m_Texture: {fileID: 2800000, guid: 8e37d650df60ccb4288086db90e07eda, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Emission_Map:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MatID_Map:
+        m_Texture: {fileID: 2800000, guid: e645acd2306a73f4ebb0c70ac9e3f717, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MetallicGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Microdetail_Map:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Normal_Map:
+        m_Texture: {fileID: 2800000, guid: 85b5f4ed4fd45e6499d729429ccd2b63, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OcclusionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ParallaxMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Pattern_Map:
+        m_Texture: {fileID: 2800000, guid: 6e7cb4e9c53e8da47969c6374e09b408, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _RGBA_Mask_Map:
+        m_Texture: {fileID: 2800000, guid: 99cd8f750caede7409af702ccd6c55d7, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _1_Blood_Intensity: 8
+    - _1_Dirt_Intensity: 1
+    - _2_Blood_Intensity: 4
+    - _2_Dirt_Intensity: 1
+    - _3_Blood_Intensity: 1
+    - _3_Dirt_Intensity: 1
+    - _ADD_MICRODETAIL: 0
+    - _AO_Strength: 1.25
+    - _AddPrecomputedVelocity: 0
+    - _AlphaCutoffEnable: 0
+    - _AlphaDstBlend: 0
+    - _AlphaSrcBlend: 1
+    - _AlphaToMask: 0
+    - _AlphaToMaskInspectorValue: 0
+    - _BUILTIN_QueueControl: 0
+    - _BUILTIN_QueueOffset: 0
+    - _BlendMode: 0
+    - _Blood_Roughness: 0.31
+    - _Blur_1: 0
+    - _Blur_2: 0
+    - _Blur_3: 0
+    - _Blur_4: 0
+    - _Blur_5: 0
+    - _Blur_6: 0
+    - _Blur_7: 0
+    - _Blur_8: 0
+    - _Blur_9: 0
+    - _BumpScale: 1
+    - _ConservativeDepthOffsetEnable: 0
+    - _CullMode: 0
+    - _CullModeForward: 0
+    - _Cutoff: 0.5
+    - _DepthOffsetEnable: 0
+    - _DetailNormalMapScale: 1
+    - _Dirt_Roughness: 0
+    - _DoubleSidedEnable: 1
+    - _DoubleSidedGIMode: 0
+    - _DoubleSidedNormalMode: 2
+    - _DstBlend: 0
+    - _ENABLE_BLOOD: 0
+    - _ENABLE_DIRT: 0
+    - _EnableBlendModePreserveSpecularLighting: 1
+    - _EnableFogOnTransparent: 1
+    - _Expand_1: 0
+    - _Expand_2: 0
+    - _Expand_3: 0
+    - _Expand_4: 0
+    - _Expand_5: 0
+    - _Expand_6: 0
+    - _Expand_7: 0
+    - _Expand_8: 0
+    - _Expand_9: 0
+    - _FLIP_NORMAL_GREEN_CHANNEL: 1
+    - _GlossMapScale: 1
+    - _Glossiness: 0.5
+    - _GlossyReflections: 1
+    - _Metallic: 0
+    - _Metallic_Strength: 1
+    - _Microdetail_Size: 32
+    - _Microdetail_Strength: 0.8
+    - _Mode: 0
+    - _Normal_Strength: 1
+    - _OcclusionStrength: 1
+    - _OpaqueCullMode: 2
+    - _Parallax: 0.02
+    - _Pattern_Tile_Intensity_1: 0
+    - _Pattern_Tile_Intensity_2: 0
+    - _Pattern_Tile_Intensity_3: 0
+    - _Pattern_Tile_Intensity_4: 0
+    - _Pattern_Tile_Intensity_5: 0
+    - _Pattern_Tile_Intensity_6: 0
+    - _Pattern_Tile_Intensity_7: 0
+    - _Pattern_Tile_Intensity_8: 0
+    - _Pattern_Tile_Intensity_9: 0
+    - _Pattern_U_Tiling_1: 0
+    - _Pattern_U_Tiling_2: 0
+    - _Pattern_U_Tiling_3: 0
+    - _Pattern_U_Tiling_4: 0
+    - _Pattern_U_Tiling_5: 0
+    - _Pattern_U_Tiling_6: 0
+    - _Pattern_U_Tiling_7: 0
+    - _Pattern_U_Tiling_8: 0
+    - _Pattern_U_Tiling_9: 0
+    - _Pattern_V_Tiling_1: 0
+    - _Pattern_V_Tiling_2: 0
+    - _Pattern_V_Tiling_3: 0
+    - _Pattern_V_Tiling_4: 0
+    - _Pattern_V_Tiling_5: 0
+    - _Pattern_V_Tiling_6: 0
+    - _Pattern_V_Tiling_7: 0
+    - _Pattern_V_Tiling_8: 0
+    - _Pattern_V_Tiling_9: 0
+    - _QueueControl: 0
+    - _QueueOffset: 0
+    - _RayTracing: 0
+    - _ReceivesSSR: 1
+    - _ReceivesSSRTransparent: 0
+    - _RefractionModel: 0
+    - _RenderQueueType: 1
+    - _RequireSplitLighting: 0
+    - _SmoothnessTextureChannel: 0
+    - _Smoothness_Strength: 1
+    - _SpecularHighlights: 1
+    - _SrcBlend: 1
+    - _StencilRef: 0
+    - _StencilRefDepth: 8
+    - _StencilRefDistortionVec: 4
+    - _StencilRefGBuffer: 10
+    - _StencilRefMV: 40
+    - _StencilWriteMask: 6
+    - _StencilWriteMaskDepth: 9
+    - _StencilWriteMaskDistortionVec: 4
+    - _StencilWriteMaskGBuffer: 15
+    - _StencilWriteMaskMV: 41
+    - _SupportDecals: 1
+    - _SurfaceType: 0
+    - _TransparentBackfaceEnable: 0
+    - _TransparentCullMode: 2
+    - _TransparentDepthPostpassEnable: 0
+    - _TransparentDepthPrepassEnable: 0
+    - _TransparentSortPriority: 0
+    - _TransparentWritingMotionVec: 0
+    - _TransparentZWrite: 0
+    - _UVSec: 0
+    - _UseShadowThreshold: 0
+    - _ZTestDepthEqualForOpaque: 3
+    - _ZTestGBuffer: 4
+    - _ZTestTransparent: 4
+    - _ZWrite: 1
+    m_Colors:
+    - _1_Blood_Color: {r: 0.47058815, g: 0.29411766, b: 0.30588236, a: 0}
+    - _1_Dirt_Color: {r: 0.9529411, g: 0.9058824, b: 0.8627451, a: 0}
+    - _2_Blood_Color: {r: 0.6078432, g: 0.44313726, b: 0, a: 0}
+    - _2_Dirt_Color: {r: 0.6078432, g: 0.44313726, b: 0, a: 0}
+    - _3_Blood_Color: {r: 0, g: 0, b: 0, a: 0}
+    - _3_Dirt_Color: {r: 0.5882353, g: 0.5411765, b: 0.48627448, a: 0}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _DoubleSidedConstants: {r: 1, g: 1, b: 1, a: 0}
+    - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
+    - _Emission_Color: {r: 0, g: 0, b: 0, a: 0}
+    - _From_MatID_Color_1: {r: 1, g: 1, b: 1, a: 0}
+    - _From_MatID_Color_2: {r: 1, g: 1, b: 1, a: 0}
+    - _From_MatID_Color_3: {r: 1, g: 1, b: 1, a: 0}
+    - _From_MatID_Color_4: {r: 1, g: 1, b: 1, a: 0}
+    - _From_MatID_Color_5: {r: 1, g: 1, b: 1, a: 0}
+    - _From_MatID_Color_6: {r: 1, g: 1, b: 1, a: 0}
+    - _From_MatID_Color_7: {r: 1, g: 1, b: 1, a: 0}
+    - _From_MatID_Color_8: {r: 1, g: 1, b: 1, a: 0}
+    - _From_MatID_Color_9: {r: 1, g: 1, b: 1, a: 0}
+    - _To_Texture_Color_1: {r: 1, g: 1, b: 1, a: 0}
+    - _To_Texture_Color_2: {r: 1, g: 1, b: 1, a: 0}
+    - _To_Texture_Color_3: {r: 1, g: 1, b: 1, a: 0}
+    - _To_Texture_Color_4: {r: 1, g: 1, b: 1, a: 0}
+    - _To_Texture_Color_5: {r: 1, g: 1, b: 1, a: 0}
+    - _To_Texture_Color_6: {r: 1, g: 1, b: 1, a: 0}
+    - _To_Texture_Color_7: {r: 1, g: 1, b: 1, a: 0}
+    - _To_Texture_Color_8: {r: 1, g: 1, b: 1, a: 0}
+    - _To_Texture_Color_9: {r: 1, g: 1, b: 1, a: 0}
+  m_BuildTextureStacks: []
+--- !u!114 &3150808714853283418
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da692e001514ec24dbc4cca1949ff7e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 13
+  hdPluginSubTargetMaterialVersions:
+    m_Keys: []
+    m_Values: 
+--- !u!114 &6290650329227907789
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 639247ca83abc874e893eb93af2b5e44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 0
