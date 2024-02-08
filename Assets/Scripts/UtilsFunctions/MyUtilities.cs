@@ -4,6 +4,7 @@ using Cinemachine;
 using UnityEngine;
 using Cinemachine.Utility;
 using Unity.Netcode;
+using UnityEditor.Animations;
 
 public static class MyUtilities
 {
@@ -26,5 +27,19 @@ public static class MyUtilities
         cinemachineBasicMultiChannelPerlin.m_FrequencyGain = 0;
     }
     
-    
+    public static bool IsAnimationPlaying(Animator animator, string stateName,int Layer)
+    {
+        
+        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(Layer);
+        float currentTime = stateInfo.length * stateInfo.normalizedTime;
+        bool result = currentTime < stateInfo.length;
+        Debug.Log("Playing?>  " + result);
+        return result;
+        
+    }
+    public static void SetDefaultUpperLayer(Animator animator, string newLayerName, string oldLayerName)
+    {
+        animator.SetLayerWeight(animator.GetLayerIndex(oldLayerName), 0);
+        animator.SetLayerWeight(animator.GetLayerIndex(newLayerName), 1);
+    }
 }

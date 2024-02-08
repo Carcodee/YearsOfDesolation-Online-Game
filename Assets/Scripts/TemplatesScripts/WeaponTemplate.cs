@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class WeaponTemplate : ScriptableObject
 {
     public Sprite weaponImage;
+    public WeaponAnimations weaponAnimationState;
     public AmmoTypeTemplate ammoType;
     public string weaponName;
     public float shootRate;
@@ -15,4 +16,11 @@ public class WeaponTemplate : ScriptableObject
     public float currentShootRefraction;
     public float minShootRefraction;
     
+}
+[System.Serializable]
+public struct WeaponAnimations
+{
+    
+    public string LayerName;
+    public string weaponChange;
 }

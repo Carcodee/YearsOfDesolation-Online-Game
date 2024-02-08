@@ -8,6 +8,7 @@ public class CrosshairItem : MonoBehaviour
 {
     public Image[] crosshairImages;
     public CanvasGroup damageImages;
+    public Image [] DamageImagesColor;
     bool posRefreshed;
 
 
@@ -47,9 +48,13 @@ public class CrosshairItem : MonoBehaviour
         crosshairImages[3].rectTransform.anchoredPosition = new Vector2(-gap, crosshairImages[3].rectTransform.anchoredPosition.y);
 
     }
-    public IEnumerator DisplayDamage(float time)
+    public IEnumerator DisplayDamage(float time, Color color)
     {
         damageImages.alpha = 1;
+        DamageImagesColor[0].color = color;
+        DamageImagesColor[1].color = color;
+        DamageImagesColor[2].color = color;
+        DamageImagesColor[3].color = color;
         while (damageImages.alpha>0)
         {
             damageImages.alpha -= Time.deltaTime / time;

@@ -19,6 +19,7 @@ namespace Players.PlayerStates
         public FallingState FallingState;
         public JetpackState jetpackState;
         public DeadState deadState;
+        public ChangingWeaponState changingWeaponState;
 
         public NetworkAnimator networkAnimator;
 
@@ -34,8 +35,9 @@ namespace Players.PlayerStates
             FallingState= new FallingState("Falling", this);
             jetpackState = new JetpackState("Jetpack", this);
             deadState = new DeadState("Dead", this);
-        
-            states =new StateMachineBase[9];
+            changingWeaponState = new ChangingWeaponState("ChangingWeapon", this);
+            
+            states =new StateMachineBase[10];
             states[0]=movementState;
             states[1]=jumpState;
             states[2]=sprintState;
@@ -45,13 +47,12 @@ namespace Players.PlayerStates
             states[6]=FallingState;
             states[7]=jetpackState;
             states[8]=deadState;
-        
+            states[9]=changingWeaponState;
 
-            for (int i = 0; i < states.Length; i++)
-            {
-                states[i].stateMachineController = this;
-                states[i].StateEnter();
-            }
+            // for (int i = 0; i < states.Length; i++)
+            // {
+            //     states[i].stateMachineController = this;
+            // }
 
 
             if (states != null && states.Length > 0)
@@ -99,6 +100,11 @@ namespace Players.PlayerStates
             currentState = nextState;
             //Entry state execution
             currentState.StateEnter();
+        }
+        public void SetChangingWeaponState(WeaponItem weaponItem)
+        {
+            changingWeaponState.weapontToChange = weaponItem;
+            SetState("ChangingWeapon");
         }
 
         private StateMachineBase GetStateWithName(string stateName)

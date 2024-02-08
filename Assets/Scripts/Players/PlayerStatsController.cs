@@ -233,11 +233,13 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
     {
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            currentWeaponSelected = doublePistols;
+            stateMachineController.SetChangingWeaponState(doublePistols);
+             // currentWeaponSelected = doublePistols;
         }
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            currentWeaponSelected = ak47;
+            stateMachineController.SetChangingWeaponState(ak47);
+            // currentWeaponSelected = ak47;
         }
     }
     public void OutsideZoneDamage()

@@ -38,6 +38,7 @@ public class PlayerController : NetworkBehaviour
     public Transform headAim;
     public Transform spawnBulletPoint;
     
+    
     // [Header("Shoot")]
     // public float shootRate = 0.1f;
     // public float shootTimer = 0f;
@@ -46,8 +47,12 @@ public class PlayerController : NetworkBehaviour
     // public float minShootRefraction = 0.01f;
     
 
+    [Header("Hit data")]
+    public LayerMask playerHitLayer;
+    public string [] hitTags;
+    public int HeadShotDamage => (int) playerStats.GetDamageDone() * 2;
+    public int legsShotDamage =>(int) playerStats.GetDamageDone() / 2;
     
-
     public float currentAimShootPercentage =>playerStats.currentWeaponSelected.weapon.currentShootRefraction /playerStats.currentWeaponSelected.weapon.minShootRefraction;
 
     [Header("Player Movement")]
@@ -68,15 +73,15 @@ public class PlayerController : NetworkBehaviour
     Vector3 cameraDirection;
     Vector3 groundPivot;
     public LayerMask ground;
-
+    
     [Header("Player Actions")]
     float xRotation = 0f;
     float yRotation = 0f;
 
     public float reloadTime => 3/playerStats.GetHaste();
-    public float reloadCurrentTime = 0f;
-    public bool isReloading = false;
-
+    public bool lockShoot=false;
+    
+    
     [Header("Jumping")]
     [SerializeField] private float jumpHeight = 5f;
     [SerializeField] private Vector3 groundPos;
@@ -134,7 +139,6 @@ public class PlayerController : NetworkBehaviour
             isGroundedCheck();
             //be care
             Reloading();
-            CreateAimTargetPos();
 
             if (playerComponentsHandler.IsPlayerLocked())
             {
@@ -172,8 +176,11 @@ public class PlayerController : NetworkBehaviour
     {
         if (IsOwner)
         {
+            CreateAimTargetPos();
+
             isGroundedCheck();
             stateMachineController.StatePhysicsUpdate();
+
         }
 
     }
@@ -231,7 +238,6 @@ public class PlayerController : NetworkBehaviour
         characterController.Move(motion );
 
     }
-    
     
 
 
@@ -293,6 +299,10 @@ public class PlayerController : NetworkBehaviour
     }
     public void AimAinimation(ref float aimAnimation, NetworkAnimator networkAnimator)
     {
+        if (lockShoot)
+        {
+            return;
+        }
         if (Input.GetKey(KeyCode.Mouse1))
         {
             aimAnimation += Time.deltaTime * 5;
@@ -307,12 +317,52 @@ public class PlayerController : NetworkBehaviour
         networkAnimator.Animator.SetFloat("Aiming", 1);
 
     }
+    HitType CheckTags(string tag)
+    {
+        for (int i = 0; i < hitTags.Length; i++)
+        {
+            if (hitTags[i] == tag)
+            {
+                // Enum.TryParse(hitTags[i], out HitType hitType);
+
+                return (HitType)i;
+            }
+        }
+        
+        Debug.Log("No tag found");
+        return  (HitType)1;
+    }
+    
+    int CheckDamageTags(string tag)
+    {
+        
+        HitType hitType = CheckTags(tag);
+        switch (hitType)
+        {
+            case HitType.Head:
+                return HeadShotDamage;
+            case HitType.Chest:
+                return playerStats.GetDamageDone();
+            case HitType.BodyR:
+                return playerStats.GetDamageDone();
+            case HitType.BodyL:
+                return playerStats.GetDamageDone();
+            case HitType.Legs:
+                return legsShotDamage;
+            default:
+                return playerStats.GetDamageDone();
+        }
+
+    }
     public void Shoot()
-    {                
+    {
+        if (playerStats.currentWeaponSelected.weapon.ammoBehaviour.isReloading || lockShoot) return;
+        
         Vector3 direction = Vector3.zero;
         float randomRefraction =Random.Range(-playerStats.currentWeaponSelected.weapon.shootRefraction , playerStats.currentWeaponSelected.weapon.shootRefraction);
         playerStats.currentWeaponSelected.weapon.shootTimer += Time.deltaTime;
-        if (Input.GetKey(KeyCode.Mouse0) && playerStats.currentWeaponSelected.weapon.shootTimer > playerStats.currentWeaponSelected.weapon.shootRate && playerStats.currentWeaponSelected.ammoBehaviour.currentBullets > 0 && !isReloading)
+        if (Input.GetKey(KeyCode.Mouse0) && playerStats.currentWeaponSelected.weapon.shootTimer > playerStats.currentWeaponSelected.weapon.shootRate && 
+            playerStats.currentWeaponSelected.ammoBehaviour.currentBullets > 0 && !playerStats.currentWeaponSelected.ammoBehaviour.isReloading)
         {
 
             StartCoroutine(playerStats.playerComponentsHandler.ShakeCamera(0.1f, .9f, .7f));
@@ -323,61 +373,70 @@ public class PlayerController : NetworkBehaviour
             Vector3 shotDirection = new Vector3(cameraRef.transform.forward.x + randomRefraction, cameraRef.transform.forward.y + randomRefraction, cameraRef.transform.forward.z);
             
             if (Physics.Raycast(cameraRef.transform.position, shotDirection, out RaycastHit hit, 
-                    distanceFactor))
+                    distanceFactor, playerHitLayer))
             {
                 
                 // OnPlayerVfxAction?.Invoke(MyVfxType.hit ,hit.point);
                 PlayerVFXController.hitEffectHandle.CreateVFX(hit.point, transform.rotation ,IsServer);
+                
+                
+                BulletController bullet = Instantiate(bulletPrefab, spawnBulletPoint.position,
+                    cinemachineCameraTarget.rotation);
+                bullet.Direction =  (spawnBulletPoint.transform.position - hit.point).normalized;
+                bullet.damage.Value = playerStats.GetDamageDone();
 
-                hit.collider.gameObject.TryGetComponent<PlayerStatsController>(out PlayerStatsController enemyRef);
-                if (enemyRef)
-                {
-                    if (IsServer)
+                // if (hit.collider.includeLayers==playerHitLayer )
+                // {
+                    PlayerStatsController objectRef= hit.collider.gameObject.GetComponentInParent<PlayerStatsController>();
+                    if (objectRef!=null)
                     {
-                        enemyRef.TakeDamageClientRpc(playerStats.GetDamageDone());
-                        CrosshairCreator.OnHitDetected?.Invoke();
+                 
+                        if (objectRef)
+                        {
+                            HitData hitData =  DamageReceiverManager.instance.CheckHitType(hit.collider.gameObject.layer);
+                            // playerHitLayer
+                            float damageToDo=Mathf.Floor((float)playerStats.GetDamageDone() * hitData.damageAmplifier); ;
+                            Debug.Log("Damage to do: " + damageToDo);
+                            Debug.Log("Layer Tag: " + hit.collider.includeLayers);
+                            Debug.Log("Gameobject Name: " + hit.collider.gameObject.name);
+                    
+                    
+                            if (IsServer)
+                            {
+                                objectRef.TakeDamageClientRpc((int)damageToDo);
+                                CrosshairCreator.OnHitDetected?.Invoke(hitData.hitType);
 
-                    }
-                    if (IsClient)
-                    {
-                        enemyRef.TakeDamageServerRpc(playerStats.GetDamageDone());
-                        CrosshairCreator.OnHitDetected?.Invoke();
+                            }
+                            if (IsClient)
+                            {
+                                objectRef.TakeDamageServerRpc((int)damageToDo);
+                                CrosshairCreator.OnHitDetected?.Invoke(hitData.hitType);
 
+                            }
+                        }
                     }
-                    Debug.Log(enemyRef.name);
-                }
+                // }
+
             }
             else
             {
                 PlayerVFXController.hitEffectHandle.CreateVFX(hit.point, transform.rotation,IsServer);
+                
+                BulletController bullet = Instantiate(bulletPrefab, spawnBulletPoint.position,
+                    cinemachineCameraTarget.rotation);
 
+                bullet.Direction =  (spawnBulletPoint.transform.position - hit.point).normalized;
+                bullet.damage.Value = playerStats.GetDamageDone();
                 // OnPlayerVfxAction?.Invoke(MyVfxType.hit ,hit.point);
                 
             }
             // if (IsServer)
             // {
-            BulletController bullet = Instantiate(bulletPrefab, spawnBulletPoint.position,
-                cinemachineCameraTarget.rotation);
-            //     Physics.IgnoreCollision(bullet.GetComponent<Collider>(),characterController.GetComponent<Collider>());
-            //     Physics.IgnoreCollision(bullet.GetComponent<Collider>(),bullet.GetComponent<Collider>());
-            //
-                bullet.Direction = shotDirection.normalized ;
-                bullet.damage.Value = playerStats.GetDamageDone();
-            //     bullet.GetComponent<NetworkObject>().SpawnWithOwnership(NetworkManager.Singleton.LocalClientId, true);
-            // }
-            // else
-            // {
-            //     BulletController bullet = Instantiate(bulletPrefab, spawnBulletPoint.position, cinemachineCameraTarget.rotation);
-            //     Physics.IgnoreCollision(bullet.GetComponent<Collider>(),characterController.GetComponent<Collider>());
-            //     Physics.IgnoreCollision(bullet.GetComponent<Collider>(),bullet.GetComponent<Collider>());
-            //     bullet.Direction = direction.normalized + new Vector3(randomRefraction, randomRefraction, 0);
-            //     bullet.damage.Value = playerStats.GetDamageDone();
-            //     // bullet.GetComponent<NetworkObject>().SpawnWithOwnership(NetworkManager.Singleton.LocalClientId, true);
-            // }
-            // SpawnFakeBulletClientRpc(direction, playerStats.GetDamageDone(),randomRefraction);
+
+
             playerStats.currentWeaponSelected.weapon.currentShootRefraction = playerStats.currentWeaponSelected.weapon.shootRefraction + Random.Range(0 , playerStats.currentWeaponSelected.weapon.shootRefraction);
         }
-        else if(!(Input.GetKey(KeyCode.Mouse0) && playerStats.currentWeaponSelected.weapon.shootTimer > playerStats.currentWeaponSelected.weapon.shootRate && playerStats.currentWeaponSelected.ammoBehaviour.currentBullets > 0 && !isReloading))
+        else if(!(Input.GetKey(KeyCode.Mouse0) && playerStats.currentWeaponSelected.weapon.shootTimer > playerStats.currentWeaponSelected.weapon.shootRate && playerStats.currentWeaponSelected.ammoBehaviour.currentBullets > 0 && !playerStats.currentWeaponSelected.ammoBehaviour.isReloading))
         {
             playerStats.currentWeaponSelected.weapon.currentShootRefraction = playerStats.currentWeaponSelected.weapon.shootRefraction;
         }
@@ -392,7 +451,7 @@ public class PlayerController : NetworkBehaviour
     public void CreateAimTargetPos()
     {
 
-        if (Physics.Raycast(cameraRef.transform.position, cameraRef.transform.forward, out RaycastHit hit, distanceFactor))
+        if (Physics.Raycast(cameraRef.transform.position, cameraRef.transform.forward, out RaycastHit hit, distanceFactor, 1))
         {
             targetPos.position = hit.point;
             headAim.position = hit.point;
@@ -522,6 +581,7 @@ public class WeaponItem
 [System.Serializable]
 public class Weapon
 {
+    public WeaponAnimations changeWeaponAnimation;
     public Sprite weaponImage;
     public AmmoBehaviour ammoBehaviour;
     public string weaponName;
@@ -530,9 +590,9 @@ public class Weapon
     public float shootRefraction;
     public float currentShootRefraction;
     public float minShootRefraction;
- 
     public Weapon(AmmoBehaviour ammoBehaviour, WeaponTemplate weaponTemplate)
     {
+        this.changeWeaponAnimation = weaponTemplate.weaponAnimationState;
         this.weaponImage = weaponTemplate.weaponImage;
         this.ammoBehaviour =ammoBehaviour;
         this.weaponName = weaponTemplate.weaponName;
@@ -622,4 +682,12 @@ public enum WeaponType
 {
     Ak99=0,
     Pistol=1,
+}
+public enum HitType
+{
+    Head,
+    Chest,
+    BodyR,
+    BodyL,
+    Legs
 }

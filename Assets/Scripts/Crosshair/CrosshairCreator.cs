@@ -10,7 +10,7 @@ public class CrosshairCreator : MonoBehaviour
     public CrossHair crossHair;
     public CrosshairItem playerCrosshair;
     public float currentGapPrecision;
-    public static Action OnHitDetected;
+    public static Action <hitType>OnHitDetected;
     public float time = 0.5f;
 
     public PlayerController playerController;
@@ -38,9 +38,23 @@ public class CrosshairCreator : MonoBehaviour
         LoadCrosshair(crossHair);
 
     }
-    public void DisplayDamage()
+    public void DisplayDamage(hitType hitType)
     {
-        StartCoroutine(playerCrosshair.DisplayDamage(time));
+        switch (hitType)
+        {
+            case hitType.Head:
+                StartCoroutine(playerCrosshair.DisplayDamage(time, Color.red));
+                break;
+            case hitType.Chest:
+                StartCoroutine(playerCrosshair.DisplayDamage(time, Color.yellow));
+                break;
+            // case hitType.Legs:
+            //     StartCoroutine(playerCrosshair.DisplayDamage(time, Color.green));
+            //     break;
+            default:
+                StartCoroutine(playerCrosshair.DisplayDamage(time, Color.yellow));
+                break;                
+        }
     }
     void LoadCrosshair(CrossHair crossHair)
     {

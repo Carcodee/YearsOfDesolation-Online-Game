@@ -266,7 +266,7 @@ public class GameController : NetworkBehaviour
         {
             sphereRadius.radius -= mapLogic.Value.zoneRadiusExpandSpeed * Time.deltaTime;
             float currentRadius = sphereRadius.radius * 2;
-            sphereRadiusMesh.localScale = new Vector3(currentRadius,currentRadius,currentRadius) ;
+            sphereRadiusMesh.localScale = new Vector3(currentRadius,sphereRadiusMesh.localScale.y,currentRadius) ;
         }
     }
     #region ServerRpc
@@ -433,4 +433,5 @@ public enum zoneColors
     pink,
     brown,
 }
+
 

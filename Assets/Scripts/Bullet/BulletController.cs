@@ -66,7 +66,7 @@ public class BulletController : MonoBehaviour
     }
     private void FixedUpdate() 
     {
-        transform.position += Direction * speed * Time.deltaTime;
+        transform.position += -Direction * speed * Time.deltaTime;
 
     //     if (IsOwner)
     //     {
