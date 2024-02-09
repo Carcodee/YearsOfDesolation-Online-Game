@@ -59,7 +59,7 @@ Shader "Hidden/ImageShaderConfifs"
                 float alpha = lerp(_MinDifunationOffset, _MaxDifunationOffset, normalizedDistance);
 
                 // Apply the alpha value to the color
-                col = fixed4(col.r, col.g ,col.b ,alpha);
+                col = fixed4(col.rgb,alpha);
                 return col ;
             }
             ENDCG

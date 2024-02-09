@@ -61,7 +61,9 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
 
     [Header("NetCode")]
     public NetworkObject playerObj;
-
+    [Header("PlayerBuild")]
+    //public PlayerBuild playerBuildSelected;
+    bool hasPlayerSelectedBuild=false;
     
 
     public override void OnNetworkSpawn()
@@ -125,28 +127,6 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
 
     }
 
-    public void FillStatNameHolder()
-    {
-        statHolderNames = new string[6];
-        statHolderNames[0] =nameof (haste);
-        statHolderNames[1] = nameof(health);
-        statHolderNames[2] = nameof(stamina);
-        statHolderNames[3] = nameof(damage);
-        statHolderNames[4] = nameof(armor);
-        statHolderNames[5] = nameof(speed);
-
-
-    }
-    public void FillArrayHolder()
-    {
-        statHolder= new int[6];
-        statHolder[0]=haste.Value;
-        statHolder[1] = health.Value;
-        statHolder[2] = stamina.Value;
-        statHolder[3]= damage.Value;
-        statHolder[4] = armor.Value;
-        statHolder[5]= speed.Value;
-    }
 
 
 
@@ -231,14 +211,15 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
 
     public void HandleWeaponChange()
     {
+        if(!hasPlayerSelectedBuild)return;
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            stateMachineController.SetChangingWeaponState(doublePistols);
+            //stateMachineController.SetChangingWeaponState(playerBuildSelected.first_weapon);
              // currentWeaponSelected = doublePistols;
         }
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            stateMachineController.SetChangingWeaponState(ak47);
+            //stateMachineController.SetChangingWeaponState(playerBuildSelected.second_weapon);
             // currentWeaponSelected = ak47;
         }
     }
@@ -402,7 +383,9 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
     public void LevelUp()
     {
         playerLevel.Value++;
+        maxHealth.Value += 1;
     }
+    
     public void AddAvaliblePoint()
     {
         avaliblePoints.Value++;
