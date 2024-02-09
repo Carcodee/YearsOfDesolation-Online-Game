@@ -41,11 +41,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
     public int[] statHolder;
     public bool isPlayerInsideTheZone;
     
-    [Header("Weapons")]
-    public WeaponItem currentWeaponSelected;
-    public WeaponItem ak47;
-    public WeaponItem doublePistols;
-    public WeaponTemplate [] weaponsData;
+
     
     [Header("Current Gamelogic")]
     public NetworkVariable<zoneColors> zoneAsigned=new NetworkVariable<zoneColors>();
@@ -65,7 +61,13 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
     //public PlayerBuild playerBuildSelected;
     bool hasPlayerSelectedBuild=false;
     
-
+    [Header("Weapons")]
+    public WeaponItem currentWeaponSelected;
+    public WeaponItem ak47;
+    public WeaponItem doublePistols;
+    public WeaponTemplate [] weaponsData;
+    //temporal variable
+    public bool isChangingWeapon=false;
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
@@ -211,15 +213,19 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
 
     public void HandleWeaponChange()
     {
-        if(!hasPlayerSelectedBuild)return;
+        // if(!hasPlayerSelectedBuild)return;
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            //stateMachineController.SetChangingWeaponState(playerBuildSelected.first_weapon);
-             // currentWeaponSelected = doublePistols;
+            stateMachineController.SetChangingWeaponState(doublePistols);
+            // stateMachineController.SetChangingWeaponState(playerBuildSelected.first_weapon);
+
+            // currentWeaponSelected = doublePistols;
         }
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            //stateMachineController.SetChangingWeaponState(playerBuildSelected.second_weapon);
+            stateMachineController.SetChangingWeaponState(ak47);
+            // stateMachineController.SetChangingWeaponState(playerBuildSelected.second_weapon);
+
             // currentWeaponSelected = ak47;
         }
     }

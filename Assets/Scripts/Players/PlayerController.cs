@@ -53,7 +53,7 @@ public class PlayerController : NetworkBehaviour
     public int HeadShotDamage => (int) playerStats.GetDamageDone() * 2;
     public int legsShotDamage =>(int) playerStats.GetDamageDone() / 2;
     
-    public float currentAimShootPercentage =>playerStats.currentWeaponSelected.weapon.currentShootRefraction /playerStats.currentWeaponSelected.weapon.minShootRefraction;
+    public float currentAimShootPercentage =>playerStats.currentWeaponSelected.weapon.currentShootRefraction / playerStats.currentWeaponSelected.weapon.minShootRefraction;
 
     [Header("Player Movement")]
     public Vector3 move;

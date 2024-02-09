@@ -1,6 +1,7 @@
 using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
+using Menu.StatsPanel;
 using Unity.Netcode;
 using UnityEngine;
 using TMPro;
@@ -23,8 +24,8 @@ public class PlayerComponentsHandler : NetworkBehaviour
     private Rigidbody rb;
 
     [Header("Ref")]
-    private CinemachineVirtualCamera cinemachineVirtualCameraInstance;
-    private CinemachineVirtualCamera cinmachineCloseLookCameraIntance;
+    public CinemachineVirtualCamera cinemachineVirtualCameraInstance;
+    public CinemachineVirtualCamera cinmachineCloseLookCameraIntance;
 
     [Header("UI")]
     public TextMeshProUGUI playerNameText;
@@ -182,14 +183,14 @@ public class PlayerComponentsHandler : NetworkBehaviour
     }
     private void TransitionCamera()
     {
-        if (Input.GetKey(KeyCode.Mouse1))
+        
+        if (Input.GetKeyDown(KeyCode.Mouse1))
         {
             cinmachineCloseLookCameraIntance.Priority = 20;
         }
-        else
+        if (Input.GetKeyUp(KeyCode.Mouse1))
         {
             cinmachineCloseLookCameraIntance.Priority = 5;
-
         }
     }
     public IEnumerator ShakeCamera(float duration, float magnitude, float frecuency)

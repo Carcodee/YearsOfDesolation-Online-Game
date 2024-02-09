@@ -103,7 +103,7 @@ namespace Players.PlayerStates
         }
         public void SetChangingWeaponState(WeaponItem weaponItem)
         {
-            changingWeaponState.weapontToChange = weaponItem;
+            changingWeaponState.weaponToChange = weaponItem;
             SetState("ChangingWeapon");
         }
 

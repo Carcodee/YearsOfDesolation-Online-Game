@@ -16,41 +16,52 @@ public class ChangingWeaponState : PlayerStateBase
         bool isBattleRoyale;
         float currentRespawnTimer;
         int layerIndex;
-        public WeaponItem weapontToChange;
+        public WeaponItem weaponToChange;
         WeaponItem oldWeapon;
         Vector2 animInput;
+        bool isAimingInAtLastFrame;
         public override void StateEnter()
         {
             playerRef.sprintFactor = 1;
             playerRef.hasPlaned = false;
-
+            networkAnimator.Animator.SetFloat("Aiming", 0);
+            playerRef.playerStats.playerComponentsHandler.cinmachineCloseLookCameraIntance.Priority = 5;
             playerRef.lockShoot = true;
-            layerIndex = networkAnimator.Animator.GetLayerIndex(weapontToChange.weapon.changeWeaponAnimation.LayerName);
+            layerIndex = networkAnimator.Animator.GetLayerIndex(weaponToChange.weapon.changeWeaponAnimation.LayerName);
             oldWeapon = playerRef.playerStats.currentWeaponSelected;
-            playerRef.playerStats.SetWeapon(weapontToChange);
+            playerRef.playerStats.SetWeapon(weaponToChange);
             
-            networkAnimator.Animator.Play(weapontToChange.weapon.changeWeaponAnimation.weaponChange);
+            networkAnimator.Animator.Play(weaponToChange.weapon.changeWeaponAnimation.weaponChange);
             
-            MyUtilities.SetDefaultUpperLayer(networkAnimator.Animator, weapontToChange.weapon.changeWeaponAnimation.LayerName, 
+            MyUtilities.SetDefaultUpperLayer(networkAnimator.Animator, weaponToChange.weapon.changeWeaponAnimation.LayerName, 
                 oldWeapon.weapon.changeWeaponAnimation.LayerName);
             
-            networkAnimator.Animator.GetLayerIndex(weapontToChange.weapon.changeWeaponAnimation.LayerName);
+            networkAnimator.Animator.GetLayerIndex(weaponToChange.weapon.changeWeaponAnimation.LayerName);
+            playerRef.playerStats.currentWeaponSelected = weaponToChange;
+
         }
 
         public override void StateExit()
         {
-            playerRef.playerStats.currentWeaponSelected = weapontToChange;
+            // playerRef.playerStats.currentWeaponSelected = weaponToChange;
             playerRef.lockShoot = false;
+            if(isAimingInAtLastFrame)
+            {
+                playerRef.playerStats.playerComponentsHandler.cinmachineCloseLookCameraIntance.Priority = 20;
+            }
+
 
         }
 
         public override void StateLateUpdate()
         {
-            if (!MyUtilities.IsAnimationPlaying(networkAnimator.Animator, weapontToChange.weapon.changeWeaponAnimation.weaponChange,layerIndex))
+            if (!MyUtilities.IsAnimationPlaying(networkAnimator.Animator, weaponToChange.weapon.changeWeaponAnimation.weaponChange,layerIndex))
             {
                 stateMachineController.SetState("Movement");
+                return;
             }
-            
+            playerRef.playerStats.playerComponentsHandler.cinmachineCloseLookCameraIntance.Priority = 5;
+            isAimingInAtLastFrame = Input.GetKey(KeyCode.Mouse1);   
         }
 
         public override void StateInput()

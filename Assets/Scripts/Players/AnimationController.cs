@@ -117,9 +117,9 @@ public class AnimationController : NetworkBehaviour
         {
             aimAnimation -= Time.deltaTime * 5;
         }
-            aimAnimation = Mathf.Clamp(aimAnimation, 0, 1);
-            float LerpedAnim = Mathf.Clamp(Mathf.Lerp(0, 1, aimAnimation), 0, 1);
-            networkAnimator.Animator.SetFloat("Aiming", aimAnimation);
+        aimAnimation = Mathf.Clamp(aimAnimation, 0, 1);
+        float LerpedAnim = Mathf.Clamp(Mathf.Lerp(0, 1, aimAnimation), 0, 1);
+        networkAnimator.Animator.SetFloat("Aiming", aimAnimation);
 
     }
 
