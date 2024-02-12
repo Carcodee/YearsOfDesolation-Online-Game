@@ -13,7 +13,7 @@ namespace Players.PlayerStates.States
         Vector3 moveDir;
         public override void StateEnter()
         {
-            networkAnimator.Animator.Play("Falling",0);
+            networkAnimator.Animator.SetBool("Fall",true);
             playerRef._bodyVelocity.y = 0;
             moveDir = playerRef.move;
             this.playerRef.gravityMultiplier = 1;
@@ -23,15 +23,16 @@ namespace Players.PlayerStates.States
         public override void StateExit()
         {
             //animation
+            networkAnimator.Animator.SetBool("Fall",false);
 
 
         }
 
         public override void StateInput()
         {
-            float x= Input.GetAxis("Horizontal");
-            float y= Input.GetAxis("Vertical");
-            this.playerRef.Move(x, y);
+            float x= Input.GetAxis("Horizontal")*0.3f;
+            float y= Input.GetAxis("Vertical")*0.3f;
+            this.playerRef.Move(moveDir.x +x,moveDir.z+ y);
         }
 
         public override void StateUpdate()

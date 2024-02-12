@@ -4,7 +4,6 @@ using Cinemachine;
 using UnityEngine;
 using Cinemachine.Utility;
 using Unity.Netcode;
-using UnityEditor.Animations;
 
 public static class MyUtilities
 {

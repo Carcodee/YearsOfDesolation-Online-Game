@@ -9,7 +9,12 @@ namespace Players.PlayerStates
     {
         [Tooltip("All my states")]
         public StateMachineBase[] states;
+        public StateMachineBase [] weaponStates { get; private set; }
+        
         public StateMachineBase currentState { get; private set; }
+        public StateMachineBase myWeaponState { get; private set; }
+
+        [Header("Player States")]
         public MovementState movementState;
         public JumpState jumpState;
         public SprintState sprintState;
@@ -19,11 +24,15 @@ namespace Players.PlayerStates
         public FallingState FallingState;
         public JetpackState jetpackState;
         public DeadState deadState;
+        
+        [Header("Weapon States")]
         public ChangingWeaponState changingWeaponState;
+        public OnWeaponState onWeaponState;
+        
 
         public NetworkAnimator networkAnimator;
 
-
+        public bool changingWeapon; 
         public void Initializate()
         {
             movementState = new MovementState("Movement", this);
@@ -36,8 +45,11 @@ namespace Players.PlayerStates
             jetpackState = new JetpackState("Jetpack", this);
             deadState = new DeadState("Dead", this);
             changingWeaponState = new ChangingWeaponState("ChangingWeapon", this);
+            onWeaponState = new OnWeaponState("OnWeapon", this);
             
-            states =new StateMachineBase[10];
+
+
+            states =new StateMachineBase[9];
             states[0]=movementState;
             states[1]=jumpState;
             states[2]=sprintState;
@@ -47,7 +59,11 @@ namespace Players.PlayerStates
             states[6]=FallingState;
             states[7]=jetpackState;
             states[8]=deadState;
-            states[9]=changingWeaponState;
+            
+            weaponStates = new StateMachineBase[2];
+            
+            weaponStates[0] = onWeaponState;
+            weaponStates[1] = changingWeaponState;
 
             // for (int i = 0; i < states.Length; i++)
             // {
@@ -55,20 +71,30 @@ namespace Players.PlayerStates
             // }
 
 
+            
             if (states != null && states.Length > 0)
             {
                 string initialStateName = states[0].stateName;
                 SetState(initialStateName);
+            }
+            
+            if (weaponStates != null && weaponStates.Length > 0)
+            {
+                string initialStateName = weaponStates[0].stateName;
+                SetWeaponState(initialStateName);
             }
         }
 
 
         public void StateUpdate()
         {
+
             if (currentState != null )
             {
                 currentState.StateUpdate();
                 // Debug.Log(currentState.stateName);
+                myWeaponState.StateUpdate();
+               
             }
         }
 
@@ -77,6 +103,7 @@ namespace Players.PlayerStates
             if (currentState != null)
             {
                 currentState.StatePhysicsUpdate();
+                myWeaponState.StatePhysicsUpdate();
             }
         }
 
@@ -85,11 +112,13 @@ namespace Players.PlayerStates
             if (currentState != null)
             {
                 currentState.StateLateUpdate();
+                myWeaponState.StateLateUpdate();
+
             }
         }
         public void SetState(string statename)
         {
-            StateMachineBase nextState = GetStateWithName(statename);
+            StateMachineBase nextState = GetStateWithName(statename, states);
             if (nextState == null) return;
             //Exit state execution
             if (currentState != null)
@@ -101,15 +130,29 @@ namespace Players.PlayerStates
             //Entry state execution
             currentState.StateEnter();
         }
-        public void SetChangingWeaponState(WeaponItem weaponItem)
+        public void SetWeaponState(string statename)
+        {
+            StateMachineBase nextState = GetStateWithName(statename, weaponStates);
+            if (nextState == null) return;
+            //Exit state execution
+            if (myWeaponState != null)
+            {
+                myWeaponState.StateExit();
+            }
+            //New state
+            myWeaponState = nextState;
+            //Entry state execution
+            myWeaponState.StateEnter();
+        }
+        public void SetChangingWeaponState(WeaponItem weaponItem, string statename)
         {
             changingWeaponState.weaponToChange = weaponItem;
-            SetState("ChangingWeapon");
+            SetWeaponState(statename);
         }
 
-        private StateMachineBase GetStateWithName(string stateName)
+        private StateMachineBase GetStateWithName(string stateName, StateMachineBase[] stateMachine)
         {
-            foreach (StateMachineBase state in states)
+            foreach (StateMachineBase state in stateMachine)
             {
                 if (state.stateName == stateName)
                 {

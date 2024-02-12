@@ -216,14 +216,14 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
         // if(!hasPlayerSelectedBuild)return;
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            stateMachineController.SetChangingWeaponState(doublePistols);
+            stateMachineController.SetChangingWeaponState(doublePistols, "ChangingWeapon");
             // stateMachineController.SetChangingWeaponState(playerBuildSelected.first_weapon);
 
             // currentWeaponSelected = doublePistols;
         }
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            stateMachineController.SetChangingWeaponState(ak47);
+            stateMachineController.SetChangingWeaponState(ak47,"ChangingWeapon");
             // stateMachineController.SetChangingWeaponState(playerBuildSelected.second_weapon);
 
             // currentWeaponSelected = ak47;

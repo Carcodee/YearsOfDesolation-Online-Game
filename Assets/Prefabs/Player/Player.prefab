@@ -1032,6 +1032,13 @@ MonoBehaviour:
   statHolderNames: []
   statHolder: 
   isPlayerInsideTheZone: 0
+  zoneAsigned:
+    m_InternalValue: 0
+  coinPosition: {fileID: 0}
+  playerZoneController: {fileID: 0}
+  currentOutsideTimerTick: 0
+  outsideTimerTick: 1
+  playerObj: {fileID: 0}
   currentWeaponSelected:
     weapon:
       changeWeaponAnimation:
@@ -1113,13 +1120,7 @@ MonoBehaviour:
   weaponsData:
   - {fileID: 11400000, guid: 8094bc5eafa57f148986c1b564d9bdff, type: 2}
   - {fileID: 11400000, guid: 09053af27b0f7f14ebdec2652680da5e, type: 2}
-  zoneAsigned:
-    m_InternalValue: 0
-  coinPosition: {fileID: 0}
-  playerZoneController: {fileID: 0}
-  currentOutsideTimerTick: 0
-  outsideTimerTick: 1
-  playerObj: {fileID: 0}
+  isChangingWeapon: 0
 --- !u!114 &811542298380123267
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1137,7 +1138,7 @@ MonoBehaviour:
     stateMachineController: {fileID: 0}
     playerRef: {fileID: 0}
     networkAnimator: {fileID: 0}
-  networkAnimator: {fileID: 3979470342932564088}
+  networkAnimator: {fileID: 2856279236233978984}
 --- !u!114 &1071611250771317373
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1160,6 +1161,8 @@ MonoBehaviour:
     type: 3}
   cameraZoomPrefab: {fileID: 2763996978624655819, guid: 71f46dd685b5bea43acdc3ab47188dd7,
     type: 3}
+  cinemachineVirtualCameraInstance: {fileID: 0}
+  cinmachineCloseLookCameraIntance: {fileID: 0}
   playerNameText: {fileID: 0}
   statsPanelController: {fileID: 0}
   pauseController: {fileID: 0}
@@ -2069,15 +2072,15 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3188ab0e172514f4e89a344fe791396d,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 3979470342932564088}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3188ab0e172514f4e89a344fe791396d,
-        type: 3}
-      insertIndex: -1
       addedObject: {fileID: 7421565325209637225}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3188ab0e172514f4e89a344fe791396d,
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 2707607439640781054}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3188ab0e172514f4e89a344fe791396d,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2856279236233978984}
   m_SourcePrefab: {fileID: 100100000, guid: 3188ab0e172514f4e89a344fe791396d, type: 3}
 --- !u!4 &20908911416046013 stripped
 Transform:
@@ -2724,20 +2727,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &3979470342932564088
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5937308204704082533}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TransitionStateInfoList: []
-  m_Animator: {fileID: 6549821381476079344}
 --- !u!114 &7421565325209637225
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2928,6 +2917,20 @@ MonoBehaviour:
   - {fileID: 3511753470317159943}
   - {fileID: 1581052002707129616}
   - {fileID: 6656804050540925923}
+--- !u!114 &2856279236233978984
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5937308204704082533}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e487e2e48c133124ea2e3497eedad86a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TransitionStateInfoList: []
+  m_Animator: {fileID: 6549821381476079344}
 --- !u!4 &5973674276429154672 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 883310885309374020, guid: 3188ab0e172514f4e89a344fe791396d,

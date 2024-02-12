@@ -57,7 +57,7 @@ public class ChangingWeaponState : PlayerStateBase
         {
             if (!MyUtilities.IsAnimationPlaying(networkAnimator.Animator, weaponToChange.weapon.changeWeaponAnimation.weaponChange,layerIndex))
             {
-                stateMachineController.SetState("Movement");
+                stateMachineController.SetChangingWeaponState(weaponToChange, "OnWeapon");
                 return;
             }
             playerRef.playerStats.playerComponentsHandler.cinmachineCloseLookCameraIntance.Priority = 5;
@@ -89,6 +89,51 @@ public class ChangingWeaponState : PlayerStateBase
             StateInput();
             this.networkAnimator.Animator.SetFloat("X", animInput.x);
             this.networkAnimator.Animator.SetFloat("Y", animInput.y);
+        }
+
+
+
+
+}
+public class OnWeaponState : PlayerStateBase
+{
+
+        public OnWeaponState(string name, StateMachineController stateMachineController) : base(name, stateMachineController)
+        {
+            playerRef = stateMachineController.GetComponent<PlayerController>();
+            networkAnimator = stateMachineController.networkAnimator;
+
+        }
+        public override void StateEnter()
+        {
+
+
+        }
+
+        public override void StateExit()
+        {
+  
+
+        }
+
+        public override void StateLateUpdate()
+        {
+
+        }
+
+        public override void StateInput()
+        {
+ 
+        }
+
+        public override void StatePhysicsUpdate()
+        {
+
+        }
+
+        public override void StateUpdate()
+        {
+
         }
 
 

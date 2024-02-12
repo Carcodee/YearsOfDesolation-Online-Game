@@ -67,7 +67,8 @@ public class PlayerController : NetworkBehaviour
     public float crouchFactor = 0.5f;
     public float AimingSpeedFactor = 0.5f;
     private float slidingTimer = 0f;
-
+    public Vector3 motionSpeed;
+    
     [Header("Camera Direction")]
     private int distanceFactor = 100;
     Vector3 cameraDirection;
@@ -233,9 +234,9 @@ public class PlayerController : NetworkBehaviour
     
     public void ApplyMovement(Vector3 movement)
     {
-        Vector3 motion= movement * playerStats.GetSpeed() * sprintFactor * Time.deltaTime;
-        motion=transform.rotation * motion;
-        characterController.Move(motion );
+        motionSpeed= movement * playerStats.GetSpeed() * sprintFactor * Time.deltaTime;
+        motionSpeed=transform.rotation * motionSpeed;
+        characterController.Move(motionSpeed );
 
     }
     

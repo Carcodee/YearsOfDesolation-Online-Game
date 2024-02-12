@@ -35,7 +35,7 @@ namespace Players.PlayerStates.States
                 x = 0;
                 y = 0;
             }
-            animInput=new Vector2(x * this.playerRef.moveAnimationSpeed, y * this.playerRef.moveAnimationSpeed);
+            animInput=new Vector2(x /** this.playerRef.moveAnimationSpeed*/, y /** this.playerRef.moveAnimationSpeed*/);
 
             this.playerRef.Move(x, y);
         }
@@ -60,7 +60,7 @@ namespace Players.PlayerStates.States
                 stateMachineController.SetState("Sprint");
                 return;
             }
-            if (Input.GetKeyDown(KeyCode.LeftAlt))
+            if (Input.GetKeyDown(KeyCode.LeftControl))
             {
                 stateMachineController.SetState("Crouch");
                 return;
