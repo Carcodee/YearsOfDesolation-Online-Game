@@ -35,7 +35,7 @@ namespace Players.PlayerStates.States
                 x = 0;
                 y = 0;
             }
-            animInput=new Vector2(x /** this.playerRef.moveAnimationSpeed*/, y /** this.playerRef.moveAnimationSpeed*/);
+            animInput=new Vector2(x , y);
 
             this.playerRef.Move(x, y);
         }

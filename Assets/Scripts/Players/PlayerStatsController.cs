@@ -59,7 +59,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
     public NetworkObject playerObj;
     [Header("PlayerBuild")]
     //public PlayerBuild playerBuildSelected;
-    bool hasPlayerSelectedBuild=false;
+    public bool hasPlayerSelectedBuild=false;
     
     [Header("Weapons")]
     public WeaponItem currentWeaponSelected;

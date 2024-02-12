@@ -11,18 +11,14 @@ public class PlayerBuild
     public WeaponItem second_weapon;
     public int currentBuildUpgrade=0;
     public int currentBuildUpgradeCost=0;
-
-    public PlayerBuild() {
-        this.first_weapon = new WeaponItem(first_weapon_Template);
-        this.second_weapon = new WeaponItem(second_weapon_Template);
-    }
+    
 
     
-    public PlayerBuild(WeaponItem first_weapon, WeaponItem second_weapon) {
-        this.first_weapon = first_weapon;
-        this.second_weapon = second_weapon;
+    public PlayerBuild(WeaponTemplate first_weapon, WeaponTemplate second_weapon) {
+        this.first_weapon =new WeaponItem(first_weapon) ;
+        this.second_weapon = new WeaponItem(second_weapon);
     }
-    
+
 
     public virtual void Upgrade(int weaponIdex, int MoneyEarned) {
     }
@@ -33,19 +29,9 @@ public class PlayerBuild
 
 public class AK_PistolBuild : PlayerBuild {
 
-
-
-    public AK_PistolBuild() {
-        this.first_weapon = new WeaponItem(first_weapon_Template);
-        this.second_weapon = new WeaponItem(second_weapon_Template);
+    public AK_PistolBuild(WeaponTemplate first_weapon, WeaponTemplate second_weapon) : base(first_weapon, second_weapon) {
+        
     }
-
-
-    public AK_PistolBuild(WeaponItem first_weapon, WeaponItem second_weapon) {
-        this.first_weapon = first_weapon;
-        this.second_weapon = second_weapon;
-    }
-
     public override void Upgrade(int weaponIdex, int MoneyEarned) {
         if (currentBuildUpgrade < currentBuildUpgradeCost) {
             Debug.Log("Not enough money to upgrade weapon");

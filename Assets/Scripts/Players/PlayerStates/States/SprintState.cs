@@ -9,6 +9,7 @@ namespace Players.PlayerStates.States
             playerRef = stateMachineController.GetComponent<PlayerController>();
             networkAnimator = stateMachineController.networkAnimator;
         }
+        float lerpTimeToSprint= 0;
         public override void StateEnter()
         {
             base.StateEnter();
@@ -17,7 +18,9 @@ namespace Players.PlayerStates.States
 
         public override void StateExit()
         {
-            this.networkAnimator.Animator.SetBool("Sprint", false);
+            // this.networkAnimator.Animator.SetBool("Sprint", false);
+            lerpTimeToSprint=0;
+
         }
 
         public override void StateInput()
@@ -25,16 +28,21 @@ namespace Players.PlayerStates.States
             float x = Input.GetAxis("Horizontal");
             float y = Input.GetAxis("Vertical");
             this.playerRef.Move(x,y);
+            float z = Input.GetAxis("Sprint1");
+            lerpTimeToSprint += Time.deltaTime;
+            lerpTimeToSprint = Mathf.Clamp(lerpTimeToSprint, 0, 1);
+            float lerp = Mathf.Lerp(playerRef.move.z, 2, easeOutQuart(lerpTimeToSprint));
+            this.networkAnimator.Animator.SetFloat("X", this.playerRef.move.x*2);
+            this.networkAnimator.Animator.SetFloat("Y", lerp);
         }
 
         public override void StateUpdate()
         {
             StateInput();
 
-            this.networkAnimator.Animator.SetFloat("X", this.playerRef.move.x);
-            this.networkAnimator.Animator.SetFloat("Y", this.playerRef.move.z);
-            this.networkAnimator.Animator.SetFloat("Speed", this.playerRef.sprintFactor);
 
+            // this.networkAnimator.Animator.SetFloat("Speed", this.playerRef.sprintFactor);
+            
             this.networkAnimator.Animator.SetBool("Sprint", true);
             if (!playerRef.isGrounded)
             {
@@ -72,5 +80,14 @@ namespace Players.PlayerStates.States
             this.playerRef.RotatePlayer();
 
         }
+        float easeOutQuart(float time) {
+            return 1 - Mathf.Pow(1 - time, 4);
+        }
+        float LerpToMovement(int Start, int End,ref float  lerpTime)
+        {
+             float lerp = Mathf.Lerp(Start, End, lerpTime);
+             return lerpTime;
+        }
+
     }
 }
