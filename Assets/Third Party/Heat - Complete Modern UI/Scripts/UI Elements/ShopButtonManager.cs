@@ -164,7 +164,7 @@ namespace Michsky.UI.Heat
             if (enableIcon && iconObj != null) { iconObj.gameObject.SetActive(true); iconObj.sprite = buttonIcon; }
             else if (iconObj != null) { iconObj.gameObject.SetActive(false); }
 
-            if (enableTitle && titleObj != null) { titleObj.gameObject.SetActive(true); titleObj.text = buttonTitle; }
+    if (enableTitle && titleObj != null) { titleObj.gameObject.SetActive(true); titleObj.text = buttonTitle; }
             else if (titleObj != null) { titleObj.gameObject.SetActive(false); }
 
             if (enableDescription && descriptionObj != null) { descriptionObj.gameObject.SetActive(true); descriptionObj.text = buttonDescription; }
