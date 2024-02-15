@@ -25,14 +25,18 @@ public class CanvasController : MonoBehaviour
     
     [Header("Player")]
     public TextMeshProUGUI level;
-    public TextMeshProUGUI totalAmmo;
     public TextMeshProUGUI hp;
     public TextMeshProUGUI exp;
 
+    [Header("HUD")]
     public TextMeshProUGUI currentBullets;
     public QuestItem weaponName;
     public RadialSlider expSlider;
+    public TextMeshProUGUI totalAmmo;
+    public TextMeshProUGUI TotalOnBagAmmo;
     public Image currentWeaponImage;
+    public Image secondWeaponImage;
+    public TextMeshProUGUI secondWeaponBullets;
     
     
     [Header("DeadScreen")] 
@@ -46,7 +50,10 @@ public class CanvasController : MonoBehaviour
     [Header("Health")]
     public ProgressBar healthBar;
 
-
+    [Header("Reloading")]
+    public SliderManager sliderManager;
+    public GameObject reloadingObject;
+    
     [Header("Ref")]
     public PlayerStatsController playerAssigned;
     public PlayerController playerController;
@@ -71,7 +78,10 @@ public class CanvasController : MonoBehaviour
         
         //TODO: bullets are not being updated
         currentBullets.text = playerAssigned.currentWeaponSelected.ammoBehaviour.currentBullets.ToString() ;
-        currentWeaponImage.sprite = playerAssigned.currentWeaponSelected.weapon.weaponImage;
+        secondWeaponBullets.text = playerAssigned.onBagWeapon.ammoBehaviour.currentBullets.ToString();
+        currentWeaponImage.sprite = playerAssigned.onBagWeapon.weapon.weaponImage;
+        secondWeaponImage.sprite = playerAssigned.onBagWeapon.weapon.weaponImage;
+        
 
     }
 
@@ -83,6 +93,7 @@ public class CanvasController : MonoBehaviour
         SetTimer();
         DisplayPlayersConnected();
         DisplayBullets();
+        Reloading();
         if (playerController.stateMachineController.currentState.stateName== "Dead")
         {
             timeToSpawn.gameObject.SetActive(true);
@@ -97,6 +108,23 @@ public class CanvasController : MonoBehaviour
     
     }
 
+    public void Reloading()
+    {
+        if (playerAssigned.currentWeaponSelected.ammoBehaviour.isReloading)
+        {
+            reloadingObject.SetActive(true);
+            sliderManager.mainSlider.maxValue = playerAssigned.currentWeaponSelected.ammoBehaviour.reloadTime.statValue;
+            sliderManager.mainSlider.value = playerAssigned.currentWeaponSelected.ammoBehaviour.reloadTime.statValue - playerAssigned.currentWeaponSelected.ammoBehaviour.reloadCurrentTime;
+            sliderManager.UpdateUI();
+        }
+        else
+        {
+            reloadingObject.SetActive(false);
+        }
+        
+        
+    }
+    
     public void SetStats(int oldValue, int newValue)
     {
         /*(float) playerAssigned.maxHealth*10*/
@@ -183,6 +211,10 @@ public class CanvasController : MonoBehaviour
         totalAmmo.text = playerAssigned.currentWeaponSelected.ammoBehaviour.totalAmmo.ToString();
         // currentBullets.text = playerAssigned.currentBullets.ToString();
         currentWeaponImage.sprite = playerAssigned.currentWeaponSelected.weapon.weaponImage;
+        
+        secondWeaponBullets.text = playerAssigned.onBagWeapon.ammoBehaviour.currentBullets.ToString();
+        secondWeaponImage.sprite = playerAssigned.onBagWeapon.weapon.weaponImage;
+        TotalOnBagAmmo.text = playerAssigned.onBagWeapon.ammoBehaviour.totalAmmo.ToString();
 
 
     }

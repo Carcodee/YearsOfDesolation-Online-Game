@@ -58,11 +58,12 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
     [Header("NetCode")]
     public NetworkObject playerObj;
     [Header("PlayerBuild")]
-    //public PlayerBuild playerBuildSelected;
+    public PlayerBuild playerBuildSelected;
     public bool hasPlayerSelectedBuild=false;
     
     [Header("Weapons")]
     public WeaponItem currentWeaponSelected;
+    public WeaponItem onBagWeapon;
     public WeaponItem ak47;
     public WeaponItem doublePistols;
     public WeaponTemplate [] weaponsData;
@@ -130,7 +131,15 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
     }
 
 
-
+    public void SelectBuild(PlayerBuild build)
+    {
+        playerBuildSelected = build;
+        hasPlayerSelectedBuild = true;
+        currentWeaponSelected = playerBuildSelected.first_weapon;
+        onBagWeapon = playerBuildSelected.second_weapon;
+        playerBuildSelected.CreateDataBuild();
+        
+    }
 
     void InitializateStats()
     {
@@ -163,6 +172,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
         ak47 = new WeaponItem(weaponsData[(int)WeaponType.Ak99]);
         doublePistols = new WeaponItem(weaponsData[(int)WeaponType.Pistol]);
         SetWeapon(ak47);
+        onBagWeapon = doublePistols;
         transform.GetComponent<PlayerController>().SetSpeedStateServerRpc(statsTemplates[statsTemplateSelected.Value].speed);
         OnStatsChanged?.Invoke();
     }
@@ -217,6 +227,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             stateMachineController.SetChangingWeaponState(doublePistols, "ChangingWeapon");
+            onBagWeapon = ak47;
             // stateMachineController.SetChangingWeaponState(playerBuildSelected.first_weapon);
 
             // currentWeaponSelected = doublePistols;
@@ -225,7 +236,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
         {
             stateMachineController.SetChangingWeaponState(ak47,"ChangingWeapon");
             // stateMachineController.SetChangingWeaponState(playerBuildSelected.second_weapon);
-
+            onBagWeapon = doublePistols;
             // currentWeaponSelected = ak47;
         }
     }

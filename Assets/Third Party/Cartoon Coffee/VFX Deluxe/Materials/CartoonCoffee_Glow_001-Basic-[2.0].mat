@@ -2,20 +2,26 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!21 &2100000
 Material:
-  serializedVersion: 6
+  serializedVersion: 8
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: CartoonCoffee_Glow_001-Basic-[2.0]
   m_Shader: {fileID: 4800000, guid: 6b10eff4bdd4fe145b220a0c2cdbe77d, type: 3}
-  m_ShaderKeywords: ETC1_EXTERNAL_ALPHA _ENABLEADJUSTCOLOR_ON
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - _ENABLEADJUSTCOLOR_ON
+  m_InvalidKeywords:
+  - ETC1_EXTERNAL_ALPHA
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -51,6 +57,7 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    m_Ints: []
     m_Floats:
     - _AdjustColorBrightness: 3
     - _AdjustColorContrast: 1
@@ -99,3 +106,4 @@ Material:
     - _UVDistortSpeed: {r: 6, g: 6, b: 0, a: 0}
     - _UVDistortTo: {r: 1, g: 1, b: 0, a: 0}
     - _UVScrollSpeed: {r: 0.2, g: 0, b: 0, a: 0}
+  m_BuildTextureStacks: []

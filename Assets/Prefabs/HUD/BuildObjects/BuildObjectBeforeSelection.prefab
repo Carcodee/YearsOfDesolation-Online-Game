@@ -87,8 +87,8 @@ MonoBehaviour:
   enableIcon: 1
   enableText: 1
   useCustomContent: 0
-  useCustomTextSize: 0
-  checkForDoubleClick: 1
+  useCustomTextSize: 1
+  checkForDoubleClick: 0
   useLocalization: 1
   bypassUpdateOnEnable: 0
   bypassControllerManager: 0
@@ -100,11 +100,23 @@ MonoBehaviour:
   selectOnRight: {fileID: 0}
   wrapAround: 0
   useSounds: 1
-  doubleClickPeriod: 0.25
-  fadingMultiplier: 8
+  doubleClickPeriod: 0.1
+  fadingMultiplier: 6.8
   onClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1400457343953675989}
+        m_TargetAssemblyTypeName: Menu.StatsPanel.BuildObjectHandler, Assembly-CSharp
+        m_MethodName: InitiliseBuild
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   onDoubleClick:
     m_PersistentCalls:
       m_Calls: []
@@ -120,7 +132,7 @@ MonoBehaviour:
   onDeselect:
     m_PersistentCalls:
       m_Calls: []
-  latestTabIndex: 2
+  latestTabIndex: 0
 --- !u!114 &5256337167860952209
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -526,8 +538,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 86.92095, y: -15}
-  m_SizeDelta: {x: 134.86, y: 45}
+  m_AnchoredPosition: {x: 50, y: -15}
+  m_SizeDelta: {x: 70.35095, y: 45}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &5730261567529567668
 CanvasRenderer:
@@ -741,7 +753,7 @@ MonoBehaviour:
   enableFilter: 1
   useModalWindow: 1
   useCustomContent: 0
-  useLocalization: 1
+  useLocalization: 0
   bypassUpdateOnEnable: 0
   useUINavigation: 0
   navigationMode: 3
@@ -753,13 +765,61 @@ MonoBehaviour:
   useSounds: 1
   onPurchaseClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1400457343953675989}
+        m_TargetAssemblyTypeName: Menu.StatsPanel.BuildObjectHandler, Assembly-CSharp
+        m_MethodName: SetBuild
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   onPurchase:
     m_PersistentCalls:
       m_Calls: []
   onClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1400457343953675989}
+        m_TargetAssemblyTypeName: Menu.StatsPanel.BuildObjectHandler, Assembly-CSharp
+        m_MethodName: SetBuild
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   onHover:
     m_PersistentCalls:
       m_Calls: []
@@ -1232,8 +1292,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 86.92095, y: -15}
-  m_SizeDelta: {x: 134.86, y: 45}
+  m_AnchoredPosition: {x: 50, y: -15}
+  m_SizeDelta: {x: 70.35095, y: 45}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &7638410207383067581
 CanvasRenderer:
@@ -1740,7 +1800,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 64.92095, y: -37.5}
+  m_AnchoredPosition: {x: 28, y: -37.5}
   m_SizeDelta: {x: 20, y: 45}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &5002327034372182223
@@ -2382,7 +2442,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 64.92095, y: -37.5}
+  m_AnchoredPosition: {x: 28, y: -37.5}
   m_SizeDelta: {x: 20, y: 45}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &7316093279445293990
@@ -4951,8 +5011,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 163.35095, y: -62.5}
-  m_SizeDelta: {x: 276.7019, y: 75}
+  m_AnchoredPosition: {x: 232.52643, y: -62.5}
+  m_SizeDelta: {x: 138.35095, y: 75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &7605601842953267131
 MonoBehaviour:
@@ -5668,8 +5728,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 86.92095, y: -15}
-  m_SizeDelta: {x: 134.86, y: 45}
+  m_AnchoredPosition: {x: 50, y: -15}
+  m_SizeDelta: {x: 70.35095, y: 45}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &1908033675113479447
 CanvasRenderer:
@@ -6198,7 +6258,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 64.92095, y: -37.5}
+  m_AnchoredPosition: {x: 28, y: -37.5}
   m_SizeDelta: {x: 20, y: 45}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &3807525678449257855

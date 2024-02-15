@@ -66,16 +66,8 @@ public class ChangingWeaponState : PlayerStateBase
 
         public override void StateInput()
         {
-            float x= Input.GetAxis("Horizontal");
-            float y= Input.GetAxis("Vertical");
-            if (playerRef.playerComponentsHandler.IsPlayerLocked())
-            {
-                x = 0;
-                y = 0;
-            }
-            animInput=new Vector2(x * this.playerRef.moveAnimationSpeed, y * this.playerRef.moveAnimationSpeed);
 
-            this.playerRef.Move(x, y);
+
         }
 
         public override void StatePhysicsUpdate()
@@ -87,8 +79,7 @@ public class ChangingWeaponState : PlayerStateBase
         public override void StateUpdate()
         {
             StateInput();
-            this.networkAnimator.Animator.SetFloat("X", animInput.x);
-            this.networkAnimator.Animator.SetFloat("Y", animInput.y);
+
         }
 
 

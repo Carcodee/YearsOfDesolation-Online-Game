@@ -50,9 +50,9 @@ namespace Menu.StatsPanel
                 playerBuildObjectSelected = new AK_PistolBuild(first_weapon_Template, second_weapon_Template);
                 
             }
-            else if (buildType == BuildType.Sniper_Pistol)
+            else if (buildType == BuildType.SMG_HeavyPistol)
             {
-                playerBuildObjectSelected = new Sniper_Pistol(first_weapon_Template, second_weapon_Template);
+                playerBuildObjectSelected = new SMG_HeavyPistol(first_weapon_Template, second_weapon_Template);
 
             }
             else if (buildType == BuildType.Shotgun_DoublePistol)
@@ -69,12 +69,14 @@ namespace Menu.StatsPanel
         {
             // playerStatsController.SetPlayerBuild(playerBuildObjectSelected);
         }
-        public void UpgradeOrBuyBuild(int weaponIndex)
-        {
-            playerBuildObjectSelected.Upgrade(weaponIndex,  playerStatsController.GetAvaliblePoints());
-            //animation later
-        }
 
+
+        public void SetBuild()
+        {
+            playerStatsController.SelectBuild(playerBuildObjectSelected);
+            
+            
+        }
         public void DisplayData()
         {
             shopButtonManager.buttonTitle = playerBuildObjectSelected.buildDescription;
@@ -102,6 +104,6 @@ namespace Menu.StatsPanel
 public enum BuildType
 {
     AK_Pistol,
-    Sniper_Pistol,
+    SMG_HeavyPistol,
     Shotgun_DoublePistol,
 }

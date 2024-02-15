@@ -153,6 +153,28 @@ BlendTree:
   m_UseAutomaticThresholds: 1
   m_NormalizedBlendValues: 0
   m_BlendType: 1
+--- !u!1101 &-7888838723865620762
+AnimatorStateTransition:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_Conditions: []
+  m_DstStateMachine: {fileID: 0}
+  m_DstState: {fileID: -9011598209955393358}
+  m_Solo: 0
+  m_Mute: 0
+  m_IsExit: 0
+  serializedVersion: 3
+  m_TransitionDuration: 0.25
+  m_TransitionOffset: 0
+  m_ExitTime: 0.5
+  m_HasExitTime: 1
+  m_HasFixedDuration: 1
+  m_InterruptionSource: 0
+  m_OrderedInterruption: 1
+  m_CanTransitionToSelf: 1
 --- !u!1102 &-7853322917533991873
 AnimatorState:
   serializedVersion: 6
@@ -460,6 +482,34 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!1102 &-4119706828413122474
+AnimatorState:
+  serializedVersion: 6
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Shoot
+  m_Speed: 1
+  m_CycleOffset: 0
+  m_Transitions:
+  - {fileID: -7888838723865620762}
+  m_StateMachineBehaviours: []
+  m_Position: {x: 50, y: 50, z: 0}
+  m_IKOnFeet: 0
+  m_WriteDefaultValues: 1
+  m_Mirror: 0
+  m_SpeedParameterActive: 0
+  m_MirrorParameterActive: 0
+  m_CycleOffsetParameterActive: 0
+  m_TimeParameterActive: 0
+  m_Motion: {fileID: -7922472681150642340, guid: dcbd14ad4823d97418ff560d35383661,
+    type: 3}
+  m_Tag: 
+  m_SpeedParameter: 
+  m_MirrorParameter: 
+  m_CycleOffsetParameter: 
+  m_TimeParameter: 
 --- !u!1101 &-3393007294540605477
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -494,7 +544,7 @@ BlendTree:
   m_Name: Blend Tree
   m_Childs:
   - serializedVersion: 2
-    m_Motion: {fileID: -4151049000073386466, guid: edebc7c2e57a807459d3e626219cebc0,
+    m_Motion: {fileID: -5075752359623666121, guid: a5504b49784f5464485e145b6ae206b8,
       type: 3}
     m_Threshold: 0
     m_Position: {x: 0, y: 0}
@@ -503,7 +553,7 @@ BlendTree:
     m_DirectBlendParameter: X
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: -7525669643797289937, guid: 29bce412f77d5884680a1fff4ae5c908,
+    m_Motion: {fileID: -9006414365150258445, guid: 2324cb230cdd0f84eacab1432fd4ef68,
       type: 3}
     m_Threshold: 1
     m_Position: {x: 1, y: 1}
@@ -1021,8 +1071,7 @@ BlendTree:
   m_Name: Blend Tree
   m_Childs:
   - serializedVersion: 2
-    m_Motion: {fileID: -203655887218126122, guid: 5046e4a9df92ade44958a7ffc47f1f65,
-      type: 3}
+    m_Motion: {fileID: 7400000, guid: 3e603d6893bdf214e995ee18c71f40f2, type: 2}
     m_Threshold: 0
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
@@ -1030,7 +1079,8 @@ BlendTree:
     m_DirectBlendParameter: X
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: 7400000, guid: 3e603d6893bdf214e995ee18c71f40f2, type: 2}
+    m_Motion: {fileID: -1147671097583843834, guid: 36f57638782ffa84d8e52c77bea52bed,
+      type: 3}
     m_Threshold: 0.5
     m_Position: {x: 1, y: 1}
     m_TimeScale: 1
@@ -1240,7 +1290,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: MovementAk
+  m_Name: MovementPistol
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -1370,16 +1420,19 @@ AnimatorStateMachine:
     m_Position: {x: 190, y: 150, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 5201442365468023678}
-    m_Position: {x: 380, y: 20, z: 0}
+    m_Position: {x: 190, y: 90, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 4085086715678552613}
     m_Position: {x: 380, y: -80, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -7853322917533991873}
-    m_Position: {x: 600, y: 270, z: 0}
+    m_Position: {x: 480, y: 250, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 2750536649294435405}
     m_Position: {x: 210, y: 340, z: 0}
+  - serializedVersion: 1
+    m_State: {fileID: -4119706828413122474}
+    m_Position: {x: 510, y: 150, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []

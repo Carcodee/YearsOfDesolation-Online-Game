@@ -7,13 +7,20 @@ Shader "Hidden/ImageShaderConfifs"
         _MaxDifunationOffset ("MaxDiff", Range(0, 1)) = 0.5
 
     }
+    
     SubShader
     {
         // No culling or depth
-        Cull Off ZWrite Off ZTest Always
+        Cull off ZWrite On ZTest Always
         
         Blend SrcAlpha OneMinusSrcAlpha
 
+        Tags
+	    {
+		    "Queue"="Transparent"
+		    "IgnoreProjector"="True"
+		    "RenderType"="Transparent"
+	    }
         Pass
         {
             CGPROGRAM

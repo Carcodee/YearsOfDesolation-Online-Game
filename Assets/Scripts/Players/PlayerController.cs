@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Players.PlayerStates;
 using Unity.Mathematics;
 using Unity.Netcode;
@@ -53,7 +54,7 @@ public class PlayerController : NetworkBehaviour
     public int HeadShotDamage => (int) playerStats.GetDamageDone() * 2;
     public int legsShotDamage =>(int) playerStats.GetDamageDone() / 2;
     
-    public float currentAimShootPercentage =>playerStats.currentWeaponSelected.weapon.currentShootRefraction / playerStats.currentWeaponSelected.weapon.minShootRefraction;
+    public float currentAimShootPercentage =>playerStats.currentWeaponSelected.weapon.currentShootRefraction / playerStats.currentWeaponSelected.weapon.minShootRefraction.statValue;
 
     [Header("Player Movement")]
     public Vector3 move;
@@ -93,6 +94,7 @@ public class PlayerController : NetworkBehaviour
 
     [Header("AnimConfigs")]
     public float moveAnimationSpeed;
+
 
     [Header("GroundCheck")]
     [Range(0.1f, 50f)] public float sphereCastRadius;
@@ -355,6 +357,18 @@ public class PlayerController : NetworkBehaviour
         }
 
     }
+    // IEnumerator ShootAnimation()
+    // {
+    //     float currentValue = stateMachineController.networkAnimator.Animator.GetFloat("Aiming");
+    //     float timeAnim = 2;
+    //     while (timeAnim > 1)
+    //     {
+    //         stateMachineController.networkAnimator.Animator.SetFloat("Aiming", timeAnim);
+    //         timeAnim -= Time.deltaTime;
+    //         yield return null;
+    //     }
+    //     stateMachineController.networkAnimator.Animator.SetFloat("Aiming", 1);
+    // }
     public void Shoot()
     {
         if (playerStats.currentWeaponSelected.weapon.ammoBehaviour.isReloading || lockShoot) return;
@@ -362,10 +376,10 @@ public class PlayerController : NetworkBehaviour
         Vector3 direction = Vector3.zero;
         float randomRefraction =Random.Range(-playerStats.currentWeaponSelected.weapon.shootRefraction , playerStats.currentWeaponSelected.weapon.shootRefraction);
         playerStats.currentWeaponSelected.weapon.shootTimer += Time.deltaTime;
-        if (Input.GetKey(KeyCode.Mouse0) && playerStats.currentWeaponSelected.weapon.shootTimer > playerStats.currentWeaponSelected.weapon.shootRate && 
+        if (Input.GetKey(KeyCode.Mouse0) && playerStats.currentWeaponSelected.weapon.shootTimer > playerStats.currentWeaponSelected.weapon.shootRate.statValue && 
             playerStats.currentWeaponSelected.ammoBehaviour.currentBullets > 0 && !playerStats.currentWeaponSelected.ammoBehaviour.isReloading)
         {
-
+            stateMachineController.networkAnimator.Animator.Play("Shoot", 1);
             StartCoroutine(playerStats.playerComponentsHandler.ShakeCamera(0.1f, .9f, .7f));
             playerStats.currentWeaponSelected.ammoBehaviour.currentBullets--;
             // OnPlayerVfxAction?.Invoke(MyVfxType.shoot ,spawnBulletPoint.position);
@@ -437,7 +451,7 @@ public class PlayerController : NetworkBehaviour
 
             playerStats.currentWeaponSelected.weapon.currentShootRefraction = playerStats.currentWeaponSelected.weapon.shootRefraction + Random.Range(0 , playerStats.currentWeaponSelected.weapon.shootRefraction);
         }
-        else if(!(Input.GetKey(KeyCode.Mouse0) && playerStats.currentWeaponSelected.weapon.shootTimer > playerStats.currentWeaponSelected.weapon.shootRate && playerStats.currentWeaponSelected.ammoBehaviour.currentBullets > 0 && !playerStats.currentWeaponSelected.ammoBehaviour.isReloading))
+        else if(!(Input.GetKey(KeyCode.Mouse0) && playerStats.currentWeaponSelected.weapon.shootTimer > playerStats.currentWeaponSelected.weapon.shootRate.statValue && playerStats.currentWeaponSelected.ammoBehaviour.currentBullets > 0 && !playerStats.currentWeaponSelected.ammoBehaviour.isReloading))
         {
             playerStats.currentWeaponSelected.weapon.currentShootRefraction = playerStats.currentWeaponSelected.weapon.shootRefraction;
         }
@@ -586,22 +600,26 @@ public class Weapon
     public Sprite weaponImage;
     public AmmoBehaviour ammoBehaviour;
     public string weaponName;
-    public float shootRate;
     public float shootTimer;
     public float shootRefraction;
     public float currentShootRefraction;
-    public float minShootRefraction;
+    public StatTier<float> shootRate;
+    public StatTier<float> minShootRefraction;
+
     public Weapon(AmmoBehaviour ammoBehaviour, WeaponTemplate weaponTemplate)
     {
         this.changeWeaponAnimation = weaponTemplate.weaponAnimationState;
         this.weaponImage = weaponTemplate.weaponImage;
         this.ammoBehaviour =ammoBehaviour;
         this.weaponName = weaponTemplate.weaponName;
-        this.shootRate = weaponTemplate.shootRate;
+        this.shootRate.statValue = weaponTemplate.shootRate;
         this.shootTimer = weaponTemplate.shootTimer;
         this.shootRefraction = weaponTemplate.shootRefraction;
         this.currentShootRefraction = weaponTemplate.currentShootRefraction;
-        this.minShootRefraction = weaponTemplate.minShootRefraction;
+        this.minShootRefraction.statValue = weaponTemplate.minShootRefraction;
+        shootRate.upgradeType = UpgradeType.FireRate;
+        minShootRefraction.upgradeType = UpgradeType.recoil;
+
     }
     
     public void AddAmmo(int ammo)
@@ -618,19 +636,20 @@ public class AmmoBehaviour
 {
     public int totalAmmo;
     public int currentBullets;
-    public int totalBullets;
     public bool isReloading;
-    public float reloadTime;
+    public StatTier<int> totalBullets;
+    public StatTier<float> reloadTime;
     public float reloadCurrentTime;
     public AmmoBehaviour(AmmoTypeTemplate typeTemplate)
     {
-        this.totalBullets =typeTemplate.totalBullets;
+        this.totalBullets.statValue =typeTemplate.totalBullets;
         this.totalAmmo = typeTemplate.totalAmmo;
         this.currentBullets = typeTemplate.currentBullets;
         this.isReloading = false;
-        this.reloadTime = typeTemplate.reloadTime;
+        this.reloadTime.statValue = typeTemplate.reloadTime;
         this.reloadCurrentTime = 0;
-        
+        totalBullets.upgradeType = UpgradeType.ClipSize;
+        reloadTime.upgradeType = UpgradeType.ReloadSpeed;
         
     }
     public void AddAmmo(int ammo)
@@ -645,33 +664,33 @@ public class AmmoBehaviour
             Debug.Log("Out of ammo find coins to fill your bullets");
             return;
         }
-        if (isReloading && reloadCurrentTime < reloadTime)
+        if (isReloading && reloadCurrentTime < reloadTime.statValue)
         {
             reloadCurrentTime += Time.deltaTime;
-            if (reloadCurrentTime > reloadTime)
+            if (reloadCurrentTime > reloadTime.statValue)
             {
                 reloadCurrentTime = 0;
-                if (totalAmmo <= totalBullets)
+                if (totalAmmo <= totalBullets.statValue)
                 {
-                    int tempBulletsToFill = totalBullets - currentBullets;
+                    int tempBulletsToFill = totalBullets.statValue - currentBullets;
                     currentBullets += totalAmmo;
                     totalAmmo -= tempBulletsToFill;
                     isReloading = false;
                 }
                 else
                 {
-                    totalAmmo -= totalBullets - currentBullets;
-                    currentBullets += totalBullets - currentBullets;
+                    totalAmmo -= totalBullets.statValue - currentBullets;
+                    currentBullets += totalBullets.statValue - currentBullets;
 
                     isReloading = false;
 
                 }
-                currentBullets = Mathf.Clamp(currentBullets, 0,totalBullets);
+                currentBullets = Mathf.Clamp(currentBullets, 0,totalBullets.statValue);
 
             }
             return;
         }
-        if ((Input.GetKeyDown(KeyCode.R) || currentBullets <= 0) && (currentBullets !=totalBullets))
+        if ((Input.GetKeyDown(KeyCode.R) || currentBullets <= 0) && (currentBullets !=totalBullets.statValue))
         {
             isReloading = true;
             Debug.Log("Reloading");

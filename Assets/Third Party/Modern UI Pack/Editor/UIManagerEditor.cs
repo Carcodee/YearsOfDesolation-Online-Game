@@ -9,7 +9,7 @@ namespace Michsky.UI.ModernUIPack
 {
     [CustomEditor(typeof(UIManager))]
     [System.Serializable]
-    public class UIManagerEditor : Editor
+    public class UIManagerEditor : UnityEditor.Editor
     {
         // Variables
         Texture2D muipLogo;

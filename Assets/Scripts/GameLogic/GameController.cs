@@ -74,7 +74,7 @@ public class GameController : NetworkBehaviour
             if (IsClient && IsOwner)
             {
                 OnPlayerEnterServerRpc();
-                SetMapLogicClientServerRpc(numberOfPlayers.Value, numberOfPlayersAlive.Value, 4f, 25, 3, 5);
+                SetMapLogicClientServerRpc(numberOfPlayers.Value, numberOfPlayersAlive.Value, 2f, 45, 3, 5);
                 SetNumberOfPlayerListServerRpc(clientId);
             }
 

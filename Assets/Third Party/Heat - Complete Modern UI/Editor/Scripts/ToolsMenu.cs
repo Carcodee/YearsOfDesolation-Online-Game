@@ -1,11 +1,11 @@
 #if UNITY_EDITOR
-using UnityEngine;
 using UnityEditor;
 using UnityEditor.SceneManagement;
+using UnityEngine;
 
-namespace Michsky.UI.Heat
+namespace Third_Party.Heat___Complete_Modern_UI.Editor.Scripts
 {
-    public class ToolsMenu : Editor
+    public class ToolsMenu : UnityEditor.Editor
     {
         static string objectPath;
 

@@ -5,7 +5,7 @@ using UnityEditor.SceneManagement;
 
 namespace Michsky.UI.ModernUIPack
 {
-    public class ContextMenu : Editor
+    public class ContextMenu : UnityEditor.Editor
     {
         static void CreateObject(string resourcePath)
         {
