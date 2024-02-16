@@ -65,16 +65,10 @@ namespace Menu.StatsPanel
             
 
         }
-        public void SelectBuild()
-        {
-            // playerStatsController.SetPlayerBuild(playerBuildObjectSelected);
-        }
-
 
         public void SetBuild()
         {
             playerStatsController.SelectBuild(playerBuildObjectSelected);
-            
             
         }
         public void DisplayData()
@@ -82,8 +76,8 @@ namespace Menu.StatsPanel
             shopButtonManager.buttonTitle = playerBuildObjectSelected.buildDescription;
             shopButtonManager.buttonDescription = playerBuildObjectSelected.buildName;
             Debug.Log("DisplayData");
-            Debug.Log(playerBuildObjectSelected.buildDescription);
-            Debug.Log(playerBuildObjectSelected.buildName);
+            //Debug.Log(playerBuildObjectSelected.buildDescription);
+            //Debug.Log(playerBuildObjectSelected.buildName);
             if (playerStatsController.GetLevel()<2)
             {
                 shopButtonManager.priceText = "UNLOCK AT LEVEL 2";

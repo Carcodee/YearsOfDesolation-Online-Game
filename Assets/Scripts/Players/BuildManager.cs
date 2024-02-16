@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using System.Reflection;
 using Object = UnityEngine.Object;
+using System.Diagnostics;
 
 [System.Serializable]
 public class PlayerBuild
@@ -20,23 +21,25 @@ public class PlayerBuild
     public UpgradableTypes[] upgradesBuffer;
 
     
-    
     public PlayerBuild(WeaponTemplate first_weapon, WeaponTemplate second_weapon) {
         this.first_weapon =new WeaponItem(first_weapon) ;
         this.second_weapon = new WeaponItem(second_weapon);
 
-
-
-        
     }
 
 
     public virtual void  Upgrade<T>(int index,UpgradeType value, T newValue)
     {
-        upgradesBuffer[index].AddStats(value, newValue);
+       totalPrice += upgradesBuffer[index].AddStats(value, newValue);
             
     }
 
+    
+    public void restartBuffer() {
+        upgradesBuffer[0].copy(upgrades[0]);
+        upgradesBuffer[1].copy(upgrades[1]);
+        totalPrice = 0;
+    }
     public void CreateDataBuild()
     {
         upgradesBuffer = new UpgradableTypes[2];
@@ -52,17 +55,22 @@ public class PlayerBuild
         
         for (int i = 0; i < upgrades.Length; i++)
         {
-            upgrades[i].shootRate =this.first_weapon.weapon.shootRate; ;
+            upgrades[i].shootRate =this.first_weapon.weapon.shootRate; 
             upgrades[i].reloadSpeed =this.first_weapon.weapon.ammoBehaviour.reloadTime;
             upgrades[i].clipSize =this.first_weapon.weapon.ammoBehaviour.totalBullets;
             upgrades[i].recoil =this.first_weapon.weapon.minShootRefraction;
-            upgradesBuffer[i] = upgrades[i];
+            upgradesBuffer[i].copy(upgrades[i]);
         }
     }
     public void SetUpgrades()
     {
 
-        upgrades = upgradesBuffer;
+        upgrades[0].copy(upgradesBuffer[0]);
+        first_weapon.weapon.shootRate = upgrades[0].shootRate;
+        first_weapon.weapon.ammoBehaviour.reloadTime = upgrades[0].reloadSpeed;
+        first_weapon.weapon.ammoBehaviour.totalBullets = upgrades[0].clipSize;
+        first_weapon.weapon.minShootRefraction = upgrades[0].recoil;
+        upgrades[1].copy(upgradesBuffer[1]);
         totalPrice = 0;
     }
      
@@ -111,6 +119,7 @@ public struct StatTier<T>
     public int tier;
     public int price=>tier;
     public UpgradeType upgradeType;
+
 }
 [System.Serializable]
 public class UpgradableTypes
@@ -120,55 +129,72 @@ public class UpgradableTypes
     public StatTier<float> reloadSpeed;
     public StatTier<int> clipSize;
     public StatTier<float> recoil;
-    // public UpgradableTypes(UpgradableTypes other)
-    // {
-    //     this.weapon = other.weapon;
-    //     this.shootRate = other.shootRate;
-    //     this.reloadSpeed = other.reloadSpeed;
-    //     this.clipSize = other.clipSize;
-    //     this.recoil = other.recoil;
-    //     
-    //     // For deep copy, manually copy all reference type fields
-    // }
-    public void AddStats<T>(UpgradeType value, T statValue)
+    public int tierLimit = 5;
+
+    //public UpgradableTypes() {;
+    //}
+    //public UpgradableTypes(UpgradableTypes other) {
+    //    this.weapon = other.weapon;
+    //    this.shootRate = other.shootRate;
+    //    this.reloadSpeed = other.reloadSpeed;
+    //    this.clipSize = other.clipSize;
+    //    this.recoil = other.recoil;
+
+    //}
+    public void copy(UpgradableTypes other) {
+        this.weapon = other.weapon;
+        this.shootRate = other.shootRate;
+        this.reloadSpeed = other.reloadSpeed;
+        this.clipSize = other.clipSize;
+        this.recoil = other.recoil;
+
+    }
+    public int AddStats<T>(UpgradeType value, T statValue)
     {
+
         switch (value)
         {
             case UpgradeType.FireRate:
+                if (shootRate.tier >= tierLimit) { return 0; }
                 shootRate.statValue += (float) (object) statValue;
-                recoil.tier++;
-                break;
+                shootRate.tier++;
+                return shootRate.price;
+
             case UpgradeType.ReloadSpeed:
+                if (reloadSpeed.tier >= tierLimit) { return 0; }
                 reloadSpeed.statValue += (float) (object) statValue;
-                recoil.tier++;
-                break;
+                reloadSpeed.tier++;
+                return reloadSpeed.price;
+
             case UpgradeType.ClipSize:
+                if (clipSize.tier>= tierLimit) { return 0; }
                 clipSize.statValue += (int) (object) statValue;
-                recoil.tier++;
-                break;
+                clipSize.tier++;
+                return clipSize.price;
+
             case UpgradeType.recoil:
+                if (recoil.tier >= tierLimit) { return 0; }
                 recoil.statValue += (float) (object) statValue;
                 recoil.tier++;
-                break;
+                return recoil.price;
+
         }
+        return 0;
         
     }
+
     public int ReturnTierFromType(UpgradeType value)
     {
         switch (value)
         {
             case UpgradeType.FireRate:
                 return shootRate.tier;
-                break;
             case UpgradeType.ReloadSpeed:
                 return reloadSpeed.tier;
-                break;
             case UpgradeType.ClipSize:
                 return clipSize.tier;
-                break;
             case UpgradeType.recoil:
                 return recoil.tier;
-                break;
         }
         return 0;
     }

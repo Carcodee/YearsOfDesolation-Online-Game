@@ -56,6 +56,7 @@ public class PlayerVFXController : NetworkBehaviour
     public PlayerController playerController;
     
     public SkinnedMeshRenderer skinnedMeshRenderer; 
+
     protected MaterialPropertyBlock mPB;
     
     [Header("VFXNetAPI")]

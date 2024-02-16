@@ -31,6 +31,7 @@ public class BuildController : MonoBehaviour
             weaponObjects[i].weaponImage.sprite = playerStatsController.playerBuildSelected.first_weapon.weapon.weaponImage;
             weaponObjects[i].weaponTitle.text = playerStatsController.playerBuildSelected.first_weapon.weapon.weaponName;
         }
+
         DisplaySlots();
     }
     public void Upgrade (StatsTierUpgrades upgrades)
@@ -45,20 +46,50 @@ public class BuildController : MonoBehaviour
         {
             float value = upgrades.value.floatValue;
             playerStatsController.playerBuildSelected.Upgrade(upgrades.index, upgrades.upgradeType, value);
-
         }
-        Debug.Log("Upgraded");
-        
+        //Debug.Log("Upgraded");
+        //Debug.Log(playerStatsController.playerBuildSelected.upgradesBuffer[0].shootRate.tier);
+        //Debug.Log(playerStatsController.playerBuildSelected.upgradesBuffer[0].recoil.tier);
+        //Debug.Log(playerStatsController.playerBuildSelected.upgradesBuffer[0].clipSize.tier);
+        //Debug.Log(playerStatsController.playerBuildSelected.upgradesBuffer[0].reloadSpeed.tier);
+
+        PreviewSlots();
+
     }
 
     public void Buy()
     {
-        if (playerStatsController.GetAvaliblePoints()<playerStatsController.playerBuildSelected.totalPrice)
+        if (playerStatsController.GetAvaliblePoints() < playerStatsController.playerBuildSelected.totalPrice)
         {
+            Cancel();
             Debug.Log("Not enough money");
             return;
         }
+        playerStatsController.SetAvaliblePointsServerRpc(playerStatsController.GetAvaliblePoints() - playerStatsController.playerBuildSelected.totalPrice);
         playerStatsController.playerBuildSelected.SetUpgrades();
+        DisplaySlots();
+
+    }
+
+    public void Cancel() {
+        for (int i = 0; i < weaponObjects.Length; i++) {
+            for (int j = 0; j < weaponObjects[i].slotObjectController.Length; j++) {
+                weaponObjects[i].slotObjectController[j].slotsToPreview =
+                    playerStatsController.playerBuildSelected.upgradesBuffer[i].ReturnTierFromType(weaponObjects[i].slotObjectController[j].upgradeType);
+                    weaponObjects[i].slotObjectController[j].FillSlots(weaponObjects[i].slotObjectController[j].currentSlotsUnlocked,
+                    weaponObjects[i].slotObjectController[j].slotsToPreview, 
+                    Color.black);
+                weaponObjects[i].slotObjectController[j].slotsToPreview = weaponObjects[i].slotObjectController[j].currentSlotsUnlocked;
+                
+            }
+        }
+        playerStatsController.playerBuildSelected.restartBuffer();
+        Debug.Log(("ReloadTier: "+ playerStatsController.playerBuildSelected.upgrades[0].reloadSpeed.tier));
+        Debug.Log(("RecoilTier: " + playerStatsController.playerBuildSelected.upgrades[0].recoil.tier));
+        Debug.Log(("shootrateTier: " + playerStatsController.playerBuildSelected.upgrades[0].shootRate.tier));
+        Debug.Log(("clipsizeTier: " + playerStatsController.playerBuildSelected.upgrades[0].clipSize.tier));
+
+
     }
     public void DisplaySlots()
     {
@@ -68,7 +99,8 @@ public class BuildController : MonoBehaviour
             {
                 weaponObjects[i].slotObjectController[j].currentSlotsUnlocked=
                     playerStatsController.playerBuildSelected.upgrades[i].ReturnTierFromType(weaponObjects[i].slotObjectController[j].upgradeType);
-                weaponObjects[i].slotObjectController[j].FillSlots(weaponObjects[i].slotObjectController[j].currentSlotsUnlocked);
+                weaponObjects[i].slotObjectController[j].FillSlots(0,weaponObjects[i].slotObjectController[j].currentSlotsUnlocked, Color.cyan);
+                Debug.Log("Slots: "+ weaponObjects[i].slotObjectController[j].currentSlotsUnlocked);
             }    
         }
     }
@@ -81,7 +113,7 @@ public class BuildController : MonoBehaviour
             {
                 weaponObjects[i].slotObjectController[j].slotsToPreview=
                     playerStatsController.playerBuildSelected.upgradesBuffer[i].ReturnTierFromType(weaponObjects[i].slotObjectController[j].upgradeType);
-                weaponObjects[i].slotObjectController[j].FillSlots(weaponObjects[i].slotObjectController[j].currentSlotsUnlocked);
+                weaponObjects[i].slotObjectController[j].FillSlots(weaponObjects[i].slotObjectController[j].currentSlotsUnlocked, weaponObjects[i].slotObjectController[j].slotsToPreview, Color.green);
             }    
         }
     }

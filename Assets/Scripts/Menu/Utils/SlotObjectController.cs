@@ -28,11 +28,12 @@ public class SlotObjectController : MonoBehaviour
     }
 
 
-    public void FillSlots(int slots)
+    public void FillSlots(int start, int end, Color color)
     {
-        for (int i = currentSlotsUnlocked; i < slots; i++)
+        for (int i = start; i < end; i++)
         {
-            slotsFill[i].color = Color.blue;
+            Debug.Log("Filling slot");
+            slotsFill[i].color = color;
         }
     }
 
