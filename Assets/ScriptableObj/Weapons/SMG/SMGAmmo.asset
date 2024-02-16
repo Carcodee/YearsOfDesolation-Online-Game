@@ -9,11 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b355c37872a74c47b27dca0deec2275, type: 3}
-  m_Name: ShootRateData_W1
+  m_Script: {fileID: 11500000, guid: a751c8f3d073dfe47b23325c48a6d27c, type: 3}
+  m_Name: SMGAmmo
   m_EditorClassIdentifier: 
-  index: 0
-  upgradeType: 0
-  value:
-    floatValue: -0.2
-    intValue: 0
+  totalAmmo: 90
+  currentBullets: 15
+  totalBullets: 15
+  isReloading: 0
+  reloadTime: 1.5
+  reloadCurrentTime: 0

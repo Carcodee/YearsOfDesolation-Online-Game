@@ -224,20 +224,16 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
     public void HandleWeaponChange()
     {
         // if(!hasPlayerSelectedBuild)return;
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            stateMachineController.SetChangingWeaponState(doublePistols, "ChangingWeapon");
-            onBagWeapon = ak47;
-            // stateMachineController.SetChangingWeaponState(playerBuildSelected.first_weapon);
-
-            // currentWeaponSelected = doublePistols;
-        }
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            stateMachineController.SetChangingWeaponState(ak47,"ChangingWeapon");
-            // stateMachineController.SetChangingWeaponState(playerBuildSelected.second_weapon);
-            onBagWeapon = doublePistols;
-            // currentWeaponSelected = ak47;
+            stateMachineController.SetChangingWeaponState(playerBuildSelected.first_weapon, "ChangingWeapon");
+            onBagWeapon = playerBuildSelected.second_weapon;
+
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            stateMachineController.SetChangingWeaponState(playerBuildSelected.second_weapon,"ChangingWeapon");
+            onBagWeapon = playerBuildSelected.first_weapon;
         }
     }
     public void OutsideZoneDamage()

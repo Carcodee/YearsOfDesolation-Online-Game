@@ -16,8 +16,7 @@ namespace Menu.StatsPanel
         public WeaponTemplate second_weapon_Template;
         
         
-        public Image first_weapon_Image;
-        public Image second_weapon_Image;
+
         
         [HideInInspector]
         public Image BorderImage;
@@ -60,6 +59,11 @@ namespace Menu.StatsPanel
                  playerBuildObjectSelected = new Shootgun_DoublePistols(first_weapon_Template, second_weapon_Template);
 
             }
+            else if (buildType == BuildType.Knives_DoublePistol)
+            {
+                playerBuildObjectSelected = new Knives_DoublePistols(first_weapon_Template, second_weapon_Template);
+
+            }
             playerBuildObjectSelected.buildDescription = Description;
             playerBuildObjectSelected.buildName = name;
             
@@ -100,4 +104,5 @@ public enum BuildType
     AK_Pistol,
     SMG_HeavyPistol,
     Shotgun_DoublePistol,
+    Knives_DoublePistol
 }

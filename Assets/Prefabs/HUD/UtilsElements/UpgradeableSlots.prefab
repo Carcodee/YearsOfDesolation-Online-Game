@@ -536,7 +536,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: UGRADE TYPE
+  m_text: FIRE RATE
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8e8f97682e668e94cb30d2e6b8e13d84, type: 2}
   m_sharedMaterial: {fileID: -7304394381272760782, guid: 8e8f97682e668e94cb30d2e6b8e13d84,
@@ -546,8 +546,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 2
   m_fontColorGradient:
@@ -621,7 +621,7 @@ MonoBehaviour:
   UIManagerAsset: {fileID: 11400000, guid: 98972d851a944df4a9402eac62a896e7, type: 2}
   fontType: 1
   colorType: 2
-  useCustomColor: 1
+  useCustomColor: 0
   useCustomAlpha: 1
   useCustomFont: 0
 --- !u!1 &3500268327522280823
@@ -725,7 +725,20 @@ MonoBehaviour:
   fadingMultiplier: 8
   onClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: BuildController, Assembly-CSharp
+        m_MethodName: Upgrade
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 11400000, guid: 85ba92536aa9e094ab780efc0339249a,
+            type: 2}
+          m_ObjectArgumentAssemblyTypeName: StatsTierUpgrades, Assembly-CSharp
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   onDoubleClick:
     m_PersistentCalls:
       m_Calls: []
@@ -741,7 +754,7 @@ MonoBehaviour:
   onDeselect:
     m_PersistentCalls:
       m_Calls: []
-  latestTabIndex: 2
+  latestTabIndex: 0
 --- !u!1 &3574771160953938427
 GameObject:
   m_ObjectHideFlags: 0
@@ -2992,6 +3005,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ea04092ae4754848b555ca3521d6cfc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UpgradeName: FIRE RATE
   UpgradeText: {fileID: 2034030407070837809}
   slotsFill:
   - {fileID: 3558237342269671401}
@@ -2999,9 +3013,11 @@ MonoBehaviour:
   - {fileID: 1282289931436329202}
   - {fileID: 5368475083914230746}
   - {fileID: 2977659522192357280}
-  currentSlotsUnlocked: 0
   emptySlotColor: {r: 0, g: 0, b: 0, a: 1}
   fullSlotColor: {r: 0, g: 1, b: 0.99215686, a: 1}
   previewSlotColor: {r: 0, g: 1, b: 0, a: 1}
   previewTimeBlink: 0.7
   isOnPreview: 0
+  currentSlotsUnlocked: 0
+  slotsToPreview: 0
+  upgradeType: 0

@@ -36,7 +36,8 @@ namespace Menu.StatsPanel
         AK_PistolBuild ak_PistolBuild;
         SMG_HeavyPistol smg_HeavyPistol;
         Shootgun_DoublePistols shootgun_DoublePistols;
-        
+        public BuildController buildObject;
+        public GameObject buildSelector;       
         
         public BuildObjectPairs[] buildObjectsPairs;
         public HorizontalSelector horizontalBuildSelector;
@@ -55,8 +56,6 @@ namespace Menu.StatsPanel
         public Vector3 startPos;
 
 
-        [Header("BuildObject")]
-        public BuildController buildObject;
         private void OnEnable()
         {
             OnPannelOpen += OpenPanel;
@@ -121,6 +120,7 @@ namespace Menu.StatsPanel
         {
             buildObject.gameObject.SetActive(true);
             new WaitForSeconds(0.1f);
+            buildSelector.SetActive(false);
             buildObject.playerStatsController = playerStatsController;
             buildObject.InitilizeBuild();
         }
@@ -138,7 +138,7 @@ namespace Menu.StatsPanel
                 Mathf.Clamp(animationTime, 0, 1);
             }
 
-            float xPos = Mathf.Lerp(startPos.x, endPos.y, animationFunction);
+            float xPos = Mathf.Lerp(startPos.x, endPos.x, animationFunction);
             transform.position = new Vector3(xPos, transform.position.y, 0);
         }
 

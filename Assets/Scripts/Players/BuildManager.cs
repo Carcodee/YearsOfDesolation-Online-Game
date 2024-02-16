@@ -44,33 +44,52 @@ public class PlayerBuild
     {
         upgradesBuffer = new UpgradableTypes[2];
         upgrades = new UpgradableTypes[2];
+        
         upgrades[0] = new UpgradableTypes();
         upgrades[1] = new UpgradableTypes();
         upgradesBuffer[0] = new UpgradableTypes();
         upgradesBuffer[1] = new UpgradableTypes();
-        upgrades[0].weapon = this.first_weapon;
-        upgrades[1].weapon = this.second_weapon;
-        upgradesBuffer[0].weapon = this.first_weapon;
-        upgradesBuffer[1].weapon = this.second_weapon;
         
-        for (int i = 0; i < upgrades.Length; i++)
-        {
-            upgrades[i].shootRate =this.first_weapon.weapon.shootRate; 
-            upgrades[i].reloadSpeed =this.first_weapon.weapon.ammoBehaviour.reloadTime;
-            upgrades[i].clipSize =this.first_weapon.weapon.ammoBehaviour.totalBullets;
-            upgrades[i].recoil =this.first_weapon.weapon.minShootRefraction;
-            upgradesBuffer[i].copy(upgrades[i]);
-        }
+        
+        upgrades[0].weapon = this.first_weapon;
+        upgradesBuffer[0].weapon = this.first_weapon;
+        
+        upgrades[1].weapon = this.second_weapon;
+        upgradesBuffer[1].weapon = this.second_weapon;
+
+        upgrades[0].shootRate =this.first_weapon.weapon.shootRate; 
+        upgrades[0].reloadSpeed =this.first_weapon.weapon.ammoBehaviour.reloadTime;
+        upgrades[0].clipSize =this.first_weapon.weapon.ammoBehaviour.totalBullets;
+        upgrades[0].recoil =this.first_weapon.weapon.minShootRefraction;
+        upgradesBuffer[0].copy(upgrades[0]);
+        
+        upgrades[1].shootRate =this.second_weapon.weapon.shootRate; 
+        upgrades[1].reloadSpeed =this.second_weapon.weapon.ammoBehaviour.reloadTime;
+        upgrades[1].clipSize =this.second_weapon.weapon.ammoBehaviour.totalBullets;
+        upgrades[1].recoil =this.second_weapon.weapon.minShootRefraction;
+        upgradesBuffer[1].copy(upgrades[1]);
     }
     public void SetUpgrades()
     {
-
+        // for (int i = 0; i < upgrades.Length; i++)
+        // {
+        //     upgrades[i].copy(upgradesBuffer[i]);
+        //     first_weapon.weapon.shootRate = upgrades[i].shootRate;
+        //     first_weapon.weapon.ammoBehaviour.reloadTime = upgrades[i].reloadSpeed;
+        //     first_weapon.weapon.ammoBehaviour.totalBullets = upgrades[i].clipSize;
+        //     first_weapon.weapon.minShootRefraction = upgrades[i].recoil;
+        // }
         upgrades[0].copy(upgradesBuffer[0]);
         first_weapon.weapon.shootRate = upgrades[0].shootRate;
         first_weapon.weapon.ammoBehaviour.reloadTime = upgrades[0].reloadSpeed;
         first_weapon.weapon.ammoBehaviour.totalBullets = upgrades[0].clipSize;
         first_weapon.weapon.minShootRefraction = upgrades[0].recoil;
+        
         upgrades[1].copy(upgradesBuffer[1]);
+        second_weapon.weapon.shootRate = upgrades[1].shootRate;
+        second_weapon.weapon.ammoBehaviour.reloadTime = upgrades[1].reloadSpeed;
+        second_weapon.weapon.ammoBehaviour.totalBullets = upgrades[1].clipSize;
+        second_weapon.weapon.minShootRefraction = upgrades[1].recoil;
         totalPrice = 0;
     }
      
@@ -100,6 +119,14 @@ public class SMG_HeavyPistol : PlayerBuild {
 public class Shootgun_DoublePistols : PlayerBuild {
 
     public Shootgun_DoublePistols(WeaponTemplate first_weapon, WeaponTemplate second_weapon) : base(first_weapon, second_weapon) {
+        this.first_weapon =new WeaponItem(first_weapon) ;
+        this.second_weapon = new WeaponItem(second_weapon);
+    }
+  
+}
+public class Knives_DoublePistols : PlayerBuild {
+
+    public Knives_DoublePistols(WeaponTemplate first_weapon, WeaponTemplate second_weapon) : base(first_weapon, second_weapon) {
         this.first_weapon =new WeaponItem(first_weapon) ;
         this.second_weapon = new WeaponItem(second_weapon);
     }

@@ -26,11 +26,14 @@ public class BuildController : MonoBehaviour
     {
         BuildName.text = playerStatsController.playerBuildSelected.buildName;
         currentMoney.text = (playerStatsController.GetAvaliblePoints()*10).ToString()+ "$";
-        for (int i = 0; i < weaponObjects.Length; i++)
-        {
-            weaponObjects[i].weaponImage.sprite = playerStatsController.playerBuildSelected.first_weapon.weapon.weaponImage;
-            weaponObjects[i].weaponTitle.text = playerStatsController.playerBuildSelected.first_weapon.weapon.weaponName;
-        }
+
+        weaponObjects[0].weaponImage.sprite = playerStatsController.playerBuildSelected.first_weapon.weapon.weaponImage;
+        weaponObjects[0].weaponTitle.text = playerStatsController.playerBuildSelected.first_weapon.weapon.weaponName;
+        
+        weaponObjects[1].weaponImage.sprite = playerStatsController.playerBuildSelected.second_weapon.weapon.weaponImage;
+        weaponObjects[1].weaponTitle.text = playerStatsController.playerBuildSelected.second_weapon.weapon.weaponName;
+
+            
 
         DisplaySlots();
     }
@@ -84,12 +87,10 @@ public class BuildController : MonoBehaviour
             }
         }
         playerStatsController.playerBuildSelected.restartBuffer();
-        Debug.Log(("ReloadTier: "+ playerStatsController.playerBuildSelected.upgrades[0].reloadSpeed.tier));
-        Debug.Log(("RecoilTier: " + playerStatsController.playerBuildSelected.upgrades[0].recoil.tier));
-        Debug.Log(("shootrateTier: " + playerStatsController.playerBuildSelected.upgrades[0].shootRate.tier));
-        Debug.Log(("clipsizeTier: " + playerStatsController.playerBuildSelected.upgrades[0].clipSize.tier));
-
-
+        // Debug.Log(("ReloadTier: "+ playerStatsController.playerBuildSelected.upgrades[0].reloadSpeed.tier));
+        // Debug.Log(("RecoilTier: " + playerStatsController.playerBuildSelected.upgrades[0].recoil.tier));
+        // Debug.Log(("shootrateTier: " + playerStatsController.playerBuildSelected.upgrades[0].shootRate.tier));
+        // Debug.Log(("clipsizeTier: " + playerStatsController.playerBuildSelected.upgrades[0].clipSize.tier));
     }
     public void DisplaySlots()
     {
