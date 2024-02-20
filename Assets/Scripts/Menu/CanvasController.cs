@@ -125,7 +125,7 @@ public class CanvasController : MonoBehaviour
         
     }
     
-    public void SetStats(int oldValue, int newValue)
+    public void SetStats(float oldValue, float newValue)
     {
         /*(float) playerAssigned.maxHealth*10*/
         healthBar.currentPercent =  newValue *10;

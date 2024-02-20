@@ -6,7 +6,7 @@ using UnityEngine;
 public class EnemyBase : NetworkBehaviour,IDamageable
 {
     public EnemyTemplates template;
-    public int health;
+    public float health;
     public int damage;
     public int armor;
     public float speed;
@@ -38,7 +38,7 @@ public class EnemyBase : NetworkBehaviour,IDamageable
         attackSpeed = template.attackSpeed;
         onKilledExp = template.onKilledExp;
     }
-    public void TakeDamage(int damage)
+    public void TakeDamage(float damage)
     {
         health = health - damage;
         if (health <= 0)

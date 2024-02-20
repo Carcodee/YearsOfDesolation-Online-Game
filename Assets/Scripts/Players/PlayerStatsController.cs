@@ -24,11 +24,11 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
     public Transform takeDamagePosition;
     [Header("Stats")]
     [SerializeField] private NetworkVariable<int> haste = new NetworkVariable<int>();
-    [SerializeField] public NetworkVariable<int> health = new NetworkVariable<int>();
+    [SerializeField] public NetworkVariable<float> health = new NetworkVariable<float>();
     [SerializeField] private NetworkVariable<int> maxHealth = new NetworkVariable<int>();
 
     [SerializeField] private NetworkVariable<int> stamina = new NetworkVariable<int>();
-    [SerializeField] private NetworkVariable<int> damage = new NetworkVariable<int>();
+    [SerializeField] private NetworkVariable<float> damage = new NetworkVariable<float>();
     [SerializeField] private NetworkVariable<int> armor = new NetworkVariable<int>();
     [SerializeField] private NetworkVariable<int> speed = new NetworkVariable<int>();
 
@@ -40,8 +40,9 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
     public string[] statHolderNames;
     public int[] statHolder;
     public bool isPlayerInsideTheZone;
-    
 
+    [Header("WeaponSpawnPoints")]
+    public Transform [] weaponSpawnPoint;
     
     [Header("Current Gamelogic")]
     public NetworkVariable<zoneColors> zoneAsigned=new NetworkVariable<zoneColors>();
@@ -67,6 +68,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
     public WeaponItem ak47;
     public WeaponItem doublePistols;
     public WeaponTemplate [] weaponsData;
+    public Action OnWeaponChange;
     //temporal variable
     public bool isChangingWeapon=false;
     public override void OnNetworkSpawn()
@@ -155,7 +157,6 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
         Debug.Log("Health called. hpValue: " + statsTemplates[statsTemplateSelected.Value].health);
 
         SetStaminaServerRpc(statsTemplates[statsTemplateSelected.Value].stamina);
-        SetDamageServerRpc(statsTemplates[statsTemplateSelected.Value].damage);
         SetArmorServerRpc(statsTemplates[statsTemplateSelected.Value].armor);
         SetSpeedServerRpc(statsTemplates[statsTemplateSelected.Value].speed);
         
@@ -167,18 +168,19 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
         SetLevelServerRpc(1);
         SetAvaliblePointsServerRpc(3);
         health.OnValueChanged += SetPlayerOnPos;
-        // ak47= new Weapon(new AmmoBehaviour(90,30,90,false,0.5f,0.0f), )
-        //Stats on controller player
         ak47 = new WeaponItem(weaponsData[(int)WeaponType.Ak99]);
         doublePistols = new WeaponItem(weaponsData[(int)WeaponType.Pistol]);
         SetWeapon(ak47);
         onBagWeapon = doublePistols;
         transform.GetComponent<PlayerController>().SetSpeedStateServerRpc(statsTemplates[statsTemplateSelected.Value].speed);
         OnStatsChanged?.Invoke();
+
     }
     public void SetWeapon(WeaponItem weapon)
     {
         currentWeaponSelected = weapon;
+        SetDamageServerRpc(currentWeaponSelected.weapon.weaponDamage);
+
     }
 
     public void SetStats()
@@ -253,7 +255,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
 
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(float damage)
     {
         
 
@@ -304,7 +306,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
         GameController.instance.OnPlayerDead(zoneAssigned);
     } 
     
-    public void SetPlayerOnPos(int oldVal, int newVal)
+    public void SetPlayerOnPos(float oldVal, float newVal)
     {
         if (health.Value<=0 && GameController.instance.zoneControllers.Count > 0 && stateMachineController.currentState.stateName!="Dead"){
             OnPlayerDead?.Invoke();
@@ -359,7 +361,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
     {
         return speed.Value;
     }
-    public int GetDamageDone()
+    public float GetDamageDone()
     {
         return damage.Value;
     }
@@ -368,7 +370,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
     {
         return playerLevel.Value;
     }
-    public int GetHealth()
+    public float GetHealth()
     {
         return health.Value;
     }
@@ -420,7 +422,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
     }
     //Stats
     [ServerRpc]
-    public void SetHealthServerRpc(int healthPoint)
+    public void SetHealthServerRpc(float healthPoint)
     {
          health.Value = healthPoint;
     }
@@ -447,7 +449,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
         armor.Value = armorPoint;
     }
     [ServerRpc]
-    public void SetDamageServerRpc(int damagePoint)
+    public void SetDamageServerRpc(float damagePoint)
     {
         damage.Value = damagePoint;
     }

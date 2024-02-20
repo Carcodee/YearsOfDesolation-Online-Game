@@ -336,7 +336,7 @@ public class PlayerController : NetworkBehaviour
         return  (HitType)1;
     }
     
-    int CheckDamageTags(string tag)
+    float CheckDamageTags(string tag)
     {
         
         HitType hitType = CheckTags(tag);
@@ -599,6 +599,7 @@ public class Weapon
     public WeaponAnimations changeWeaponAnimation;
     public Sprite weaponImage;
     public AmmoBehaviour ammoBehaviour;
+    public float weaponDamage;
     public string weaponName;
     public float shootTimer;
     public float shootRefraction;
@@ -608,6 +609,7 @@ public class Weapon
 
     public Weapon(AmmoBehaviour ammoBehaviour, WeaponTemplate weaponTemplate)
     {
+        this.weaponDamage = weaponTemplate.weaponDamage;
         this.changeWeaponAnimation = weaponTemplate.weaponAnimationState;
         this.weaponImage = weaponTemplate.weaponImage;
         this.ammoBehaviour =ammoBehaviour;

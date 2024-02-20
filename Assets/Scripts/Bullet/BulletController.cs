@@ -12,7 +12,7 @@ public class BulletController : MonoBehaviour
     public Rigidbody rb;
     public Vector3 Direction;
     public float speed = 10f;
-    public NetworkVariable<int> damage;
+    public NetworkVariable<float> damage;
     public MeshRenderer meshRenderer;
 
     public float colorLerpTimer;

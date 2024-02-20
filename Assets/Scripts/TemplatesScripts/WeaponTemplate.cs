@@ -9,6 +9,7 @@ public class WeaponTemplate : ScriptableObject
     public Sprite weaponImage;
     public WeaponAnimations weaponAnimationState;
     public AmmoTypeTemplate ammoType;
+    public float weaponDamage;
     public string weaponName;
     public float shootRate;
     public float shootTimer;

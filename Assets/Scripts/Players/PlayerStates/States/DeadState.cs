@@ -60,7 +60,7 @@ namespace Players.PlayerStates.States
 
             }
         }
-        public void RespawnPlayer(int oldValue,int newValue)
+        public void RespawnPlayer(float oldValue,float newValue)
         {
 
         }
