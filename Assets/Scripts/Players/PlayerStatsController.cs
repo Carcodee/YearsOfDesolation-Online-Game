@@ -15,6 +15,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
     public UnityAction OnStatsChanged;
     public Action OnLevelUp;    
     public Action OnPlayerDead;
+    public Action <Transform> OnWeaponChanged;
     
     [Header("References")]
     public StatsTemplate[] statsTemplates;
@@ -69,6 +70,9 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
     public WeaponItem doublePistols;
     public WeaponTemplate [] weaponsData;
     public Action OnWeaponChange;
+    public GameObject noBuildWeapon;
+    public Transform weaponNoBuildGripPoint;
+
     //temporal variable
     public bool isChangingWeapon=false;
     public override void OnNetworkSpawn()
@@ -140,7 +144,22 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
         currentWeaponSelected = playerBuildSelected.first_weapon;
         onBagWeapon = playerBuildSelected.second_weapon;
         playerBuildSelected.CreateDataBuild();
+        playerBuildSelected.first_weapon.weaponObjectController=Instantiate(playerBuildSelected.first_weapon.weapon.weaponObjectController, weaponSpawnPoint[0].position, Quaternion.identity, weaponSpawnPoint[0]);
+        playerBuildSelected.first_weapon.weaponObjectController.transform.localPosition = Vector3.zero;
+        playerBuildSelected.first_weapon.weaponObjectController.transform.localRotation= playerBuildSelected.first_weapon.weapon.weaponObjectController.transform.localRotation;
+        playerBuildSelected.second_weapon.weaponObjectController=Instantiate(playerBuildSelected.second_weapon.weapon.weaponObjectController, weaponSpawnPoint[1].position, Quaternion.identity, weaponSpawnPoint[0]);
+        playerBuildSelected.second_weapon.weaponObjectController.transform.localPosition = Vector3.zero;
+        playerBuildSelected.second_weapon.weaponObjectController.transform.localRotation= playerBuildSelected.second_weapon.weapon.weaponObjectController.transform.localRotation;
+
+        playerBuildSelected.second_weapon.weaponObjectController.gameObject.SetActive(false);
         
+        noBuildWeapon.SetActive(false);
+        
+        stateMachineController.SetChangingWeaponState(playerBuildSelected.first_weapon, "ChangingWeapon");
+        currentWeaponSelected.weaponObjectController.gameObject.SetActive(true);
+        onBagWeapon = playerBuildSelected.second_weapon;
+        onBagWeapon.weaponObjectController.gameObject.SetActive(false);
+        OnWeaponChanged.Invoke(currentWeaponSelected.weapon.weaponObjectController.weaponBulletSpawnPoints);
     }
 
     void InitializateStats()
@@ -174,6 +193,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
         onBagWeapon = doublePistols;
         transform.GetComponent<PlayerController>().SetSpeedStateServerRpc(statsTemplates[statsTemplateSelected.Value].speed);
         OnStatsChanged?.Invoke();
+
 
     }
     public void SetWeapon(WeaponItem weapon)
@@ -229,14 +249,21 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             stateMachineController.SetChangingWeaponState(playerBuildSelected.first_weapon, "ChangingWeapon");
+            currentWeaponSelected.weaponObjectController.gameObject.SetActive(true);
             onBagWeapon = playerBuildSelected.second_weapon;
-
+            onBagWeapon.weaponObjectController.gameObject.SetActive(false);
+            OnWeaponChanged.Invoke(currentWeaponSelected.weapon.weaponObjectController.weaponBulletSpawnPoints);
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             stateMachineController.SetChangingWeaponState(playerBuildSelected.second_weapon,"ChangingWeapon");
+            currentWeaponSelected.weaponObjectController.gameObject.SetActive(true);
             onBagWeapon = playerBuildSelected.first_weapon;
+            onBagWeapon.weaponObjectController.gameObject.SetActive(false);
+            OnWeaponChanged.Invoke(currentWeaponSelected.weapon.weaponObjectController.weaponBulletSpawnPoints);
+
         }
+
     }
     public void OutsideZoneDamage()
     {

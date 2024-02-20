@@ -80,7 +80,6 @@ public class PlayerController : NetworkBehaviour
     float xRotation = 0f;
     float yRotation = 0f;
 
-    public float reloadTime => 3/playerStats.GetHaste();
     public bool lockShoot=false;
     
     
@@ -127,6 +126,7 @@ public class PlayerController : NetworkBehaviour
             playerStats.OnPlayerDead += PlayerDeadCallback;
             // DoRagdoll(false);
             playerStats.currentWeaponSelected.weapon.shootRefraction = 0.1f;
+            playerStats.OnWeaponChanged+= SetSpawnPoint;
 
         }
 
@@ -200,6 +200,10 @@ public class PlayerController : NetworkBehaviour
 
     }
 
+    public void SetSpawnPoint(Transform transform)  
+    {
+        spawnBulletPoint.localPosition = transform.localPosition;
+    }
     public void isGroundedCheck()
     {
 
@@ -584,7 +588,7 @@ public class WeaponItem
 {
     public Weapon weapon;
     public AmmoBehaviour ammoBehaviour;
-
+    public WeaponObjectController weaponObjectController=null;
     public WeaponItem (WeaponTemplate weaponTemplate)
     {
         this.ammoBehaviour = new AmmoBehaviour(weaponTemplate.ammoType);
@@ -599,6 +603,7 @@ public class Weapon
     public WeaponAnimations changeWeaponAnimation;
     public Sprite weaponImage;
     public AmmoBehaviour ammoBehaviour;
+    public WeaponObjectController weaponObjectController;
     public float weaponDamage;
     public string weaponName;
     public float shootTimer;
@@ -618,6 +623,7 @@ public class Weapon
         this.shootTimer = weaponTemplate.shootTimer;
         this.shootRefraction = weaponTemplate.shootRefraction;
         this.currentShootRefraction = weaponTemplate.currentShootRefraction;
+        this.weaponObjectController = weaponTemplate.weaponObjectController;
         this.minShootRefraction.statValue = weaponTemplate.minShootRefraction;
         shootRate.upgradeType = UpgradeType.FireRate;
         minShootRefraction.upgradeType = UpgradeType.recoil;

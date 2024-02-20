@@ -8,7 +8,6 @@ namespace Menu.StatsPanel
 {
     public class BuildObjectHandler : MonoBehaviour
     {
-        [HideInInspector]
         public BuildType buildType;
         public PlayerBuild playerBuildObjectSelected;
         

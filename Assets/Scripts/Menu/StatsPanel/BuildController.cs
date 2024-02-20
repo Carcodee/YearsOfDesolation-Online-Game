@@ -50,11 +50,6 @@ public class BuildController : MonoBehaviour
             float value = upgrades.value.floatValue;
             playerStatsController.playerBuildSelected.Upgrade(upgrades.index, upgrades.upgradeType, value);
         }
-        //Debug.Log("Upgraded");
-        //Debug.Log(playerStatsController.playerBuildSelected.upgradesBuffer[0].shootRate.tier);
-        //Debug.Log(playerStatsController.playerBuildSelected.upgradesBuffer[0].recoil.tier);
-        //Debug.Log(playerStatsController.playerBuildSelected.upgradesBuffer[0].clipSize.tier);
-        //Debug.Log(playerStatsController.playerBuildSelected.upgradesBuffer[0].reloadSpeed.tier);
 
         PreviewSlots();
 
