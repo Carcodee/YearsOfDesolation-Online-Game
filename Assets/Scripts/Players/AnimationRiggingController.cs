@@ -8,39 +8,55 @@ public class AnimationRiggingController : MonoBehaviour
 {
     
     public Rig animationRigging;
-    public PlayerStatsController playerStatsController;
+    public PlayerController playerStatsController;
     public Transform handLTarget;
     public Transform currentHandLTarget;
     [Header("IK Constraints")]
-    TwoBoneIKConstraint twoBoneIKConstraint;
+    public TwoBoneIKConstraint twoBoneIKConstraint;
+    public MultiAimConstraint multiAimConstraint;
 
 
     private void Start()
     {
-        playerStatsController.OnWeaponChanged += OnWeaponChanged;
-        handLTarget.position = playerStatsController.weaponNoBuildGripPoint.position;
+        playerStatsController.playerStats.OnWeaponChanged += OnWeaponChanged;
+        handLTarget.position = playerStatsController.playerStats.weaponNoBuildGripPoint.position;
 
     }
 
     void Update()
     {
-        if (!playerStatsController.hasPlayerSelectedBuild)
+
+        if (playerStatsController.isSprinting)
         {
-            handLTarget.position = playerStatsController.weaponNoBuildGripPoint.position;
+            multiAimConstraint.weight = 0;
+            twoBoneIKConstraint.weight = 0;
+        }
+        else
+        {
+            multiAimConstraint.weight = 1;
+            twoBoneIKConstraint.weight = 1;
+        }
+        if (!playerStatsController.playerStats.hasPlayerSelectedBuild)
+        {
+            handLTarget.position = playerStatsController.playerStats.weaponNoBuildGripPoint.position;
+            handLTarget.rotation = playerStatsController.playerStats.weaponNoBuildGripPoint.rotation;
             return;
         }
         if (currentHandLTarget != null)
         {
             handLTarget.position = currentHandLTarget.position;
+            handLTarget.rotation = currentHandLTarget.rotation;
+
         }
+
         
     }
     
     public void OnWeaponChanged(Transform gripPoint)
     {
-        if (playerStatsController.playerBuildSelected.first_weapon.weapon.weaponObjectController != null)
+        if (playerStatsController.playerStats.playerBuildSelected.first_weapon.weapon.weaponObjectController != null)
         {
-            currentHandLTarget= playerStatsController.currentWeaponSelected.weaponObjectController.weaponGripPoint;
+            currentHandLTarget= playerStatsController.playerStats.currentWeaponSelected.weaponObjectController.weaponGripPoint;
         }
         else
         {

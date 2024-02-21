@@ -21,12 +21,14 @@ public class PlayerComponentsHandler : NetworkBehaviour
     public Canvas canvasPrefab;
     public GameObject cameraPrefab;
     public GameObject cameraZoomPrefab;
+    public GameObject sprintCameraPrefab;
     private Rigidbody rb;
+    public PlayerController playerController;
 
     [Header("Ref")]
     public CinemachineVirtualCamera cinemachineVirtualCameraInstance;
     public CinemachineVirtualCamera cinmachineCloseLookCameraIntance;
-
+    public CinemachineVirtualCamera cinmachineSprintCameraIntance;
     [Header("UI")]
     public TextMeshProUGUI playerNameText;
     public StatsPanelController statsPanelController;
@@ -141,6 +143,10 @@ public class PlayerComponentsHandler : NetworkBehaviour
         cinmachineCloseLookCameraIntance=cameraZoom.GetComponentInChildren<CinemachineVirtualCamera>();
         cinmachineCloseLookCameraIntance.Follow = cinemachineCameraTarget;
         
+        GameObject sprintCamera = Instantiate(sprintCameraPrefab);
+        cinmachineSprintCameraIntance = sprintCamera.GetComponentInChildren<CinemachineVirtualCamera>();
+        cinmachineSprintCameraIntance.Follow = cinemachineCameraTarget;
+        
         //Canvas
         Canvas canvas = Instantiate(canvasPrefab,transform);
         canvas.GetComponentInChildren<Button>().onClick.AddListener(transform.GetComponent<PlayerStatsController>().OnSpawnPlayer);
@@ -186,13 +192,22 @@ public class PlayerComponentsHandler : NetworkBehaviour
         
         if (Input.GetKeyDown(KeyCode.Mouse1))
         {
-            cinmachineCloseLookCameraIntance.Priority = 20;
+            cinmachineCloseLookCameraIntance.Priority = 25;
         }
         if (Input.GetKeyUp(KeyCode.Mouse1))
         {
             cinmachineCloseLookCameraIntance.Priority = 5;
         }
+        if (playerController.isSprinting)
+        {
+            cinmachineSprintCameraIntance.Priority = 20;
+        }   
+        if (!playerController.isSprinting)
+        {
+            cinmachineSprintCameraIntance.Priority = 5;
+        }
     }
+    
     public IEnumerator ShakeCamera(float duration, float magnitude, float frecuency)
     {
         float elapsed = 0.0f;

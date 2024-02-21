@@ -144,12 +144,14 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
         currentWeaponSelected = playerBuildSelected.first_weapon;
         onBagWeapon = playerBuildSelected.second_weapon;
         playerBuildSelected.CreateDataBuild();
+        
         playerBuildSelected.first_weapon.weaponObjectController=Instantiate(playerBuildSelected.first_weapon.weapon.weaponObjectController, weaponSpawnPoint[0].position, Quaternion.identity, weaponSpawnPoint[0]);
-        playerBuildSelected.first_weapon.weaponObjectController.transform.localPosition = Vector3.zero;
+        playerBuildSelected.first_weapon.weaponObjectController.transform.localPosition =  playerBuildSelected.first_weapon.weapon.weaponObjectController.transform.localPosition;
         playerBuildSelected.first_weapon.weaponObjectController.transform.localRotation= playerBuildSelected.first_weapon.weapon.weaponObjectController.transform.localRotation;
+      
         playerBuildSelected.second_weapon.weaponObjectController=Instantiate(playerBuildSelected.second_weapon.weapon.weaponObjectController, weaponSpawnPoint[1].position, Quaternion.identity, weaponSpawnPoint[0]);
-        playerBuildSelected.second_weapon.weaponObjectController.transform.localPosition = Vector3.zero;
-        playerBuildSelected.second_weapon.weaponObjectController.transform.localRotation= playerBuildSelected.second_weapon.weapon.weaponObjectController.transform.localRotation;
+        playerBuildSelected.second_weapon.weaponObjectController.transform.localPosition = playerBuildSelected.second_weapon.weapon.weaponObjectController.transform.localPosition;
+        playerBuildSelected.second_weapon.weaponObjectController.transform.localRotation = playerBuildSelected.second_weapon.weapon.weaponObjectController.transform.localRotation;
 
         playerBuildSelected.second_weapon.weaponObjectController.gameObject.SetActive(false);
         

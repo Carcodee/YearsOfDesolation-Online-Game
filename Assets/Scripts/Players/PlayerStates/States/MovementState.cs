@@ -55,11 +55,12 @@ namespace Players.PlayerStates.States
                 stateMachineController.SetState("Aiming");
 
             }
-            if (Input.GetKeyDown(KeyCode.LeftShift))
+            if (Input.GetKeyDown(KeyCode.LeftShift) && playerRef.move.magnitude > 0.1f)
             {
                 stateMachineController.SetState("Sprint");
                 return;
-            }
+            } 
+            
             if (Input.GetKeyDown(KeyCode.LeftControl))
             {
                 stateMachineController.SetState("Crouch");

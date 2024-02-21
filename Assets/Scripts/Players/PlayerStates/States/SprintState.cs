@@ -13,13 +13,20 @@ namespace Players.PlayerStates.States
         public override void StateEnter()
         {
             base.StateEnter();
-            playerRef.sprintFactor = 1.5f;
+            playerRef.lockShoot = true;
+            playerRef.sprintFactor = 1.6f;
+            playerRef.isSprinting = true;
+            this.networkAnimator.Animator.SetBool("Sprint", playerRef.isSprinting);
+
         }
 
         public override void StateExit()
         {
             // this.networkAnimator.Animator.SetBool("Sprint", false);
             lerpTimeToSprint=0;
+            playerRef.lockShoot =false;
+            playerRef.isSprinting = false;
+            this.networkAnimator.Animator.SetBool("Sprint", playerRef.isSprinting);
 
         }
 
@@ -31,9 +38,12 @@ namespace Players.PlayerStates.States
             float z = Input.GetAxis("Sprint1");
             lerpTimeToSprint += Time.deltaTime;
             lerpTimeToSprint = Mathf.Clamp(lerpTimeToSprint, 0, 1);
-            float lerp = Mathf.Lerp(playerRef.move.z, 2, easeOutQuart(lerpTimeToSprint));
-            this.networkAnimator.Animator.SetFloat("X", this.playerRef.move.x*2);
-            this.networkAnimator.Animator.SetFloat("Y", lerp);
+            float targetDirY= (y<0)? -2*Mathf.Abs(y):2*Mathf.Abs(y);
+            float targetDirX= (x<0)? -2*Mathf.Abs(x):2*Mathf.Abs(x);
+            float lerpX = Mathf.Lerp(playerRef.move.x,targetDirX, easeOutQuart(lerpTimeToSprint));
+            float lerpY = Mathf.Lerp(playerRef.move.z,targetDirY, easeOutQuart(lerpTimeToSprint));
+            this.networkAnimator.Animator.SetFloat("X", lerpX);
+            this.networkAnimator.Animator.SetFloat("Y", lerpY);
         }
 
         public override void StateUpdate()
@@ -77,7 +87,7 @@ namespace Players.PlayerStates.States
         }
         public override void StateLateUpdate()
         {
-            this.playerRef.RotatePlayer();
+             this.playerRef.RotatePlayer();
 
         }
         float easeOutQuart(float time) {

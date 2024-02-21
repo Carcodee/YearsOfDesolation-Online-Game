@@ -980,6 +980,7 @@ MonoBehaviour:
   crouchFactor: 0.5
   AimingSpeedFactor: 0.5
   motionSpeed: {x: 0, y: 0, z: 0}
+  isSprinting: 0
   ground:
     serializedVersion: 2
     m_Bits: 256
@@ -1387,8 +1388,12 @@ MonoBehaviour:
     type: 3}
   cameraZoomPrefab: {fileID: 2763996978624655819, guid: 71f46dd685b5bea43acdc3ab47188dd7,
     type: 3}
+  sprintCameraPrefab: {fileID: 2763996978624655819, guid: 8fe94bd9ed27e484dad9764851dc8d62,
+    type: 3}
+  playerController: {fileID: 7329186199153258139}
   cinemachineVirtualCameraInstance: {fileID: 0}
   cinmachineCloseLookCameraIntance: {fileID: 0}
+  cinmachineSprintCameraIntance: {fileID: 0}
   playerNameText: {fileID: 0}
   statsPanelController: {fileID: 0}
   pauseController: {fileID: 0}
@@ -1461,9 +1466,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animationRigging: {fileID: 940783172214761599}
-  playerStatsController: {fileID: 6344872551529989650}
+  playerStatsController: {fileID: 7329186199153258139}
   handLTarget: {fileID: 839888130895678969}
   currentHandLTarget: {fileID: 0}
+  twoBoneIKConstraint: {fileID: 5369960337818183342}
+  multiAimConstraint: {fileID: 7314398233730771931}
 --- !u!143 &-7918970974976374508
 CharacterController:
   m_ObjectHideFlags: 0
@@ -2104,7 +2111,7 @@ MonoBehaviour:
     m_Target: {fileID: 839888130895678969}
     m_Hint: {fileID: 5580386441530026741}
     m_TargetPositionWeight: 1
-    m_TargetRotationWeight: 1
+    m_TargetRotationWeight: 0
     m_HintWeight: 1
     m_MaintainTargetPositionOffset: 1
     m_MaintainTargetRotationOffset: 0
@@ -2134,7 +2141,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0.00000017881389, y: -0.000000038854118, z: 0.00000012973325,
     w: 1}
-  m_LocalPosition: {x: -0.44854376, y: 1.1280475, z: -0.43758848}
+  m_LocalPosition: {x: -0.833, y: 0.597, z: 0.188}
   m_LocalScale: {x: 0.100000024, y: 0.10000001, z: 0.1}
   m_ConstrainProportionsScale: 0
   m_Children: []

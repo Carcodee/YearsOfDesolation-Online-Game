@@ -69,6 +69,7 @@ public class PlayerController : NetworkBehaviour
     public float AimingSpeedFactor = 0.5f;
     private float slidingTimer = 0f;
     public Vector3 motionSpeed;
+    public bool isSprinting=false;
     
     [Header("Camera Direction")]
     private int distanceFactor = 100;
@@ -250,7 +251,7 @@ public class PlayerController : NetworkBehaviour
 
     public void Move(float x, float y)
     {
-        move = new Vector3(x, 0, y);
+        move = new Vector3(x, 0, y).normalized;
     }
 
 
