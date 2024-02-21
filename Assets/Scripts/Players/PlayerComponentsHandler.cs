@@ -29,6 +29,8 @@ public class PlayerComponentsHandler : NetworkBehaviour
     public CinemachineVirtualCamera cinemachineVirtualCameraInstance;
     public CinemachineVirtualCamera cinmachineCloseLookCameraIntance;
     public CinemachineVirtualCamera cinmachineSprintCameraIntance;
+    public MinimapCameraController playerMinimapCamera;
+    
     [Header("UI")]
     public TextMeshProUGUI playerNameText;
     public StatsPanelController statsPanelController;
@@ -53,7 +55,7 @@ public class PlayerComponentsHandler : NetworkBehaviour
     private bool IsCurrentDeviceMouse=true;
     private const float _threshold = 0;
 
-
+    
 
     public override void OnNetworkSpawn()
     {
@@ -124,8 +126,8 @@ public class PlayerComponentsHandler : NetworkBehaviour
 
     void InstanciateComponents()
     {
-        //_playerInput = GetComponent<PlayerInput>();
-        //_input = GetComponent<StarterAssetsInputs>();
+        playerInput = GetComponent<PlayerInput>();
+        input = GetComponent<StarterAssetsInputs>();
         input = transform.GetComponent<StarterAssetsInputs>();
         playerInput.enabled = true;
         if (playerInput.actions != playerControls)
@@ -147,6 +149,8 @@ public class PlayerComponentsHandler : NetworkBehaviour
         cinmachineSprintCameraIntance = sprintCamera.GetComponentInChildren<CinemachineVirtualCamera>();
         cinmachineSprintCameraIntance.Follow = cinemachineCameraTarget;
         
+        //Minimap
+        playerMinimapCamera.transform.SetParent(null);
         //Canvas
         Canvas canvas = Instantiate(canvasPrefab,transform);
         canvas.GetComponentInChildren<Button>().onClick.AddListener(transform.GetComponent<PlayerStatsController>().OnSpawnPlayer);
@@ -222,6 +226,6 @@ public class PlayerComponentsHandler : NetworkBehaviour
 
         MyUtilities.StopCameraShake(cinemachineVirtualCameraInstance);
         MyUtilities.StopCameraShake(cinmachineCloseLookCameraIntance);
-
+        
     }
 }

@@ -17,8 +17,7 @@ namespace Players.PlayerStates.States
             playerRef.hasPlaned = false;
             playerRef.sprintFactor = 1;
             networkAnimator.Animator.Play("Movement");
-            // networkAnimator.Animator.SetFloat("Aiming", 0);
-
+            
         }
 
         public override void StateExit()

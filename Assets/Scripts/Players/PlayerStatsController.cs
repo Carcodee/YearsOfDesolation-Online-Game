@@ -75,6 +75,9 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
 
     //temporal variable
     public bool isChangingWeapon=false;
+    
+    [Header("Netcode")]
+    ulong clientIdInstigator;
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
@@ -118,7 +121,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
     private void Update()
     {
         if (IsOwner) {
-            if (!_IsInitizalized && health.Value==0) {
+            if (!_IsInitizalized && health.Value<=0) {
                 OnSpawnPlayer?.Invoke();
                 _IsInitizalized = true;
             }
@@ -286,10 +289,21 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
 
     public void TakeDamage(float damage)
     {
-        
-
         if (IsOwner)
         {
+            
+            if (!GameController.instance.started)
+            {
+                return;
+            }
+            if (stateMachineController.currentState.stateName == "Dead" && GameController.instance.mapLogic.Value.isBattleRoyale)
+            {
+                Application.Quit();
+                return;
+            }
+            {
+                
+            }
             if (stateMachineController.currentState.stateName == "Dead" || health.Value<=0)
             {
                 return;
@@ -324,9 +338,10 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void TakeDamageServerRpc(int myDamage)
+    public void TakeDamageServerRpc(int myDamage, ulong clientId)
     {
-        TakeDamageClientRpc(myDamage);
+        //TODO> money is being added to the player that is dead
+        TakeDamageClientRpc(myDamage, clientId);
     }
 
     [ServerRpc]
@@ -337,26 +352,42 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
     
     public void SetPlayerOnPos(float oldVal, float newVal)
     {
+        
         if (health.Value<=0 && GameController.instance.zoneControllers.Count > 0 && stateMachineController.currentState.stateName!="Dead"){
             OnPlayerDead?.Invoke();
+            var rpcPrams= new ClientRpcParams
+            {
+                Send = new ClientRpcSendParams
+                {
+                    TargetClientIds = new[] {clientIdInstigator}
+                }
+                
+            };
+            AddAvailablePointsOnDeadClientRpc(1,rpcPrams);
             CallServerOnDeadServerRpc((int)zoneAsigned.Value);
         }
     }
     [ClientRpc]
-    public void TakeDamageClientRpc(int myDamage)
+    public void TakeDamageClientRpc(int myDamage, ulong playerClientID)
     {
 
         if (IsOwner)
         {
             if (stateMachineController.currentState.stateName == "Dead" || health.Value<=0)
             {
+                
                 return;
             }
-            
             else
             {
+                
+                if (!GameController.instance.started)
+                {
+                    return;
+                }
                 if (IsServer)
                 {
+                    clientIdInstigator = playerClientID;
                     //this is wrong stat holder is controlling the health
                     health.Value -= (myDamage);
                     StartCoroutine(playerComponentsHandler.ShakeCamera(0.3f, 5, 5));
@@ -364,6 +395,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
                 }
                 else
                 {
+                    clientIdInstigator = playerClientID;
                     SetHealthServerRpc(health.Value - (myDamage));  
                     StartCoroutine(playerComponentsHandler.ShakeCamera(0.3f, 5, 5));
                     PlayerVFXController.bloodEffectHandle.CreateVFX(takeDamagePosition.position, Quaternion.identity , IsServer);
@@ -376,6 +408,18 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
     }
     
 
+    [ClientRpc]
+    public void AddAvailablePointsOnDeadClientRpc(int points, ClientRpcParams clientRpcParams= default)
+    {
+        if (IsServer)
+        {
+            avaliblePoints.Value += points;
+        }
+        else
+        {
+            SetAvaliblePointsServerRpc(avaliblePoints.Value + points);
+        }
+    }
 
     public void AddValueFromButton(int index)
     {

@@ -423,13 +423,13 @@ public class PlayerController : NetworkBehaviour
                     
                             if (IsServer)
                             {
-                                objectRef.TakeDamageClientRpc((int)damageToDo);
+                                objectRef.TakeDamageClientRpc((int)damageToDo, OwnerClientId);
                                 CrosshairCreator.OnHitDetected?.Invoke(hitData.hitType);
 
                             }
                             if (IsClient)
                             {
-                                objectRef.TakeDamageServerRpc((int)damageToDo);
+                                objectRef.TakeDamageServerRpc((int)damageToDo, OwnerClientId);
                                 CrosshairCreator.OnHitDetected?.Invoke(hitData.hitType);
 
                             }

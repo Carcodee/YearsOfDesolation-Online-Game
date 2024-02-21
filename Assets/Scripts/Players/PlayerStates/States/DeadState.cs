@@ -21,8 +21,6 @@ namespace Players.PlayerStates.States
             playerRef.sprintFactor = 1f;
             playerRef.move = Vector3.zero;
             playerRef.playerStats.SetHealth(playerRef.playerStats.GetMaxHealth());
-            
-            playerRef.playerStats.health.OnValueChanged+=RespawnPlayer;
         }
 
         public override void StateExit()
@@ -59,10 +57,6 @@ namespace Players.PlayerStates.States
                 stateMachineController.SetState("Movement");
 
             }
-        }
-        public void RespawnPlayer(float oldValue,float newValue)
-        {
-
         }
 
     }

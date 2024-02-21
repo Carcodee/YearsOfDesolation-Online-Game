@@ -480,6 +480,7 @@ GameObject:
   - component: {fileID: 1230539593047533868}
   - component: {fileID: 4484300109741967187}
   - component: {fileID: 7818082010535695104}
+  - component: {fileID: 8971999252156365834}
   m_Layer: 0
   m_Name: MinimapViewPlayer
   m_TagString: Untagged
@@ -690,6 +691,19 @@ MonoBehaviour:
       enableFptlForForwardOpaque: 0
       enableBigTilePrepass: 0
       isFptlEnabled: 0
+--- !u!114 &8971999252156365834
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2620403231188312912}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f358af6218ff7f04a8652d7722ac3795, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerController: {fileID: 7329186199153258139}
 --- !u!1 &2712369393089554260
 GameObject:
   m_ObjectHideFlags: 0
@@ -1394,6 +1408,7 @@ MonoBehaviour:
   cinemachineVirtualCameraInstance: {fileID: 0}
   cinmachineCloseLookCameraIntance: {fileID: 0}
   cinmachineSprintCameraIntance: {fileID: 0}
+  playerMinimapCamera: {fileID: 8971999252156365834}
   playerNameText: {fileID: 0}
   statsPanelController: {fileID: 0}
   pauseController: {fileID: 0}
