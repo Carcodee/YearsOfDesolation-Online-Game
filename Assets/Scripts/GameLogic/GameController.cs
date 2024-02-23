@@ -11,7 +11,7 @@ public class GameController : NetworkBehaviour
     public static GameController instance;
 
     [Header("Lobby")]
-    public bool started;
+    public NetworkVariable<bool> started;
     public NetworkVariable<float> netTimeToStart = new NetworkVariable<float>();
     public float waitingTime;
 
@@ -35,6 +35,7 @@ public class GameController : NetworkBehaviour
     public PlayerZoneController zoneControllerPrefab;
     public List<PlayerZoneController> zoneControllers;
     zoneColors[] zoneColors;
+    
     
     private void Awake()
     {
@@ -140,7 +141,7 @@ public class GameController : NetworkBehaviour
                 }
             }
             if (IsServer) SpawnCoins();
-            started = true;
+            started.Value = true;
     }
 
 
@@ -226,20 +227,20 @@ public class GameController : NetworkBehaviour
 
     private void UpdateTime()
     {
-        if (IsServer && !started)
+        if (IsServer && !started.Value)
         {
             netTimeToStart.Value += Time.deltaTime;
 
         }
-        else if (IsClient && !started && IsOwner)
+        else if (IsClient && !started.Value && IsOwner)
         {
             SetTimeToStartServerRpc(Time.deltaTime);
         }
-        if (netTimeToStart.Value > waitingTime && !started)
+        if (netTimeToStart.Value > waitingTime && !started.Value)
         {
             StartGame();
         }
-        if (started && !mapLogic.Value.isBattleRoyale)
+        if (started.Value && !mapLogic.Value.isBattleRoyale)
         {
             farmStageTimer += Time.deltaTime;
        
@@ -255,6 +256,14 @@ public class GameController : NetworkBehaviour
 
     }
 
+    [ServerRpc(RequireOwnership = false)]
+    public void AddPointsOnKillerServerRpc(int points, ulong instigatorClientId,ServerRpcParams serverRpcParams = default)
+    {
+        
+            NetworkManager.Singleton.ConnectedClients[instigatorClientId].PlayerObject.GetComponent<PlayerStatsController>().AddAvaliblePoint(points);
+        
+    }
+    
     public Vector3 GetRandomPointFromCollider(Collider col)
     {
         Vector3 newPos=new Vector3(UnityEngine.Random.Range(col.bounds.min.x, col.bounds.max.x), 2.5f ,UnityEngine.Random.Range(col.bounds.min.z, col.bounds.max.z));
@@ -367,6 +376,13 @@ public class GameController : NetworkBehaviour
         players[playerIndex].position = pos;
         players[playerIndex].GetComponent<PlayerController>().characterController.enabled = true;
         players[playerIndex].GetComponent<PlayerStatsController>().OnStatsChanged?.Invoke();
+
+            Debug.Log("Called on client number" + playerIndex);
+            Debug.Log("Killer: " + players[playerIndex].GetComponent<PlayerStatsController>().clientIdInstigator.Value);
+
+            var rpcParams = new ServerRpcParams { };
+            rpcParams.Receive.SenderClientId=players[playerIndex].GetComponent<PlayerStatsController>().clientIdInstigator.Value;
+            AddPointsOnKillerServerRpc(1, players[playerIndex].GetComponent<PlayerStatsController>().clientIdInstigator.Value,rpcParams);            
         if (PlayerVFXController.respawningEffectHandle!=null)
         {
             PlayerVFXController.respawningEffectHandle.CreateVFX(players[playerIndex].transform.position, Quaternion.identity, false);

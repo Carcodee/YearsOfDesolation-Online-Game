@@ -8,7 +8,8 @@ public sealed class OutsideOfZone : CustomPostProcessVolumeComponent, IPostProce
 {
     [Tooltip("Controls the intensity of the effect.")]
     public ClampedFloatParameter intensity = new ClampedFloatParameter(0f, 0f, 1f);
-
+    [Tooltip("Controls the intensity of the effect.")]
+    public ClampedFloatParameter vigneeteIntensity = new ClampedFloatParameter(0f, 0f, 1f);
     Material m_Material;
 
     public bool IsActive() => m_Material != null && intensity.value > 0f;
@@ -32,6 +33,7 @@ public sealed class OutsideOfZone : CustomPostProcessVolumeComponent, IPostProce
             return;
 
         m_Material.SetFloat("_Intensity", intensity.value);
+        m_Material.SetFloat("vigneeteIntensity", vigneeteIntensity.value);
         m_Material.SetTexture("_MainTex", source);
         HDUtils.DrawFullScreen(cmd, m_Material, destination, shaderPassId: 0);
     }

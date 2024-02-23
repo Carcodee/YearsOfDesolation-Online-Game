@@ -419,19 +419,16 @@ public class PlayerController : NetworkBehaviour
                             Debug.Log("Damage to do: " + damageToDo);
                             Debug.Log("Layer Tag: " + hit.collider.includeLayers);
                             Debug.Log("Gameobject Name: " + hit.collider.gameObject.name);
-                    
-                    
+    
                             if (IsServer)
                             {
                                 objectRef.TakeDamageClientRpc((int)damageToDo, OwnerClientId);
                                 CrosshairCreator.OnHitDetected?.Invoke(hitData.hitType);
-
                             }
                             if (IsClient)
                             {
                                 objectRef.TakeDamageServerRpc((int)damageToDo, OwnerClientId);
                                 CrosshairCreator.OnHitDetected?.Invoke(hitData.hitType);
-
                             }
                         }
                     }

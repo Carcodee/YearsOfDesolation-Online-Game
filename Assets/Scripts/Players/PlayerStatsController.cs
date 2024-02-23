@@ -77,7 +77,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
     public bool isChangingWeapon=false;
     
     [Header("Netcode")]
-    ulong clientIdInstigator;
+    public NetworkVariable<ulong> clientIdInstigator;
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
@@ -224,15 +224,12 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
     public void SetHealth(int value)
     {
         if (IsServer)
-        {
+        { 
             health.Value = value;
         }
         else
         {
-            if (IsOwner)
-            {
-                SetHealthServerRpc(value);
-            }
+           SetHealthServerRpc(value);
         }
     }
     public void SetTemplate(int index)
@@ -291,18 +288,10 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
     {
         if (IsOwner)
         {
-            
-            if (!GameController.instance.started)
-            {
-                return;
-            }
             if (stateMachineController.currentState.stateName == "Dead" && GameController.instance.mapLogic.Value.isBattleRoyale)
             {
                 Application.Quit();
                 return;
-            }
-            {
-                
             }
             if (stateMachineController.currentState.stateName == "Dead" || health.Value<=0)
             {
@@ -352,62 +341,56 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
     
     public void SetPlayerOnPos(float oldVal, float newVal)
     {
-        
+        Debug.Log("Health: " + newVal);
         if (health.Value<=0 && GameController.instance.zoneControllers.Count > 0 && stateMachineController.currentState.stateName!="Dead"){
-            OnPlayerDead?.Invoke();
-            var rpcPrams= new ClientRpcParams
-            {
-                Send = new ClientRpcSendParams
-                {
-                    TargetClientIds = new[] {clientIdInstigator}
-                }
-                
-            };
-            AddAvailablePointsOnDeadClientRpc(1,rpcPrams);
+            
             CallServerOnDeadServerRpc((int)zoneAsigned.Value);
+            OnPlayerDead?.Invoke();
         }
     }
+
     [ClientRpc]
     public void TakeDamageClientRpc(int myDamage, ulong playerClientID)
     {
 
         if (IsOwner)
         {
+            if (!GameController.instance.started.Value)
+            {
+                return;
+            }
             if (stateMachineController.currentState.stateName == "Dead" || health.Value<=0)
             {
-                
                 return;
+            }
+            if (IsServer)
+            {
+                clientIdInstigator.Value = playerClientID;
+                //this is wrong stat holder is controlling the health
+                health.Value -= (myDamage);
+                StartCoroutine(playerComponentsHandler.ShakeCamera(0.3f, 5, 5));
+                PlayerVFXController.bloodEffectHandle.CreateVFX(takeDamagePosition.position, Quaternion.identity ,IsServer);
             }
             else
             {
-                
-                if (!GameController.instance.started)
-                {
-                    return;
-                }
-                if (IsServer)
-                {
-                    clientIdInstigator = playerClientID;
-                    //this is wrong stat holder is controlling the health
-                    health.Value -= (myDamage);
-                    StartCoroutine(playerComponentsHandler.ShakeCamera(0.3f, 5, 5));
-                    PlayerVFXController.bloodEffectHandle.CreateVFX(takeDamagePosition.position, Quaternion.identity ,IsServer);
-                }
-                else
-                {
-                    clientIdInstigator = playerClientID;
-                    SetHealthServerRpc(health.Value - (myDamage));  
-                    StartCoroutine(playerComponentsHandler.ShakeCamera(0.3f, 5, 5));
-                    PlayerVFXController.bloodEffectHandle.CreateVFX(takeDamagePosition.position, Quaternion.identity , IsServer);
+                SetClientIdInstigatorServerRpc(playerClientID) ;
+                SetHealthServerRpc(health.Value - (myDamage));  
+                StartCoroutine(playerComponentsHandler.ShakeCamera(0.3f, 5, 5));
+                PlayerVFXController.bloodEffectHandle.CreateVFX(takeDamagePosition.position, Quaternion.identity , IsServer);
 
-                }
-                OnStatsChanged?.Invoke();
             }
+            OnStatsChanged?.Invoke();
+        
         }
 
     }
     
 
+    [ServerRpc]
+    public void SetClientIdInstigatorServerRpc(ulong clientId)
+    {
+        clientIdInstigator.Value = clientId;
+    }
     [ClientRpc]
     public void AddAvailablePointsOnDeadClientRpc(int points, ClientRpcParams clientRpcParams= default)
     {
@@ -417,7 +400,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
         }
         else
         {
-            SetAvaliblePointsServerRpc(avaliblePoints.Value + points);
+            avaliblePoints.Value += points;
         }
     }
 
@@ -474,9 +457,16 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
         maxHealth.Value += 1;
     }
     
-    public void AddAvaliblePoint()
+    public void AddAvaliblePoint(int value)
     {
-        avaliblePoints.Value++;
+        if (IsServer)
+        {
+            avaliblePoints.Value+=value;
+        }
+        else
+        {
+            addAvaliblePointsServerRpc(value);
+        }
     }
     public void RemoveAvaliblePoint()
     {
@@ -494,7 +484,8 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
         statsTemplateSelected.Value = index;
     }
     //Stats
-    [ServerRpc]
+    
+    [ServerRpc (RequireOwnership = false)]
     public void SetHealthServerRpc(float healthPoint)
     {
          health.Value = healthPoint;
@@ -547,12 +538,16 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
         playerLevel.Value= val;
     }
     //AvaliblePoints
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     public void SetAvaliblePointsServerRpc(int val)
     {
         avaliblePoints.Value=val;
     }
-
+    [ServerRpc(RequireOwnership = false)]
+    public void addAvaliblePointsServerRpc(int val)
+    {
+        avaliblePoints.Value+=val;
+    }
 
 
     [ServerRpc]
@@ -593,6 +588,19 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
             if (other.CompareTag("Zone"))
             {
                 isPlayerInsideTheZone = true;
+            }
+            if (other.CompareTag("Coin"))
+            {
+                if (IsServer)
+                {
+                    avaliblePoints.Value += 1;
+                }
+                else
+                {
+                    AddAvailablePointsOnDeadClientRpc(1);
+                    int randomPlayer = UnityEngine.Random.Range(0, GameController.instance.numberOfPlayers.Value);
+                    coinPosition = GameController.instance.players[randomPlayer].GetComponent<PlayerStatsController>().playerZoneController.spawnCoinPoint;
+                }
             }
         }
 

@@ -29,7 +29,11 @@ namespace Players.PlayerStates.States
             playerRef.sprintFactor = 1f;
             this.playerRef.ActivatePlayer();
             playerRef.playerStats.OnStatsChanged?.Invoke();
-            
+            // if (playerRef.playerStats.GetMaxHealth()!=playerRef.playerStats.GetHealth())
+            // {
+            //     playerRef.playerStats.health.OnValueChanged?.Invoke(0,playerRef.playerStats.GetMaxHealth());
+            // }
+            CanvasController.OnUpdateUI?.Invoke();
         }
 
         public override void StateLateUpdate()

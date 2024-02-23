@@ -15,11 +15,13 @@ using ProgressBar = Michsky.UI.ModernUIPack.ProgressBar;
 public class CanvasController : MonoBehaviour
 {
     Canvas canvas;
+    
     [Header("Game")]
     public TextMeshProUGUI timeLeft;
     public TextMeshProUGUI playersAlive;
     public TextMeshProUGUI playersConnected;
-
+    public static Action OnUpdateUI;
+    
     public Michsky.UI.Heat.ProgressBar timeLeftBar;
     public TextMeshProUGUI timeLeftBarText;
     
@@ -75,6 +77,7 @@ public class CanvasController : MonoBehaviour
         timeToSpawnHolder = GameController.instance.respawnTime;
         timeToSpawnTimer = GameController.instance.respawnTime;
         playerAssigned.health.OnValueChanged += SetStats;
+        OnUpdateUI += SetStats;
         
         //TODO: bullets are not being updated
         currentBullets.text = playerAssigned.currentWeaponSelected.ammoBehaviour.currentBullets.ToString() ;
@@ -140,7 +143,21 @@ public class CanvasController : MonoBehaviour
         
         Debug.Log("Health: " + playerAssigned.GetHealth());
     }
-    
+    public void SetStats()
+    {
+        /*(float) playerAssigned.maxHealth*10*/
+        healthBar.currentPercent = playerController.playerStats.GetHealth()*10;
+        // while(healthBar.currentPercent>playerAssigned.GetHealth()*10)
+        // {
+        //     healthBar.currentPercent-=1;
+        //     if (healthBar.currentPercent<= playerAssigned.GetHealth()*10)
+        //     {
+        //         healthBar.currentPercent = playerAssigned.GetHealth()*10;
+        //     }
+        // }
+        
+        Debug.Log("Health: " + playerAssigned.GetHealth());
+    }
     private void GetComponents()
     {
         canvas = GetComponent<Canvas>();
@@ -150,7 +167,7 @@ public class CanvasController : MonoBehaviour
     private void SetTimer()
     {
         //waiting time
-        if (!GameController.instance.started)
+        if (!GameController.instance.started.Value)
         {
             timeLeft.text = "Time to start: " + (GameController.instance.waitingTime - GameController.instance.netTimeToStart.Value).ToString("0.0");
             timeLeftBarText.text = "Current Stage: Waiting";
@@ -160,7 +177,7 @@ public class CanvasController : MonoBehaviour
 
         }
         //farm time
-        if (GameController.instance.started&& !GameController.instance.mapLogic.Value.isBattleRoyale)
+        if (GameController.instance.started.Value&& !GameController.instance.mapLogic.Value.isBattleRoyale)
         {
             if (!FarmShowed)
             {
@@ -178,7 +195,7 @@ public class CanvasController : MonoBehaviour
 
         }
         //battle royale time
-        else if(GameController.instance.started && GameController.instance.mapLogic.Value.isBattleRoyale)
+        else if(GameController.instance.started.Value && GameController.instance.mapLogic.Value.isBattleRoyale)
         {
             if (!BattleRoyaleShowed)
             {
@@ -196,7 +213,7 @@ public class CanvasController : MonoBehaviour
     }
     private void DisplayPlayersConnected()
     {
-        if (!GameController.instance.started)
+        if (!GameController.instance.started.Value)
         {
             playersConnected.text = "Players Connected: " + GameController.instance.numberOfPlayers.Value.ToString();
         }

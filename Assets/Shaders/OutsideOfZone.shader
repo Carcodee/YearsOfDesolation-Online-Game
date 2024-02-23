@@ -4,6 +4,7 @@ Shader "Hidden/Shader/OutsideOfZone"
     {
         // This property is necessary to make the CommandBuffer.Blit bind the source texture to _MainTex
         _MainTex("Main Texture", 2DArray) = "grey" {}
+        
     }
 
     HLSLINCLUDE
@@ -42,6 +43,7 @@ Shader "Hidden/Shader/OutsideOfZone"
 
     // List of properties to control your post process effect
     float _Intensity;
+    float vigneeteIntensity;
     TEXTURE2D_X(_MainTex);
 
     float4 CustomPostProcess(Varyings input) : SV_Target
@@ -49,12 +51,18 @@ Shader "Hidden/Shader/OutsideOfZone"
         UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
 
         // Note that if HDUtils.DrawFullScreen is not used to render the post process, you don't need to call ClampAndScaleUVForBilinearPostProcessTexture.
+        
+        float3 sourceColor = SAMPLE_TEXTURE2D_X(_MainTex, s_linear_clamp_sampler,input.texcoord.xy).xyz;
 
-        float3 sourceColor = SAMPLE_TEXTURE2D_X(_MainTex, s_linear_clamp_sampler, ClampAndScaleUVForBilinearPostProcessTexture(input.texcoord.xy)).xyz;
+        float distance = length(input.texcoord.xy - float2(0.5, 0.5));
+        float nDistance = distance/0.5;
 
         // Apply greyscale effect
-        float3 color = lerp(sourceColor, Luminance(sourceColor), _Intensity);
-
+        float3 color = lerp(sourceColor, Gamma20ToLinear(sourceColor), _Intensity);
+         float timeBasedEffect = sin(_Time.y * 2.0 * 3.14159 * 0.5); // Oscillates every 2 seconds
+    
+        color = lerp(color, float3(0.0, 0.0, 0.0), nDistance * vigneeteIntensity*timeBasedEffect);
+        
         return float4(color, 1);
     }
 
