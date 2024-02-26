@@ -54,11 +54,11 @@ public class GameController : NetworkBehaviour
     }
     private void OnEnable()
     {
-        CoinBehaivor.OnCoinCollected += MoveCoin;
+        // CoinBehaivor.OnCoinCollected += MoveCoin;
     }
     private void OnDisable()
     {
-        CoinBehaivor.OnCoinCollected -= MoveCoin;
+        // CoinBehaivor.OnCoinCollected -= MoveCoin;
 
     }
 
@@ -108,6 +108,7 @@ public class GameController : NetworkBehaviour
     {
 
         UpdateTime();
+
         if (mapLogic.Value.isBattleRoyale && sphereRadius.radius>0)
         {
                 ReduceSphereSize();
@@ -140,7 +141,7 @@ public class GameController : NetworkBehaviour
                     SetPlayerPosClientRpc(zoneControllers[i].playerSpawn.position, i);
                 }
             }
-            if (IsServer) SpawnCoins();
+            // if (IsServer) SpawnCoins();
             started.Value = true;
     }
 
@@ -189,7 +190,7 @@ public class GameController : NetworkBehaviour
                 {
                     CoinBehaivor myCoin = Instantiate(coinPrefab, zoneControllers[coinSpawned].spawnCoinPoint.position, Quaternion.identity);
 
-                    myCoin.GetComponent<NetworkObject>().Spawn();
+                    // myCoin.GetComponent<NetworkObject>().Spawn();
                     //this represent who owns the coin
                     myCoin.networkPlayerID.Value = players[coinSpawned].GetComponent<PlayerStatsController>().OwnerClientId;
                     //this represent the zone where the coin is
@@ -421,7 +422,7 @@ public class GameController : NetworkBehaviour
         //set the coin on the client side   
         NetworkManager.Singleton.SpawnManager.SpawnedObjects[networkID].GetComponent<Transform>().position = zoneControllers[coinIndex].spawnCoinPoint.position;
         zoneControllers[coinIndex].currentCoin = NetworkManager.Singleton.SpawnManager.SpawnedObjects[networkID].GetComponent<CoinBehaivor>();
-        players[coinIndex].GetComponent<PlayerStatsController>().coinPosition = NetworkManager.Singleton.SpawnManager.SpawnedObjects[networkID].GetComponent<CoinBehaivor>().transform;
+        // players[coinIndex].GetComponent<PlayerStatsController>().coinPosition = NetworkManager.Singleton.SpawnManager.SpawnedObjects[networkID].GetComponent<CoinBehaivor>().transform;
     }
     //set the zone controller on the client
     [ClientRpc]

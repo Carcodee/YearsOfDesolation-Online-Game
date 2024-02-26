@@ -17,35 +17,28 @@ namespace Players.PlayerStates.States
     
         public override void StateEnter()
         {
+            playerRef.lockShoot = true;
             currentRespawnTimer= 0;
             playerRef.sprintFactor = 1f;
             playerRef.move = Vector3.zero;
             playerRef.playerStats.SetHealth(playerRef.playerStats.GetMaxHealth());
         }
-
         public override void StateExit()
         {
             //respawn
             playerRef.sprintFactor = 1f;
             this.playerRef.ActivatePlayer();
             playerRef.playerStats.OnStatsChanged?.Invoke();
-            // if (playerRef.playerStats.GetMaxHealth()!=playerRef.playerStats.GetHealth())
-            // {
-            //     playerRef.playerStats.health.OnValueChanged?.Invoke(0,playerRef.playerStats.GetMaxHealth());
-            // }
             CanvasController.OnUpdateUI?.Invoke();
+            playerRef.lockShoot = false;
         }
 
         public override void StateLateUpdate()
         {
-        
         }
-
         public override void StateInput()
         {
-        
         }
-
         public override void StatePhysicsUpdate()
         {
         }

@@ -6,6 +6,7 @@ using Michsky.UI.Heat;
 using Third_Party.Modern_UI_Pack.Scripts.Slider;
 using TMPro;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
@@ -21,6 +22,8 @@ public class CanvasController : MonoBehaviour
     public TextMeshProUGUI playersAlive;
     public TextMeshProUGUI playersConnected;
     public static Action OnUpdateUI;
+    public static Action OnBulletsAddedUI;
+    public static Action OnMoneyAddedUI;
     
     public Michsky.UI.Heat.ProgressBar timeLeftBar;
     public TextMeshProUGUI timeLeftBarText;
@@ -67,9 +70,17 @@ public class CanvasController : MonoBehaviour
     public bool stageObjectPlaying=false;
     bool BattleRoyaleShowed = false;
     bool FarmShowed = false;
+    public Animator[] totalHudAnimators;
+    public Animator moneyAnimator;
+    
+    
+    [Header("Notifications")]
+    public TextMeshProUGUI ammoAddedText;
+    public TextMeshProUGUI moneyAddedText;
+    public TextMeshProUGUI currentMoney;
 
-
-
+    
+    
     void Start()
     {
     
@@ -78,13 +89,16 @@ public class CanvasController : MonoBehaviour
         timeToSpawnTimer = GameController.instance.respawnTime;
         playerAssigned.health.OnValueChanged += SetStats;
         OnUpdateUI += SetStats;
-        
+        OnBulletsAddedUI += TotalBulletsAnimation;
+        playerAssigned.avaliblePoints.OnValueChanged+=AddMoneyAnimation;
         //TODO: bullets are not being updated
         currentBullets.text = playerAssigned.currentWeaponSelected.ammoBehaviour.currentBullets.ToString() ;
         secondWeaponBullets.text = playerAssigned.onBagWeapon.ammoBehaviour.currentBullets.ToString();
         currentWeaponImage.sprite = playerAssigned.onBagWeapon.weapon.weaponImage;
         secondWeaponImage.sprite = playerAssigned.onBagWeapon.weapon.weaponImage;
         
+        currentMoney.text = (playerAssigned.GetAvaliblePoints()*10).ToString()+ "$";
+
 
     }
 
@@ -127,7 +141,41 @@ public class CanvasController : MonoBehaviour
         
         
     }
-    
+
+    public void AddMoneyAnimation(int oldVal, int newVal)
+    {
+        currentMoney.text = (playerAssigned.GetAvaliblePoints()*10).ToString()+ "$";
+        int moneyAdded = newVal - oldVal;
+        moneyAnimator.Play("MoneyAddedOnPanel");
+
+        if (moneyAdded>0)
+        {
+            moneyAddedText.gameObject.SetActive(true);
+            moneyAddedText.text = "+ $" + (moneyAdded*10).ToString();
+            moneyAddedText.color=Color.green;
+        }
+        if (moneyAdded<0)
+        {
+            moneyAddedText.gameObject.SetActive(true);
+            moneyAddedText.text = "- $" + (moneyAdded*10).ToString();
+            moneyAddedText.color=Color.red;
+        }
+
+    }
+    public void TotalBulletsAnimation()
+    {
+        for (int i = 0; i < totalHudAnimators.Length; i++)
+        {
+            totalHudAnimators[i].Play("BulletsAdded");
+        }
+
+        BulletsOnScreenPopup();
+    }
+
+    public void BulletsOnScreenPopup()
+    {
+        ammoAddedText.gameObject.SetActive(true);
+    }
     public void SetStats(float oldValue, float newValue)
     {
         /*(float) playerAssigned.maxHealth*10*/

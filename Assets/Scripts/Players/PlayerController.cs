@@ -143,16 +143,16 @@ public class PlayerController : NetworkBehaviour
             isGroundedCheck();
             //be care
             Reloading();
+            stateMachineController.StateUpdate();
 
             if (playerComponentsHandler.IsPlayerLocked())
             {
-                stateMachineController.SetState("Movement");
-                move = Vector3.zero;
+                // stateMachineController.SetState("Movement");
+                // move = Vector3.zero;
                 return;
             }
+//NO SHOOT
             Shoot();
-
-            stateMachineController.StateUpdate();
             if (Input.GetKey(KeyCode.Mouse1))
             {
                 this.stateMachineController.networkAnimator.Animator.SetFloat("X", this.move.x);

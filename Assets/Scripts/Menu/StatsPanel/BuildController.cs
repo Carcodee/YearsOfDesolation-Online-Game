@@ -11,7 +11,6 @@ public class BuildController : MonoBehaviour
     
     public TextMeshProUGUI BuildName;
 
-    public TextMeshProUGUI currentMoney;
 
     public WeaponObject[] weaponObjects;
 
@@ -19,13 +18,11 @@ public class BuildController : MonoBehaviour
     
     public void Update()
     {
-        currentMoney.text = (playerStatsController.GetAvaliblePoints()*10).ToString()+ "$";
         totalPrice.text = (playerStatsController.playerBuildSelected.totalPrice * 10).ToString()+ "$";        
     }
     public void InitilizeBuild()
     {
         BuildName.text = playerStatsController.playerBuildSelected.buildName;
-        currentMoney.text = (playerStatsController.GetAvaliblePoints()*10).ToString()+ "$";
 
         weaponObjects[0].weaponImage.sprite = playerStatsController.playerBuildSelected.first_weapon.weapon.weaponImage;
         weaponObjects[0].weaponTitle.text = playerStatsController.playerBuildSelected.first_weapon.weapon.weaponName;

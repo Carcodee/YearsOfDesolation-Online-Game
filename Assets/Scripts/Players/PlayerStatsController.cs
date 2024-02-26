@@ -1,13 +1,10 @@
-using JetBrains.Annotations;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using Players.PlayerStates;
-using Unity.Collections;
+using Unity.Mathematics;
 using Unity.Netcode;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
+using Random = Unity.Mathematics.Random;
 
 public class PlayerStatsController : NetworkBehaviour, IDamageable
 {
@@ -34,7 +31,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
     [SerializeField] private NetworkVariable<int> speed = new NetworkVariable<int>();
 
     [SerializeField] private NetworkVariable<int> playerLevel = new NetworkVariable<int>();
-    [SerializeField] private NetworkVariable<int> avaliblePoints = new NetworkVariable<int>();
+    [SerializeField] public NetworkVariable<int> avaliblePoints = new NetworkVariable<int>();
     
     public NetworkVariable<bool> isInvulnerable = new NetworkVariable<bool>();
 
@@ -47,12 +44,14 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
     
     [Header("Current Gamelogic")]
     public NetworkVariable<zoneColors> zoneAsigned=new NetworkVariable<zoneColors>();
-    public Transform coinPosition;
+    public CoinBehaivor coinPosition;
     public PlayerZoneController playerZoneController;
     public float currentOutsideTimerTick;
     public float outsideTimerTick=1;
     private bool _IsInitizalized=false;
     private bool _isInNetwork=false;
+    public CoinBehaivor coin;
+    
 
     [Header("Interfaces")]
     private IDamageable iDamageable;
@@ -125,10 +124,16 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
                 OnSpawnPlayer?.Invoke();
                 _IsInitizalized = true;
             }
+            
             OutsideZoneDamage();
 
             HandleWeaponChange();
 
+            
+            if (GameController.instance.started.Value&& coinPosition==null)
+            {
+                SpawnPlayerCoin();
+            }
         }
         //TODO: find some way to check if the player is dead with ownership
 
@@ -198,8 +203,6 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
         onBagWeapon = doublePistols;
         transform.GetComponent<PlayerController>().SetSpeedStateServerRpc(statsTemplates[statsTemplateSelected.Value].speed);
         OnStatsChanged?.Invoke();
-
-
     }
     public void SetWeapon(WeaponItem weapon)
     {
@@ -208,6 +211,19 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
 
     }
 
+    public void SpawnPlayerCoin()
+    {
+        if (GameController.instance.zoneControllers.Count<=1)return;
+        
+        int coinIndexZone = UnityEngine.Random.Range(0, GameController.instance.zoneControllers.Count);
+        if (coinIndexZone==(int)zoneAsigned.Value)
+        {
+            SpawnPlayerCoin();
+            return;
+        }
+        coinPosition= Instantiate(coin, GameController.instance.zoneControllers[coinIndexZone].transform.position, quaternion.identity);
+    }
+    
     public void SetStats()
     {
         if (IsOwner)
@@ -216,6 +232,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
         }
     }
 
+    
     public void RefillAmmo()
     {
         currentWeaponSelected.weapon.ammoBehaviour.AddAmmo(60);
@@ -247,6 +264,8 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
 
     public void HandleWeaponChange()
     {
+        if (!hasPlayerSelectedBuild)return;
+        
         // if(!hasPlayerSelectedBuild)return;
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
@@ -453,8 +472,8 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
 
     public void LevelUp()
     {
-        playerLevel.Value++;
-        maxHealth.Value += 1;
+        SetLevelServerRpc(playerLevel.Value + 1);
+        SetMaxHealthServerRpc(maxHealth.Value+1);
     }
     
     public void AddAvaliblePoint(int value)
@@ -549,6 +568,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
         avaliblePoints.Value+=val;
     }
 
+    
 
     [ServerRpc]
     public void SetZoneAsignedStateServerRpc(zoneColors zone)
@@ -591,16 +611,11 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
             }
             if (other.CompareTag("Coin"))
             {
-                if (IsServer)
-                {
-                    avaliblePoints.Value += 1;
-                }
-                else
-                {
-                    AddAvailablePointsOnDeadClientRpc(1);
+                    OnLevelUp?.Invoke();
+                    addAvaliblePointsServerRpc(1);
                     int randomPlayer = UnityEngine.Random.Range(0, GameController.instance.numberOfPlayers.Value);
-                    coinPosition = GameController.instance.players[randomPlayer].GetComponent<PlayerStatsController>().playerZoneController.spawnCoinPoint;
-                }
+                    coinPosition.transform.position = GameController.instance.players[randomPlayer].GetComponent<PlayerStatsController>().playerZoneController.spawnCoinPoint.position;
+                    CanvasController.OnBulletsAddedUI?.Invoke();
             }
         }
 
