@@ -170,6 +170,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
         onBagWeapon = playerBuildSelected.second_weapon;
         onBagWeapon.weaponObjectController.gameObject.SetActive(false);
         OnWeaponChanged.Invoke(currentWeaponSelected.weapon.weaponObjectController.weaponBulletSpawnPoints);
+        
     }
 
     void InitializateStats()
@@ -330,7 +331,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
                     health.Value -= (damage);
                     StartCoroutine(playerComponentsHandler.ShakeCamera(0.3f, 5, 5));
                     PlayerVFXController.bloodEffectHandle.CreateVFX(takeDamagePosition.position,  Quaternion.identity,IsServer);
-
+                        
                 }
                 else
                 {
@@ -340,6 +341,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
 
 
                 }
+                CanvasController.OnUpdateUI?.Invoke();
                 OnStatsChanged?.Invoke();
             }
         }

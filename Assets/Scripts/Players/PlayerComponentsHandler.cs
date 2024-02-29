@@ -1,3 +1,4 @@
+using System;
 using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,6 +20,12 @@ public class PlayerComponentsHandler : NetworkBehaviour
 
     [Header("Player Components")]
     public Canvas canvasPrefab;
+    public Canvas UIRenderer;
+
+    [Header("UI and Gameplay Canvases")]
+    public Canvas canvasObject;
+    public Canvas canvasRenderer;
+    
     public GameObject cameraPrefab;
     public GameObject cameraZoomPrefab;
     public GameObject sprintCameraPrefab;
@@ -62,6 +69,7 @@ public class PlayerComponentsHandler : NetworkBehaviour
         if (IsOwner)
         {
             InstanciateComponents();
+
             // Attach input events
             playerInput.onActionTriggered += HandleAction;
         }
@@ -71,7 +79,7 @@ public class PlayerComponentsHandler : NetworkBehaviour
     {
         if (IsOwner)
         {
-  
+
         }
     }
     void Start()
@@ -100,12 +108,12 @@ public class PlayerComponentsHandler : NetworkBehaviour
 
         }
     }
+
     private void LateUpdate()
     {
         if (IsOwner)
         {
             CameraRotation(input.look);
-
         }
     }
 
@@ -152,17 +160,30 @@ public class PlayerComponentsHandler : NetworkBehaviour
         //Minimap
         playerMinimapCamera.transform.SetParent(null);
         //Canvas
-        Canvas canvas = Instantiate(canvasPrefab,transform);
-        canvas.GetComponentInChildren<Button>().onClick.AddListener(transform.GetComponent<PlayerStatsController>().OnSpawnPlayer);
-        playerNameText = canvas.GetComponentInChildren<TextMeshProUGUI>();
-        statsPanelController = GetComponentInChildren<StatsPanelController>();
-        pauseController = GetComponentInChildren<PauseController>();
+        // canvasObject = Instantiate(canvasPrefab,transform);
+        // canvasObject.GetComponentInChildren<Button>().onClick.AddListener(transform.GetComponent<PlayerStatsController>().OnSpawnPlayer);
+        // playerNameText = canvasObject.GetComponentInChildren<TextMeshProUGUI>();
+        // statsPanelController = GetComponentInChildren<StatsPanelController>();
+        // pauseController = GetComponentInChildren<PauseController>();
 
 
         //rb = GetComponent<Rigidbody>();
         //rb.isKinematic = true;
     }
 
+
+    public void CreateCanvas(Camera camera)
+    {
+        canvasObject = Instantiate(canvasPrefab,transform);
+        canvasObject.worldCamera = camera;
+        canvasObject.planeDistance = 0.35f;
+
+        canvasRenderer= Instantiate(UIRenderer,transform);
+        playerNameText = canvasObject.GetComponentInChildren<TextMeshProUGUI>();
+        statsPanelController =canvasRenderer.GetComponentInChildren<StatsPanelController>();
+        pauseController = GetComponentInChildren<PauseController>();    
+
+    }
     private void CameraRotation(Vector3 look)
     {
         // if there is an input and camera position is not fixed

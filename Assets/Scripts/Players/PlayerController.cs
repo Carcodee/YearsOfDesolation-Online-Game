@@ -26,7 +26,11 @@ public class PlayerController : NetworkBehaviour
     // public Rigidbody[] ragdollRigidbodies;
     
     //TODO : Refactor this cam thing
+    [Header("CAMERAS")]
     public Camera cam;
+    public Camera UICam;
+    public Camera gameplayCam;
+
     [SerializeField] private Transform body;
     [SerializeField] private Camera cameraRef;
     public Camera topViewCamera;
@@ -108,7 +112,9 @@ public class PlayerController : NetworkBehaviour
     {
         cam= GetComponentInChildren<Camera>();
         cam.enabled = IsOwner;
+        UICam.enabled = IsOwner;
         topViewCamera.enabled = IsOwner;
+        gameplayCam.enabled = IsOwner;
         if (!cam)
         {
             Destroy(cam);
@@ -128,7 +134,7 @@ public class PlayerController : NetworkBehaviour
             // DoRagdoll(false);
             playerStats.currentWeaponSelected.weapon.shootRefraction = 0.1f;
             playerStats.OnWeaponChanged+= SetSpawnPoint;
-
+            playerComponentsHandler.CreateCanvas(UICam);
         }
 
     }

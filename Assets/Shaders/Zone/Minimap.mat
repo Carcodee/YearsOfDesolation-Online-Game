@@ -1,5 +1,20 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8501490921131826660
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa486462e6be1764e89c788ba30e61f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_DiffusionProfileReferences:
+  - {fileID: 11400000, guid: 11ff08de70665d84a9babafd435b4f03, type: 2}
+  m_MaterialReferences: []
 --- !u!21 &2100000
 Material:
   serializedVersion: 8
@@ -13,6 +28,7 @@ Material:
   m_Parent: {fileID: 2100000, guid: 512b973552b57a14998377366569b33c, type: 2}
   m_ModifiedSerializedProperties: 16
   m_ValidKeywords:
+  - _DISABLE_SSR_TRANSPARENT
   - _ENABLE_FOG_ON_TRANSPARENT
   - _SURFACE_TYPE_TRANSPARENT
   m_InvalidKeywords: []
@@ -28,6 +44,7 @@ Material:
   - TransparentDepthPostpass
   - TransparentBackface
   - MOTIONVECTORS
+  - RayTracingPrepass
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
@@ -36,10 +53,17 @@ Material:
     m_Floats:
     - _AlphaDstBlend: 1
     - _BlendMode: 1
+    - _DiffusionProfileHash: 2.2288074
     - _DstBlend: 1
     - _FresnelPower: 4.25
     - _RenderQueueType: 3
+    - _StencilRefDepth: 0
+    - _StencilRefGBuffer: 2
+    - _StencilRefMV: 32
+    - _StencilWriteMaskMV: 41
     m_Colors:
+    - _DiffusionProfileAsset: {r: -2.467907e+18, g: -2.6025462e-36, b: -3.10257e+37,
+        a: 6.0936596e-37}
     - _ZoneColor: {r: 1, g: 0, b: 0.9813728, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &8313391817513026745

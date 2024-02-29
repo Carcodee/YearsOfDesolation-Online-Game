@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using Players.PlayerStates;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -58,6 +59,18 @@ public class PlayerVFXController : NetworkBehaviour
     public SkinnedMeshRenderer skinnedMeshRenderer; 
 
     protected MaterialPropertyBlock mPB;
+
+    [Header("HP")] 
+    public Material hpMat;
+    public GameObject hpObject;
+    
+    public Material followHpMat;
+    public GameObject followHpObject;
+    private bool isFollowing;
+    private float followValue;
+    private float followValTemp;
+    private float followTime;
+    private float targetVal; 
     
     [Header("VFXNetAPI")]
      public static HandleVFX shootEffectHandle;
@@ -76,9 +89,10 @@ public class PlayerVFXController : NetworkBehaviour
         playerController = GetComponent<PlayerController>();
         playerStatsController = GetComponent<PlayerStatsController>();
         playerStatsController.OnLevelUp += LevelUpEffect;
+        hpObject.SetActive(IsOwner);
+        followHpObject.SetActive(IsOwner);
         if (IsOwner)
         {
-            
             // playerController.OnBulletHit += BulletHitEffect;
             // playerController.OnPlyerShoot += ShootEffect;
              shootEffectHandle = new HandleVFX(ShootVFX, ShootEffectPrefab, HandleVFX.VfxType.Net,0);
@@ -95,6 +109,7 @@ public class PlayerVFXController : NetworkBehaviour
             // playerController.OnPlayerVfxAction += AddVFXOnNet;
             stateMachineController = GetComponent<StateMachineController>();
             playerStatsController = GetComponent<PlayerStatsController>();
+            playerStatsController.health.OnValueChanged += UpdateHealthEffect;
 
         }
 
@@ -103,6 +118,8 @@ public class PlayerVFXController : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
+        hpObject.SetActive(IsOwner);
+
         if (IsOwner)
         {
 
@@ -151,6 +168,7 @@ public class PlayerVFXController : NetworkBehaviour
                 Instantiate(jumpEffectPrefab, jumpEffectPosition.position, Quaternion.identity);
             }
 
+            FollowHPBar();
         }
        
    
@@ -166,7 +184,43 @@ public class PlayerVFXController : NetworkBehaviour
         }
         
     }
+
     
+    public void UpdateHealthEffect(float oldVal, float newVal)
+    {
+        targetVal = playerStatsController.GetHealth() / playerStatsController.GetMaxHealth();
+        hpMat.SetFloat("_HP",targetVal);
+        isFollowing = true;
+        followValTemp = followValue;
+
+    }
+
+    public void FollowHPBar()
+    {
+        if (!isFollowing)return;
+        followTime += Time.deltaTime;
+        followValue = Mathf.Lerp(followValTemp, targetVal, followTime);
+        followHpMat.SetFloat("_HP",followValue);
+
+        if (followTime>=1)
+        {
+            followTime = 0;
+            isFollowing = false;
+
+            followValue = targetVal;
+            followHpMat.SetFloat("_HP",followValue);
+
+        }
+
+    }
+    private void OnApplicationQuit()
+    {
+        hpMat.SetFloat("_HP", 1);
+        followHpMat.SetFloat("_HP",1);
+
+    }
+
+
     public static HandleVFX GetVFXHandle(int id)
     {
         for (int i = 0; i < vfxHandles.Length; i++)

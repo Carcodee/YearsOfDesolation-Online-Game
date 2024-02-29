@@ -4711,7 +4711,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7807427599481683472}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5221,23 +5221,44 @@ MonoBehaviour:
         ammoBehaviour:
           totalAmmo: 0
           currentBullets: 0
-          totalBullets: 0
           isReloading: 0
-          reloadTime: 0
+          totalBullets:
+            statValue: 0
+            tier: 0
+            upgradeType: 0
+          reloadTime:
+            statValue: 0
+            tier: 0
+            upgradeType: 0
           reloadCurrentTime: 0
+        weaponObjectController: {fileID: 0}
+        weaponDamage: 0
         weaponName: 
-        shootRate: 0
         shootTimer: 0
         shootRefraction: 0
         currentShootRefraction: 0
-        minShootRefraction: 0
+        shootRate:
+          statValue: 0
+          tier: 0
+          upgradeType: 0
+        minShootRefraction:
+          statValue: 0
+          tier: 0
+          upgradeType: 0
       ammoBehaviour:
         totalAmmo: 0
         currentBullets: 0
-        totalBullets: 0
         isReloading: 0
-        reloadTime: 0
+        totalBullets:
+          statValue: 0
+          tier: 0
+          upgradeType: 0
+        reloadTime:
+          statValue: 0
+          tier: 0
+          upgradeType: 0
         reloadCurrentTime: 0
+      weaponObjectController: {fileID: 0}
     second_weapon:
       weapon:
         changeWeaponAnimation:
@@ -5247,33 +5268,53 @@ MonoBehaviour:
         ammoBehaviour:
           totalAmmo: 0
           currentBullets: 0
-          totalBullets: 0
           isReloading: 0
-          reloadTime: 0
+          totalBullets:
+            statValue: 0
+            tier: 0
+            upgradeType: 0
+          reloadTime:
+            statValue: 0
+            tier: 0
+            upgradeType: 0
           reloadCurrentTime: 0
+        weaponObjectController: {fileID: 0}
+        weaponDamage: 0
         weaponName: 
-        shootRate: 0
         shootTimer: 0
         shootRefraction: 0
         currentShootRefraction: 0
-        minShootRefraction: 0
+        shootRate:
+          statValue: 0
+          tier: 0
+          upgradeType: 0
+        minShootRefraction:
+          statValue: 0
+          tier: 0
+          upgradeType: 0
       ammoBehaviour:
         totalAmmo: 0
         currentBullets: 0
-        totalBullets: 0
         isReloading: 0
-        reloadTime: 0
+        totalBullets:
+          statValue: 0
+          tier: 0
+          upgradeType: 0
+        reloadTime:
+          statValue: 0
+          tier: 0
+          upgradeType: 0
         reloadCurrentTime: 0
-    currentBuildUpgrade: 0
-    currentBuildUpgradeCost: 0
+      weaponObjectController: {fileID: 0}
+    totalPrice: 0
     buildDescription: 
     buildName: 
+    upgrades: []
+    upgradesBuffer: []
   first_weapon_Template: {fileID: 11400000, guid: 8094bc5eafa57f148986c1b564d9bdff,
     type: 2}
   second_weapon_Template: {fileID: 11400000, guid: 09053af27b0f7f14ebdec2652680da5e,
     type: 2}
-  first_weapon_Image: {fileID: 0}
-  second_weapon_Image: {fileID: 0}
   BorderImage: {fileID: 0}
   upgradesSocketsImages: []
   playerStatsController: {fileID: 0}

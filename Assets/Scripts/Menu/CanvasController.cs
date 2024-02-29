@@ -30,7 +30,6 @@ public class CanvasController : MonoBehaviour
     
     [Header("Player")]
     public TextMeshProUGUI level;
-    public TextMeshProUGUI hp;
     public TextMeshProUGUI exp;
 
     [Header("HUD")]
@@ -51,9 +50,16 @@ public class CanvasController : MonoBehaviour
 
     [Header("Buttons")]
     public Button openStatsButton;
-    
+
     [Header("Health")]
-    public ProgressBar healthBar;
+    public TextMeshProUGUI healthValue;
+    public Material hpUIMat;
+    public Material followUIHpMat;
+    private bool isFollowing;
+    private float followValue;
+    private float followValTemp;
+    private float followTime;
+    private float targetVal; 
 
     [Header("Reloading")]
     public SliderManager sliderManager;
@@ -88,7 +94,7 @@ public class CanvasController : MonoBehaviour
         timeToSpawnHolder = GameController.instance.respawnTime;
         timeToSpawnTimer = GameController.instance.respawnTime;
         playerAssigned.health.OnValueChanged += SetStats;
-        OnUpdateUI += SetStats;
+        OnUpdateUI += SetUIElements;
         OnBulletsAddedUI += TotalBulletsAnimation;
         playerAssigned.avaliblePoints.OnValueChanged+=AddMoneyAnimation;
         //TODO: bullets are not being updated
@@ -96,7 +102,6 @@ public class CanvasController : MonoBehaviour
         secondWeaponBullets.text = playerAssigned.onBagWeapon.ammoBehaviour.currentBullets.ToString();
         currentWeaponImage.sprite = playerAssigned.onBagWeapon.weapon.weaponImage;
         secondWeaponImage.sprite = playerAssigned.onBagWeapon.weapon.weaponImage;
-        
         currentMoney.text = (playerAssigned.GetAvaliblePoints()*10).ToString()+ "$";
 
 
@@ -124,7 +129,43 @@ public class CanvasController : MonoBehaviour
         }
     
     }
+    
 
+
+    public void SetUIElements()
+    {
+        
+        targetVal = playerAssigned.GetHealth() / playerAssigned.GetMaxHealth();
+        hpUIMat.SetFloat("_HP",targetVal);
+        isFollowing = true;
+        followValTemp = followValue;
+        healthValue.text = "%" + (targetVal*10).ToString();
+        Debug.Log("Health: " + playerAssigned.GetHealth());
+    }
+    public void FollowHPBar()
+    {
+        if (!isFollowing)return;
+        followTime += Time.deltaTime;
+        followValue = Mathf.Lerp(followValTemp, targetVal, followTime);
+        followUIHpMat.SetFloat("_HP",followValue);
+
+        if (followTime>=1)
+        {
+            followTime = 0;
+            isFollowing = false;
+
+            followValue = targetVal;
+            followUIHpMat.SetFloat("_HP",followValue);
+
+        }
+
+    }
+    private void OnApplicationQuit()
+    {
+        hpUIMat.SetFloat("_HP", 1);
+        followUIHpMat.SetFloat("_HP",1);
+
+    }
     public void Reloading()
     {
         if (playerAssigned.currentWeaponSelected.ammoBehaviour.isReloading)
@@ -178,34 +219,14 @@ public class CanvasController : MonoBehaviour
     }
     public void SetStats(float oldValue, float newValue)
     {
-        /*(float) playerAssigned.maxHealth*10*/
-        healthBar.currentPercent =  newValue *10;
-        // while(healthBar.currentPercent>playerAssigned.GetHealth()*10)
-        // {
-        //     healthBar.currentPercent-=1;
-        //     if (healthBar.currentPercent<= playerAssigned.GetHealth()*10)
-        //     {
-        //         healthBar.currentPercent = playerAssigned.GetHealth()*10;
-        //     }
-        // }
-        
+        targetVal = playerAssigned.GetHealth() / playerAssigned.GetMaxHealth();
+        hpUIMat.SetFloat("_HP",targetVal);
+        isFollowing = true;
+        followValTemp = followValue;
+        healthValue.text = "%" + (targetVal*10).ToString();
         Debug.Log("Health: " + playerAssigned.GetHealth());
     }
-    public void SetStats()
-    {
-        /*(float) playerAssigned.maxHealth*10*/
-        healthBar.currentPercent = playerController.playerStats.GetHealth()*10;
-        // while(healthBar.currentPercent>playerAssigned.GetHealth()*10)
-        // {
-        //     healthBar.currentPercent-=1;
-        //     if (healthBar.currentPercent<= playerAssigned.GetHealth()*10)
-        //     {
-        //         healthBar.currentPercent = playerAssigned.GetHealth()*10;
-        //     }
-        // }
-        
-        Debug.Log("Health: " + playerAssigned.GetHealth());
-    }
+
     private void GetComponents()
     {
         canvas = GetComponent<Canvas>();

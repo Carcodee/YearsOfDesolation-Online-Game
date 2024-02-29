@@ -74,8 +74,8 @@ namespace Menu.StatsPanel
             isPanelOpen = false;
             playerStatsController = GetComponentInParent<PlayerStatsController>();
             playerVFXController = playerStatsController.GetComponent<PlayerVFXController>();
-            endPos = targetPos.position;
-            startPos = transform.position;
+            endPos = targetPos.localPosition;
+            startPos = transform.localPosition;
             for (int i = 0; i < buildObjectsPairs.Length; i++)
             {
                 buildObjectsPairs[i].InitialiseBuilds();
@@ -139,7 +139,7 @@ namespace Menu.StatsPanel
             }
 
             float xPos = Mathf.Lerp(startPos.x, endPos.x, animationFunction);
-            transform.position = new Vector3(xPos, transform.position.y, 0);
+            transform.localPosition = new Vector3(xPos, transform.localPosition.y, 0);
         }
 
 
