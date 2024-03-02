@@ -11,12 +11,16 @@ namespace Players.PlayerStates.States
 
         }
         Vector3 moveDir;
+        float airTime;
         public override void StateEnter()
         {
+            
             networkAnimator.Animator.SetBool("Fall",true);
             playerRef._bodyVelocity.y = 0;
             moveDir = playerRef.move;
             this.playerRef.gravityMultiplier = 1;
+            airTime = 0;
+
 
         }
 
@@ -24,7 +28,7 @@ namespace Players.PlayerStates.States
         {
             //animation
             networkAnimator.Animator.SetBool("Fall",false);
-
+            airTime = 0;
 
         }
 
@@ -38,7 +42,10 @@ namespace Players.PlayerStates.States
         public override void StateUpdate()
         {
             StateInput();
-            if (Input.GetKeyDown(KeyCode.Space)&&!playerRef.hasPlaned)
+            airTime += Time.deltaTime;
+
+            if ((Input.GetKeyDown(KeyCode.Space)&&!playerRef.hasPlaned && airTime>playerRef.airTimeToPlane) || 
+                (Input.GetKeyDown(KeyCode.Space)&&stateMachineController.lastStateName== "Jump"&&!playerRef.hasPlaned))
             {
                 stateMachineController.SetState("Jetpack");
             }

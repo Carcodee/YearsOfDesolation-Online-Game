@@ -57,6 +57,7 @@ namespace Players.PlayerStates.States
             if (!playerRef.isGrounded)
             {
                 stateMachineController.SetState("Falling");
+
                 return;
 
             }

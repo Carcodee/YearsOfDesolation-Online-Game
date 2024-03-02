@@ -12,6 +12,7 @@ namespace Players.PlayerStates
         public StateMachineBase [] weaponStates { get; private set; }
         
         public StateMachineBase currentState { get; private set; }
+        public string lastStateName { get; private set; }
         public StateMachineBase myWeaponState { get; private set; }
 
         [Header("Player States")]
@@ -123,6 +124,8 @@ namespace Players.PlayerStates
             //Exit state execution
             if (currentState != null)
             {
+                string lastStateTemp = currentState.stateName;
+                lastStateName = lastStateTemp;
                 currentState.StateExit();
             }
             //New state

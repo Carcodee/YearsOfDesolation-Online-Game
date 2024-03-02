@@ -74,6 +74,7 @@ public class PlayerController : NetworkBehaviour
     private float slidingTimer = 0f;
     public Vector3 motionSpeed;
     public bool isSprinting=false;
+    public float airTimeToPlane=1.0f;
     
     [Header("Camera Direction")]
     private int distanceFactor = 100;
@@ -135,6 +136,7 @@ public class PlayerController : NetworkBehaviour
             playerStats.currentWeaponSelected.weapon.shootRefraction = 0.1f;
             playerStats.OnWeaponChanged+= SetSpawnPoint;
             playerComponentsHandler.CreateCanvas(UICam);
+            airTimeToPlane = 1;
         }
 
     }

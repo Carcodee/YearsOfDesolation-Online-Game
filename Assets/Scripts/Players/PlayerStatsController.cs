@@ -4,6 +4,7 @@ using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 using Random = Unity.Mathematics.Random;
 
 public class PlayerStatsController : NetworkBehaviour, IDamageable
@@ -35,6 +36,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
     
     public NetworkVariable<bool> isInvulnerable = new NetworkVariable<bool>();
 
+    [FormerlySerializedAs("StartGameHealth")] public float startGameHealth;
     public string[] statHolderNames;
     public int[] statHolder;
     public bool isPlayerInsideTheZone;
@@ -189,11 +191,8 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
         SetStaminaServerRpc(statsTemplates[statsTemplateSelected.Value].stamina);
         SetArmorServerRpc(statsTemplates[statsTemplateSelected.Value].armor);
         SetSpeedServerRpc(statsTemplates[statsTemplateSelected.Value].speed);
-        
-        
-        
         SetMaxHealthServerRpc(10);
-        
+        startGameHealth = statsTemplates[statsTemplateSelected.Value].health;
 
         SetLevelServerRpc(1);
         SetAvaliblePointsServerRpc(3);
@@ -225,13 +224,6 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
         coinPosition= Instantiate(coin, GameController.instance.zoneControllers[coinIndexZone].transform.position, quaternion.identity);
     }
     
-    public void SetStats()
-    {
-        if (IsOwner)
-        {
-            InitializateStats();
-        }
-    }
 
     
     public void RefillAmmo()
@@ -471,13 +463,14 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
     {
         return maxHealth.Value;
     }
-
     public void LevelUp()
     {
         SetLevelServerRpc(playerLevel.Value + 1);
+        SetHealthServerRpc(health.Value+6);
         SetMaxHealthServerRpc(maxHealth.Value+1);
+        CanvasController.OnUpdateUI?.Invoke();
     }
-    
+
     public void AddAvaliblePoint(int value)
     {
         if (IsServer)
@@ -618,9 +611,31 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
                     int randomPlayer = UnityEngine.Random.Range(0, GameController.instance.numberOfPlayers.Value);
                     coinPosition.transform.position = GameController.instance.players[randomPlayer].GetComponent<PlayerStatsController>().playerZoneController.spawnCoinPoint.position;
                     CanvasController.OnBulletsAddedUI?.Invoke();
+                    CanvasController.OnUpdateUI?.Invoke();
+
             }
         }
 
     }
+    
+    //EDITOR
+#if UNITY_EDITOR
+    [ContextMenu("Test Level Up")]
+    public void LevelUpEditor()
+    {
+        SetLevelServerRpc(playerLevel.Value + 1);
+        SetHealthServerRpc(health.Value+6);
+        SetMaxHealthServerRpc(maxHealth.Value+1);
+        CanvasController.OnUpdateUI?.Invoke();
+    }
+    [ContextMenu("Test Level Up (take damage)")]
+    public void RecieveDamage()
+    {
+        TakeDamage(5);
+        CanvasController.OnUpdateUI?.Invoke();
+
+    }
+#endif
+
 }
 

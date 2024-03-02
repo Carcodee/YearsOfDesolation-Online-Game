@@ -55,6 +55,10 @@ namespace Menu.StatsPanel
         public Vector3 endPos;
         public Vector3 startPos;
 
+        [Header("Money")] 
+        public TextMeshProUGUI currentMoney;
+        public Animator moneyAnimator;
+
 
         private void OnEnable()
         {
@@ -75,6 +79,7 @@ namespace Menu.StatsPanel
             playerStatsController = GetComponentInParent<PlayerStatsController>();
             playerVFXController = playerStatsController.GetComponent<PlayerVFXController>();
             endPos = targetPos.localPosition;
+
             startPos = transform.localPosition;
             for (int i = 0; i < buildObjectsPairs.Length; i++)
             {
@@ -83,8 +88,17 @@ namespace Menu.StatsPanel
                 buildObjectsPairs[i].DisplayBuilds();
                 
             }
-        }
+            currentMoney.text = (playerStatsController.GetAvaliblePoints()*10).ToString()+ "$";
 
+            playerStatsController.avaliblePoints.OnValueChanged+=AddMoneyAnimationOnPanel;
+        }
+        public void AddMoneyAnimationOnPanel(int oldVal, int newVal)
+        {
+            currentMoney.text = (playerStatsController.GetAvaliblePoints()*10).ToString()+ "$";
+            int moneyAdded = newVal - oldVal;
+            moneyAnimator.Play("MoneyAddedOnPanel");
+
+        }
         void Update()
         {
             if (Input.GetKeyDown(KeyCode.B))

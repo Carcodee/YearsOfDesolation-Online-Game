@@ -11,41 +11,51 @@ namespace Players.PlayerStates.States
         }
         public float slidingTimer;
         public float slidingTime=1.4f;
+        private float slidingTimeNormalized;
         private Vector3 moveDir;
     
         public override void StateEnter()
         {
             base.StateEnter();
+            networkAnimator.Animator.SetBool("Sliding", true);
+
             playerRef.sprintFactor = 2.0f;
             moveDir = playerRef.move;
             this.networkAnimator.Animator.Play("Slide");
 
+            
         }
 
         public override void StateExit()
-        { 
+        {
+            networkAnimator.Animator.SetBool("Sliding", false);
         }
 
         public override void StateInput()
         {
-
+            slidingTimeNormalized = slidingTimer / slidingTime;
+            float speedFactor= Mathf.Lerp(2.0f, 1.0f, slidingTimeNormalized);
+            playerRef.sprintFactor = speedFactor;
         }
  
 
         public override void StateUpdate()
         {
             StateInput();
+            if (Input.GetKeyUp(KeyCode.Space))
+            {
+                stateMachineController.SetState("Jump");
+                return;
+            }
             this.networkAnimator.Animator.SetFloat("X", moveDir.x);
             this.networkAnimator.Animator.SetFloat("Y", moveDir.z);
             slidingTimer += Time.deltaTime;
+            
+            
             if (slidingTimer > slidingTime)
             {
                 slidingTimer = 0;
                 stateMachineController.SetState("Movement");
-            }
-            if (Input.GetKeyUp(KeyCode.Space))
-            {
-                stateMachineController.SetState("Jump");
             }
             if (!playerRef.isGrounded)
             {
@@ -101,7 +111,7 @@ namespace Players.PlayerStates.States
                 return;
 
             }
-            if (Input.GetKeyUp(KeyCode.LeftAlt))
+            if (Input.GetKeyUp(KeyCode.LeftControl))
             {
                 stateMachineController.SetState("Movement");
                 return;

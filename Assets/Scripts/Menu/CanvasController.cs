@@ -12,6 +12,7 @@ using UnityEngine.Rendering;
 using UnityEngine.UI;
 using UnityEditor;
 using ProgressBar = Michsky.UI.ModernUIPack.ProgressBar;
+using Random = UnityEngine.Random;
 
 public class CanvasController : MonoBehaviour
 {
@@ -60,6 +61,16 @@ public class CanvasController : MonoBehaviour
     private float followValTemp;
     private float followTime;
     private float targetVal; 
+    private int stackPointer=1;
+    private int maxStackPointer=1;
+    public HealthType[] healths;
+    
+    public Stack<HealthType> healthsStack=new Stack<HealthType>();
+    public HealthType greenHealth=new HealthType();
+    public HealthType backgroundHealth=new HealthType();
+    public bool isOnHpBar=true;
+    
+    
 
     [Header("Reloading")]
     public SliderManager sliderManager;
@@ -77,13 +88,11 @@ public class CanvasController : MonoBehaviour
     bool BattleRoyaleShowed = false;
     bool FarmShowed = false;
     public Animator[] totalHudAnimators;
-    public Animator moneyAnimator;
     
     
     [Header("Notifications")]
     public TextMeshProUGUI ammoAddedText;
     public TextMeshProUGUI moneyAddedText;
-    public TextMeshProUGUI currentMoney;
 
     
     
@@ -102,8 +111,8 @@ public class CanvasController : MonoBehaviour
         secondWeaponBullets.text = playerAssigned.onBagWeapon.ammoBehaviour.currentBullets.ToString();
         currentWeaponImage.sprite = playerAssigned.onBagWeapon.weapon.weaponImage;
         secondWeaponImage.sprite = playerAssigned.onBagWeapon.weapon.weaponImage;
-        currentMoney.text = (playerAssigned.GetAvaliblePoints()*10).ToString()+ "$";
-
+        healthsStack.Push(backgroundHealth);
+        healthsStack.Push(greenHealth);
 
     }
 
@@ -130,17 +139,126 @@ public class CanvasController : MonoBehaviour
     
     }
     
-
+    public void SetStats(float oldValue, float newValue)
+    {
+        SetUIElements();
+    }
 
     public void SetUIElements()
     {
+
+        if (playerAssigned.GetMaxHealth()==0||playerAssigned.GetMaxHealth()==null)
+        {
+            return;
+        }
+
+
+        int newStackPointer= (int)Math.Ceiling(playerAssigned.GetHealth()/playerAssigned.startGameHealth);
         
-        targetVal = playerAssigned.GetHealth() / playerAssigned.GetMaxHealth();
+        targetVal = (playerAssigned.GetHealth()-((newStackPointer-1)*10)) / playerAssigned.startGameHealth;
+        //
+        if (playerAssigned.GetHealth()>playerAssigned.startGameHealth)
+        {
+            if (newStackPointer>stackPointer)
+            {
+                stackPointer = newStackPointer;
+                if (stackPointer>maxStackPointer)
+                {
+                    maxStackPointer = stackPointer;
+                    PushBar(GetRandomBar());    
+                }
+                
+            }else if (newStackPointer<stackPointer)
+            {
+                stackPointer = newStackPointer;
+            }
+            SetBarsAtPointerLocation(hpUIMat);
+        }
+        if (playerAssigned.GetHealth()<=playerAssigned.startGameHealth)
+        {
+            targetVal = playerAssigned.GetHealth() / playerAssigned.startGameHealth;
+            SetBarDefaultValues(hpUIMat);
+        }
+
         hpUIMat.SetFloat("_HP",targetVal);
         isFollowing = true;
         followValTemp = followValue;
-        healthValue.text = "%" + (targetVal*10).ToString();
-        Debug.Log("Health: " + playerAssigned.GetHealth());
+        healthValue.text = "%" + ((playerAssigned.GetHealth() / playerAssigned.startGameHealth)*100).ToString();
+        //
+    }
+
+    private HealthType GetRandomBar()
+    {
+        HealthType newHealthType = new HealthType();
+                
+
+
+        newHealthType.backgroundHealthColor = new Color(Random.Range(0.0f, 1f), Random.Range(0.0f, 1f), Random.Range(0.0f, 1f),1.0f);
+        newHealthType.healthColor =new Vector4(newHealthType.backgroundHealthColor.r,newHealthType.backgroundHealthColor.g,newHealthType.backgroundHealthColor.b,5.0f);
+
+        newHealthType.texture= greenHealth.texture;
+        return newHealthType;
+        
+    }
+    private void SetBarsAtPointerLocation(Material material)
+    {
+        if (stackPointer>=2)
+        {
+            HealthType[] stackArray = healthsStack.ToArray();
+            healths = healthsStack.ToArray();
+
+            int top = (healthsStack.Count-1)-stackPointer;
+            int secondTop = top+1;
+            material.SetColor("_BackgroundCol",stackArray[secondTop].healthColor);
+            material.SetTexture("_BackGroundText",stackArray[secondTop].texture);
+            
+            material.SetColor("_CurrentBarColor",stackArray[top].backgroundHealthColor);
+            material.SetTexture("_CurrentBarTexture",stackArray[top].texture);
+            Debug.Log("Top: " + top);
+            Debug.Log("Second Top: " + secondTop);
+        }
+    }
+    private void SetBarDefaultValues(Material material)
+    {
+        HealthType[] stackArray = healthsStack.ToArray();
+
+        healths = healthsStack.ToArray();
+        material.SetColor("_BackgroundCol",stackArray[healthsStack.Count-1].healthColor);
+        material.SetTexture("_BackGroundText",stackArray[healthsStack.Count-1].texture);
+        material.SetColor("_CurrentBarColor",stackArray[healthsStack.Count-2].healthColor);
+        material.SetTexture("_CurrentBarTexture",stackArray[healthsStack.Count-2].texture);
+    }
+    public void PushBar(HealthType newHealthType)
+    {
+        healthsStack.Push(newHealthType);
+    }
+
+    public void PopBar(Material material)
+    {
+        if (healthsStack.Count<=2)
+        {
+            Debug.Log("Can't pop more health bars");
+            return;
+        }
+        healthsStack.Pop();
+        material.SetColor("_CurrentBarColor",healthsStack.Peek().healthColor);
+        material.SetTexture("_MainTex",healthsStack.Peek().texture);
+
+        HealthType healthBeforeTheTop = healthsStack.ToArray()[healthsStack.Count-2];
+
+        material.SetColor("_BackGroundCol",healthBeforeTheTop.healthColor);
+        material.SetTexture("_BackGroundText",healthBeforeTheTop.texture);
+        
+    }
+
+    public void SetDefaultVaues(Material material)
+    {
+        material.SetColor("_BackGroundCol",backgroundHealth.healthColor);
+        material.SetTexture("_BackGroundText",backgroundHealth.texture);
+
+        material.SetColor("_CurrentBarColor",greenHealth.healthColor);
+        material.SetTexture("_MainTex",greenHealth.texture);
+        material.SetFloat("_HP", 1);
     }
     public void FollowHPBar()
     {
@@ -162,8 +280,9 @@ public class CanvasController : MonoBehaviour
     }
     private void OnApplicationQuit()
     {
-        hpUIMat.SetFloat("_HP", 1);
-        followUIHpMat.SetFloat("_HP",1);
+        SetDefaultVaues(hpUIMat);
+        
+        // followUIHpMat.SetFloat("_HP",1);
 
     }
     public void Reloading()
@@ -185,9 +304,7 @@ public class CanvasController : MonoBehaviour
 
     public void AddMoneyAnimation(int oldVal, int newVal)
     {
-        currentMoney.text = (playerAssigned.GetAvaliblePoints()*10).ToString()+ "$";
         int moneyAdded = newVal - oldVal;
-        moneyAnimator.Play("MoneyAddedOnPanel");
 
         if (moneyAdded>0)
         {
@@ -217,15 +334,7 @@ public class CanvasController : MonoBehaviour
     {
         ammoAddedText.gameObject.SetActive(true);
     }
-    public void SetStats(float oldValue, float newValue)
-    {
-        targetVal = playerAssigned.GetHealth() / playerAssigned.GetMaxHealth();
-        hpUIMat.SetFloat("_HP",targetVal);
-        isFollowing = true;
-        followValTemp = followValue;
-        healthValue.text = "%" + (targetVal*10).ToString();
-        Debug.Log("Health: " + playerAssigned.GetHealth());
-    }
+
 
     private void GetComponents()
     {
@@ -319,6 +428,16 @@ public class CanvasController : MonoBehaviour
     {
         stagesObject.SetActive(true);
         stagesText.text = stageText;
+    }
+    [System.Serializable]
+    public struct HealthType
+    {
+        [ColorUsageAttribute(true, true)]
+        public Color healthColor;
+        
+        public Color backgroundHealthColor;
+
+        public Texture2D texture;
     }
    
 }
