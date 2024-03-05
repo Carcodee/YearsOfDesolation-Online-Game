@@ -13,6 +13,7 @@ public class CoinBehaivor : MonoBehaviour
     public static Action<CoinBehaivor> OnCoinCollected;
     public GameObject coinEffectPrefab;
     public PlayerStatsController playerStatsController;
+    public Transform magPosition;
 
     void Start()
     {

@@ -11,13 +11,14 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
 using UnityEditor;
+using UnityEngine.Serialization;
 using ProgressBar = Michsky.UI.ModernUIPack.ProgressBar;
 using Random = UnityEngine.Random;
 
 public class CanvasController : MonoBehaviour
 {
     Canvas canvas;
-    
+    public RectTransform canvasRect;
     [Header("Game")]
     public TextMeshProUGUI timeLeft;
     public TextMeshProUGUI playersAlive;
@@ -70,7 +71,6 @@ public class CanvasController : MonoBehaviour
     public HealthType backgroundHealth=new HealthType();
     public bool isOnHpBar=true;
     
-    
 
     [Header("Reloading")]
     public SliderManager sliderManager;
@@ -94,7 +94,11 @@ public class CanvasController : MonoBehaviour
     public TextMeshProUGUI ammoAddedText;
     public TextMeshProUGUI moneyAddedText;
 
-    
+    [Header("CoinUI")]
+    public GameObject coinUI;
+    public float closeDistance=10;
+    public float largeDistance=40;
+    public CanvasGroup coinImageGroup;
     
     void Start()
     {
@@ -113,11 +117,43 @@ public class CanvasController : MonoBehaviour
         secondWeaponImage.sprite = playerAssigned.onBagWeapon.weapon.weaponImage;
         healthsStack.Push(backgroundHealth);
         healthsStack.Push(greenHealth);
+        canvasRect = canvas.GetComponent<RectTransform>();
+        coinImageGroup = coinUI.GetComponent<CanvasGroup>();
+    }
+
+
+
+    public void TrackCoin()
+    {
+        if (playerAssigned.coinPosition==null)
+        {
+            return;
+        }
+
+        Vector3 coinPos = playerAssigned.transform.position;
+        
+        Vector3 coinInScreen=playerController.cam.WorldToScreenPoint(playerAssigned.coinPosition.transform.position);
+        Vector3 magYPos=playerController.cam.WorldToScreenPoint(playerAssigned.coinPosition.magPosition.transform.position);
+        
+        coinInScreen.x = coinInScreen.x - canvasRect.sizeDelta.x/2;
+        magYPos.y = magYPos.y - canvasRect.sizeDelta.y/2;
+        
+        coinUI.transform.localPosition = new Vector3(coinInScreen.x,magYPos.y,0);
+ 
+        // set it
+
+
 
     }
 
-  
-
+    public void CheckAlpha()
+    {
+        if (!coinUI.activeSelf || playerAssigned.coinPosition == null)return;
+        
+        float distanceToCoin = Vector3.Distance(playerAssigned.transform.position, playerAssigned.coinPosition.transform.position);
+        float alpha = Mathf.InverseLerp(closeDistance,largeDistance, distanceToCoin);
+        coinImageGroup.alpha = alpha;
+    }
     void Update()
     {
         stageObjectPlaying = stagesObject.activeSelf;
@@ -136,6 +172,8 @@ public class CanvasController : MonoBehaviour
             timeToSpawnTimer = timeToSpawnHolder;
             timeToSpawn.gameObject.SetActive(false);
         }
+        TrackCoin();
+        CheckAlpha();
     
     }
     

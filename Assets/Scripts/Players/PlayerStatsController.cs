@@ -622,6 +622,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
 #if UNITY_EDITOR
     [ContextMenu("Test Level Up")]
     public void LevelUpEditor()
+        
     {
         SetLevelServerRpc(playerLevel.Value + 1);
         SetHealthServerRpc(health.Value+6);
