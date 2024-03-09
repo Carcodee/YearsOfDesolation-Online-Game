@@ -24,11 +24,15 @@ public class GameController : NetworkBehaviour
     public NetworkVariable <Vector3> randomPoint = new NetworkVariable<Vector3>();
     public Transform sphereRadiusMesh;
     
+    public int timeToFarm=20;
+    public float reduceZoneSpeed=2.0f;
+    public float zoneRadius=2.0f;
     public int respawnTime=5;
     
     [Header("References")]
     [SerializeField] private CoinBehaivor coinPrefab;
     public SphereCollider sphereRadius;
+    
     [Header("Zones")]
     public Transform[] spawnPoints;
     public Transform zoneInstances;
@@ -75,7 +79,7 @@ public class GameController : NetworkBehaviour
             if (IsClient && IsOwner)
             {
                 OnPlayerEnterServerRpc();
-                SetMapLogicClientServerRpc(numberOfPlayers.Value, numberOfPlayersAlive.Value, 2f, 120, 3, 5);
+                SetMapLogicClientServerRpc(numberOfPlayers.Value, numberOfPlayersAlive.Value, reduceZoneSpeed, timeToFarm, 3, zoneRadius);
                 SetNumberOfPlayerListServerRpc(clientId);
             }
 
@@ -93,7 +97,7 @@ public class GameController : NetworkBehaviour
             {
 
                 OnPlayerOutServerRpc();
-                SetMapLogicClientServerRpc(numberOfPlayers.Value, numberOfPlayersAlive.Value, 5.0f, 25, 3, 5);
+                SetMapLogicClientServerRpc(numberOfPlayers.Value, numberOfPlayersAlive.Value, reduceZoneSpeed, timeToFarm, 3, zoneRadius);
                 SetNumberOfPlayerListServerRpc(clientId);
 
             }
@@ -146,6 +150,7 @@ public class GameController : NetworkBehaviour
     }
 
 
+    
     /// <summary>
     /// Set Each player a zone
     /// </summary>
@@ -329,6 +334,7 @@ public class GameController : NetworkBehaviour
     [ServerRpc]
     public void OnPlayerOutServerRpc()
     {
+        
         numberOfPlayersAlive.Value--;
         numberOfPlayers.Value--;
     }

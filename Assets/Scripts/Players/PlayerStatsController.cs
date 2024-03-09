@@ -114,8 +114,12 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
             iDamageable = GetComponent<IDamageable>();
             isPlayerInsideTheZone = true;
             _isInNetwork = true;
+            OnSpawnPlayer();
+
+#if UNITY_EDITOR
+            DebugManager.instance.playerStatsController = this;
+#endif
             
-            OnSpawnPlayer?.Invoke();
         }
     }
 
@@ -221,7 +225,13 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
             SpawnPlayerCoin();
             return;
         }
-        coinPosition= Instantiate(coin, GameController.instance.zoneControllers[coinIndexZone].transform.position, quaternion.identity);
+        SpawnCoin(coin, GameController.instance.zoneControllers[coinIndexZone].transform.position);
+    }
+
+    public void SpawnCoin(CoinBehaivor coinPrefab, Vector3 pos)
+    {
+        coinPosition= Instantiate(coinPrefab, pos, quaternion.identity);
+        
     }
     
 
@@ -291,6 +301,12 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
                     currentOutsideTimerTick = 0;
                     TakeDamage(GameController.instance.mapLogic.Value.damagePerTick);
                 }
+                PostProccesingManager.instance.ApplyPostProcessing(true);
+
+            }
+            else
+            {
+                PostProccesingManager.instance.ApplyPostProcessing(false);
             }
         }
 

@@ -110,7 +110,7 @@ public class PlayerVFXController : NetworkBehaviour
             stateMachineController = GetComponent<StateMachineController>();
             playerStatsController = GetComponent<PlayerStatsController>();
             playerStatsController.health.OnValueChanged += UpdateHealthEffect;
-
+  
         }
 
 
@@ -185,6 +185,7 @@ public class PlayerVFXController : NetworkBehaviour
         
     }
 
+    
     
     public void UpdateHealthEffect(float oldVal, float newVal)
     {
