@@ -182,6 +182,7 @@ public class PlayerComponentsHandler : NetworkBehaviour
         playerNameText = canvasObject.GetComponentInChildren<TextMeshProUGUI>();
         statsPanelController =canvasRenderer.GetComponentInChildren<StatsPanelController>();
         pauseController = canvasRenderer.GetComponentInChildren<PauseController>();    
+        pauseController.playerAssigned = playerController;
 
     }
     private void CameraRotation(Vector3 look)

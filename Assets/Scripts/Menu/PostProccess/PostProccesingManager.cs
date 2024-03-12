@@ -11,6 +11,8 @@ public class PostProccesingManager : MonoBehaviour
     [Header("PostProcessing")]
     public Volume volume;
     // Start is called before the first frame update
+
+    public Material fullScreenPassMaterial;
     private void Awake()
     {
         if (instance == null)
@@ -24,7 +26,19 @@ public class PostProccesingManager : MonoBehaviour
     }
 
     // Update is called once per frame
-    
+
+
+    public void ActivateBlur(float intensity)
+    {
+        fullScreenPassMaterial.SetFloat("_ActivateBlur", intensity);
+    }
+
+    private void OnApplicationQuit()
+    {
+        fullScreenPassMaterial.SetFloat("_ActivateBlur", 0);
+        
+    }
+
     public void ApplyPostProcessing(bool isActive)
     {
         if (isActive)

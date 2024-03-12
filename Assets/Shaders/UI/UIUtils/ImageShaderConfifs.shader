@@ -7,9 +7,6 @@ Shader "Hidden/ImageShaderConfifs"
         _MaxDifunationOffset ("MaxDiff", Range(0, 1)) = 0.5
         _RoundedBordersRadius("RoundedBorders", Range(0, 1)) = 0
         
-        
-        
-        
     }
     
     SubShader

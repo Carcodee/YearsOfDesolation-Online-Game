@@ -12,15 +12,25 @@ public class CrosshairCreator : MonoBehaviour
     public float currentGapPrecision;
     public static Action <hitType>OnHitDetected;
     public float time = 0.5f;
+    
+    public bool isForEditor=false;
 
     public PlayerController playerController;
     private void OnEnable()
     {
+        if (isForEditor)
+        {
+            return;
+        }
         OnHitDetected += DisplayDamage;
     }
 
     private void OnDisable()
     {
+        if (isForEditor)
+        {
+            return;
+        }
         OnHitDetected -= DisplayDamage;
     }
     void Start()
@@ -28,12 +38,22 @@ public class CrosshairCreator : MonoBehaviour
         crossHair = new CrossHair(crosshairScriptableObj.width,  crosshairScriptableObj.length, 
             crosshairScriptableObj.gap,crosshairScriptableObj.isStatic, crosshairScriptableObj.color);
         LoadCrosshair(crossHair);
+        if (isForEditor)
+        {
+            return;
+        }
         playerController = GetComponentInParent<PlayerController>();
     }
 
 
     void Update()
     {
+        if (isForEditor)
+        { 
+            currentGapPrecision = crosshairScriptableObj.gap;
+            LoadCrosshair(crossHair);
+            return;
+        }
         currentGapPrecision = playerController.currentAimShootPercentage;
         LoadCrosshair(crossHair);
 
@@ -61,6 +81,10 @@ public class CrosshairCreator : MonoBehaviour
         playerCrosshair.SetLenght(crossHair.length);
         playerCrosshair.SetWidth(crossHair.width);
         crossHair.SetRecoilGap(currentGapPrecision);
+        if (isForEditor)
+        {
+            crossHair.SetRecoilGap(1);
+        }
         playerCrosshair.SetGap(crossHair.gap);
         playerCrosshair.SetColor(crossHair.color);
         

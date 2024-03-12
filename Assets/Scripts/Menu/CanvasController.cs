@@ -99,7 +99,7 @@ public class CanvasController : MonoBehaviour
     public float closeDistance=10;
     public float largeDistance=40;
     public CanvasGroup coinImageGroup;
-    
+    public TextMeshProUGUI distanceToCoinText;
     void Start()
     {
     
@@ -130,16 +130,31 @@ public class CanvasController : MonoBehaviour
             return;
         }
 
+
+        Vector3 playerToCoin = playerAssigned.coinPosition.transform.position - playerAssigned.transform.position;
+        Vector3 playerForward = playerController.cam.transform.forward;
+        if (Vector3.Dot(playerToCoin, playerForward) < 0)
+        {
+            coinImageGroup.alpha = 0;
+            return;
+        }
+        else
+        {
+
+            coinUI.SetActive(true);
+        }
+
         Vector3 coinPos = playerAssigned.transform.position;
-        
         Vector3 coinInScreen=playerController.cam.WorldToScreenPoint(playerAssigned.coinPosition.transform.position);
         Vector3 magYPos=playerController.cam.WorldToScreenPoint(playerAssigned.coinPosition.magPosition.transform.position);
-        
+        Debug.Log("Coin in screen: " + coinInScreen);
+
         coinInScreen.x = coinInScreen.x - canvasRect.sizeDelta.x/2;
         magYPos.y = magYPos.y - canvasRect.sizeDelta.y/2;
+
         
-        coinUI.transform.localPosition = new Vector3(coinInScreen.x,magYPos.y,0);
- 
+        coinUI.transform.localPosition = new Vector3(coinInScreen.x ,magYPos.y ,0);
+        distanceToCoinText.text = Vector3.Distance(playerAssigned.transform.position, playerAssigned.coinPosition.transform.position).ToString("0.0")+ "m";
         // set it
 
 
@@ -148,7 +163,11 @@ public class CanvasController : MonoBehaviour
 
     public void CheckAlpha()
     {
-        if (!coinUI.activeSelf || playerAssigned.coinPosition == null)return;
+        if (!coinUI.activeSelf || playerAssigned.coinPosition == null)
+        {
+            coinImageGroup.alpha = 0;
+            return;
+        };
         
         float distanceToCoin = Vector3.Distance(playerAssigned.transform.position, playerAssigned.coinPosition.transform.position);
         float alpha = Mathf.InverseLerp(closeDistance,largeDistance, distanceToCoin);

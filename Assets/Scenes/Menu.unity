@@ -51987,8 +51987,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -25.15, y: 44.05}
-  m_SizeDelta: {x: 3556.33, y: 2044.11}
+  m_AnchoredPosition: {x: 0.07806206, y: -0.01265}
+  m_SizeDelta: {x: 1920, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &825683532
 MonoBehaviour:
@@ -52002,8 +52002,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.2}
+  m_Material: {fileID: 2100000, guid: d9e6c647c4f3cb9429398b481c47296c, type: 2}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -86874,12 +86874,29 @@ MonoBehaviour:
   priority: 0
   customPasses:
   - rid: 8800665449096019972
-  injectionPoint: 1
+  - rid: 6387110611172196352
+  injectionPoint: 2
   m_TargetCamera: {fileID: 1489229440}
   useTargetCamera: 0
   references:
     version: 2
     RefIds:
+    - rid: 6387110611172196352
+      type: {class: FullScreenCustomPass, ns: UnityEngine.Rendering.HighDefinition,
+        asm: Unity.RenderPipelines.HighDefinition.Runtime}
+      data:
+        m_Name: BlurPass
+        enabled: 1
+        targetColorBuffer: 0
+        targetDepthBuffer: 0
+        clearFlags: 0
+        passFoldout: 0
+        m_Version: 0
+        fullscreenPassMaterial: {fileID: 2100000, guid: 72b924ee31479aa478f772551fc8e112,
+          type: 2}
+        materialPassIndex: 0
+        materialPassName: DrawProcedural
+        fetchColorBuffer: 0
     - rid: 8800665449096019972
       type: {class: DrawRenderersCustomPass, ns: UnityEngine.Rendering.HighDefinition,
         asm: Unity.RenderPipelines.HighDefinition.Runtime}
@@ -92764,6 +92781,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   volume: {fileID: 1682985876}
+  fullScreenPassMaterial: {fileID: 2100000, guid: 72b924ee31479aa478f772551fc8e112,
+    type: 2}
 --- !u!4 &1855907352
 Transform:
   m_ObjectHideFlags: 0
