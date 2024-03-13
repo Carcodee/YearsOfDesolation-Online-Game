@@ -392,6 +392,7 @@ public class PlayerController : NetworkBehaviour
         if (Input.GetKey(KeyCode.Mouse0) && playerStats.currentWeaponSelected.weapon.shootTimer > playerStats.currentWeaponSelected.weapon.shootRate.statValue && 
             playerStats.currentWeaponSelected.ammoBehaviour.currentBullets > 0 && !playerStats.currentWeaponSelected.ammoBehaviour.isReloading)
         {
+            CrosshairCreator.OnCrosshairChange?.Invoke();
             stateMachineController.networkAnimator.Animator.Play("Shoot", 1);
             StartCoroutine(playerStats.playerComponentsHandler.ShakeCamera(0.1f, .9f, .7f));
             playerStats.currentWeaponSelected.ammoBehaviour.currentBullets--;

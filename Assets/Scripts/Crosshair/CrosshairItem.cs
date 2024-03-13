@@ -62,4 +62,18 @@ public class CrosshairItem : MonoBehaviour
         }
         damageImages.alpha = 0;
     }
+    public IEnumerator ExpandCrosshair(float gap, float gapBuffer, float speed)
+  
+    {
+        
+        SetGap(gap);
+        while (gap >gapBuffer)
+        {
+            gap -= Time.deltaTime*speed;
+            SetGap(gap);
+            yield return null;
+        }
+        SetGap(gapBuffer);
+
+    }
 }

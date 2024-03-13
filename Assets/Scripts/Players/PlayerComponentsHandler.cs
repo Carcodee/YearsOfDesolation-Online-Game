@@ -183,7 +183,7 @@ public class PlayerComponentsHandler : NetworkBehaviour
         statsPanelController =canvasRenderer.GetComponentInChildren<StatsPanelController>();
         pauseController = canvasRenderer.GetComponentInChildren<PauseController>();    
         pauseController.playerAssigned = playerController;
-
+        pauseController.playerCrosshair = canvasObject.GetComponent<CrosshairCreator>();
     }
     private void CameraRotation(Vector3 look)
     {

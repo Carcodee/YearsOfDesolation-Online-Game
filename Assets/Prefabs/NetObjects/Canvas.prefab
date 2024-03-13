@@ -1917,7 +1917,7 @@ MonoBehaviour:
   onClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 841425225356840686}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PauseController, Assembly-CSharp
         m_MethodName: ResumeGame
         m_Mode: 1
@@ -15186,7 +15186,7 @@ MonoBehaviour:
   onClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 841425225356840686}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PauseController, Assembly-CSharp
         m_MethodName: OpenHelp
         m_Mode: 1
@@ -15939,7 +15939,7 @@ MonoBehaviour:
   onClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 841425225356840686}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PauseController, Assembly-CSharp
         m_MethodName: OpenOptions
         m_Mode: 1
@@ -16480,7 +16480,7 @@ MonoBehaviour:
   onClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 841425225356840686}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PauseController, Assembly-CSharp
         m_MethodName: ExitGame
         m_Mode: 1
@@ -21824,7 +21824,6 @@ GameObject:
   - component: {fileID: 5295429681934034803}
   - component: {fileID: 6048998640224780359}
   - component: {fileID: 3373936115909179696}
-  - component: {fileID: 841425225356840686}
   - component: {fileID: 2243511108731372955}
   m_Layer: 5
   m_Name: Canvas
@@ -22010,29 +22009,14 @@ MonoBehaviour:
     width: 0.3
     gap: 0.3
     length: 0.8
-    isStatic: 1
+    isStatic: 0
     gapBuffer: 0
     color: {r: 0, g: 0, b: 0, a: 0}
   playerCrosshair: {fileID: 6480951419367634757}
   currentGapPrecision: 0
   time: 0.5
+  isForEditor: 0
   playerController: {fileID: 0}
---- !u!114 &841425225356840686
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8540820803955698664}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3afbc9d6c92534e458fa74604566c2b2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pauseMenu: {fileID: 7277605201508759342}
-  optionsMenu: {fileID: 7728112100149504959}
-  crosshairCreator: {fileID: 0}
-  helpMenu: {fileID: 5561446189158335155}
 --- !u!95 &2243511108731372955
 Animator:
   serializedVersion: 5

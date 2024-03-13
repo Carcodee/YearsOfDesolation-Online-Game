@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class CrosshairCreator : MonoBehaviour
 {
+    public static Action OnCrosshairChange;
     public CrosshairScriptableObj crosshairScriptableObj;
     public CrossHair crossHair;
     public CrosshairItem playerCrosshair;
@@ -23,6 +24,7 @@ public class CrosshairCreator : MonoBehaviour
             return;
         }
         OnHitDetected += DisplayDamage;
+        OnCrosshairChange += LoadCrosshair;
     }
 
     private void OnDisable()
@@ -32,6 +34,7 @@ public class CrosshairCreator : MonoBehaviour
             return;
         }
         OnHitDetected -= DisplayDamage;
+        OnCrosshairChange -= LoadCrosshair;
     }
     void Start()
     {
@@ -50,15 +53,24 @@ public class CrosshairCreator : MonoBehaviour
     {
         if (isForEditor)
         { 
-            currentGapPrecision = crosshairScriptableObj.gap;
+            currentGapPrecision = 1;
             LoadCrosshair(crossHair);
             return;
         }
         currentGapPrecision = playerController.currentAimShootPercentage;
+        //TODO: change this to a event
         LoadCrosshair(crossHair);
 
     }
-    public void DisplayDamage(hitType hitType)
+    public void LoadCrosshair()
+    {
+        if (playerController)
+        {
+            return;
+        }
+        LoadCrosshair(crossHair);
+    }
+    public void DisplayDamage(hitType hitType) 
     {
         switch (hitType)
         {
@@ -76,21 +88,20 @@ public class CrosshairCreator : MonoBehaviour
                 break;                
         }
     }
-    void LoadCrosshair(CrossHair crossHair)
+    public void LoadCrosshair(CrossHair crossHair)
     {
         playerCrosshair.SetLenght(crossHair.length);
         playerCrosshair.SetWidth(crossHair.width);
-        crossHair.SetRecoilGap(currentGapPrecision);
-        if (isForEditor)
-        {
-            crossHair.SetRecoilGap(1);
-        }
-        playerCrosshair.SetGap(crossHair.gap);
         playerCrosshair.SetColor(crossHair.color);
+        this.crossHair.isStatic = crossHair.isStatic;
+        this.crossHair.SetRecoilGap(currentGapPrecision);
+        playerCrosshair.SetGap(crossHair.gap);
+
         
     }
-    void SetCrosshairExpansion(float expansion)
+    void SetCrosshairExpansion()
     {
+        StartCoroutine(playerCrosshair.ExpandCrosshair(crossHair.gap, crossHair.gapBuffer, 1));
 
     }
 }
@@ -113,6 +124,16 @@ public class CrossHair
         this.color = color;
         gapBuffer = gap;
     }
+    
+    public void CopyCrosshair(CrossHair crossHair)
+    {
+        this.width = crossHair.width;
+        this.gap = crossHair.gap;
+        this.length = crossHair.length;
+        this.isStatic = crossHair.isStatic;
+        this.color = crossHair.color;
+        gapBuffer = crossHair.gap;
+    }
 
     public void SetWidth(float newWidth)
     {
@@ -129,10 +150,16 @@ public class CrossHair
 
     public void SetRecoilGap(float currentGapPrecision)
     {
+        
         if (!isStatic)
         {
-            gap =  gapBuffer * currentGapPrecision ;
+            gap =  gapBuffer * currentGapPrecision;
         }
+        else
+        {
+            gap = gapBuffer;
+        }
+        
         
     }
 
