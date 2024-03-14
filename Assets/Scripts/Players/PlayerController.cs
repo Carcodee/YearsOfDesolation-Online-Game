@@ -396,7 +396,9 @@ public class PlayerController : NetworkBehaviour
             stateMachineController.networkAnimator.Animator.Play("Shoot", 1);
             StartCoroutine(playerStats.playerComponentsHandler.ShakeCamera(0.1f, .9f, .7f));
             playerStats.currentWeaponSelected.ammoBehaviour.currentBullets--;
-            // OnPlayerVfxAction?.Invoke(MyVfxType.shoot ,spawnBulletPoint.position);
+            //TODO : Spawn vfx on local player 
+            // playerStats.playerVFXController.CallShootEffectClientRpc(OwnerClientId);
+            // playerStats.playerVFXController.ShootEffectLocal();
             PlayerVFXController.shootEffectHandle.CreateVFX(spawnBulletPoint.position, transform.rotation ,IsServer);
             playerStats.currentWeaponSelected.weapon.shootTimer = 0;
             Vector3 shotDirection = new Vector3(cameraRef.transform.forward.x + randomRefraction, cameraRef.transform.forward.y + randomRefraction, cameraRef.transform.forward.z);
@@ -428,7 +430,17 @@ public class PlayerController : NetworkBehaviour
                             Debug.Log("Damage to do: " + damageToDo);
                             Debug.Log("Layer Tag: " + hit.collider.includeLayers);
                             Debug.Log("Gameobject Name: " + hit.collider.gameObject.name);
-    
+                            
+                            ClientRpcParams clientRpcParams = new ClientRpcParams
+                            {
+                                Send = new ClientRpcSendParams
+                                {
+                                    TargetClientIds = new[] {objectRef.OwnerClientId}            
+                                }
+                            };
+                            objectRef.SpawnDamageTakenVFXClientRpc(objectRef.takeDamagePosition.position, Quaternion.identity, OwnerClientId, clientRpcParams);
+                            objectRef.playerVFXController.BodyDamageVFX();
+                            
                             if (IsServer)
                             {
                                 objectRef.TakeDamageClientRpc((int)damageToDo, OwnerClientId);

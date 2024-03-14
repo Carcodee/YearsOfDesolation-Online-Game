@@ -113,11 +113,16 @@ public class GameController : NetworkBehaviour
 
         UpdateTime();
 
+        
+        
+    }
+
+    private void FixedUpdate()
+    {
         if (mapLogic.Value.isBattleRoyale && sphereRadius.radius>0)
         {
-                ReduceSphereSize();
+            ReduceSphereSize();
         }
-        
     }
 
 
@@ -279,7 +284,7 @@ public class GameController : NetworkBehaviour
     {
         if (sphereRadius.radius>0)
         {
-            sphereRadius.radius -= mapLogic.Value.zoneRadiusExpandSpeed * Time.deltaTime;
+            sphereRadius.radius -= mapLogic.Value.zoneRadiusExpandSpeed * Time.fixedDeltaTime;
             float currentRadius = sphereRadius.radius * 2;
             sphereRadiusMesh.localScale = new Vector3(currentRadius,sphereRadiusMesh.localScale.y,currentRadius) ;
         }

@@ -7,6 +7,7 @@ using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.VFX;
 
 public class PlayerVFXController : NetworkBehaviour
 {
@@ -44,7 +45,9 @@ public class PlayerVFXController : NetworkBehaviour
     public Transform ShootEffectPosition;
     
     [Header("TakeDamage")]
+    public GameObject takeDamageParticlePrefab;
     public GameObject takeDamageEffectPrefab;
+    public VisualEffect takeDamageEffectVFX;
     
     [Header("Respawn")]
     public GameObject respawingEffectPrefab;
@@ -72,10 +75,11 @@ public class PlayerVFXController : NetworkBehaviour
     private float followTime;
     private float targetVal; 
     
+    
     [Header("VFXNetAPI")]
      public static HandleVFX shootEffectHandle;
      public static HandleVFX hitEffectHandle;
-     public static HandleVFX bloodEffectHandle;
+     public HandleVFX bloodEffectHandle;
      public static HandleVFX respawningEffectHandle;
      public static HandleVFX OnRespawnEffectHandle;
 
@@ -97,7 +101,7 @@ public class PlayerVFXController : NetworkBehaviour
             // playerController.OnPlyerShoot += ShootEffect;
              shootEffectHandle = new HandleVFX(ShootVFX, ShootEffectPrefab, HandleVFX.VfxType.Net,0);
              hitEffectHandle = new HandleVFX(HitVFX, hitEffectPrefab, HandleVFX.VfxType.Net,1);
-             bloodEffectHandle= new HandleVFX(BloodVFX, takeDamageEffectPrefab, HandleVFX.VfxType.Net,2);
+             bloodEffectHandle= new HandleVFX(BloodVFX, takeDamageParticlePrefab, HandleVFX.VfxType.Net,2);
              respawningEffectHandle= new HandleVFX(RespawnVFX, respawingEffectPrefab, HandleVFX.VfxType.Net,3);
              OnRespawnEffectHandle= new HandleVFX(OnRespawnVFX, OnRespawnEffectPrefab, HandleVFX.VfxType.Net,4);
             vfxHandles[0] = shootEffectHandle;
@@ -221,7 +225,12 @@ public class PlayerVFXController : NetworkBehaviour
 
     }
 
-
+    [ClientRpc]
+    public void SendDamageVfxToPlayerClientRpc(ClientRpcParams rpcParams = default)
+    {
+        
+    }
+    
     public static HandleVFX GetVFXHandle(int id)
     {
         for (int i = 0; i < vfxHandles.Length; i++)
@@ -250,7 +259,17 @@ public class PlayerVFXController : NetworkBehaviour
     }
     public void BloodVFX(Vector3 position, Quaternion rotation)
     {
-        Instantiate(takeDamageEffectPrefab, position, rotation);
+        Instantiate(takeDamageParticlePrefab, position, rotation);
+     
+    }
+    
+    public void BodyDamageVFX()
+    {
+        if (!takeDamageEffectPrefab.activeSelf)
+        {
+            takeDamageEffectPrefab.SetActive(true);
+        }
+        takeDamageEffectVFX.Play();
     }
     public void RespawnVFX(Vector3 position, Quaternion rotation)
     {
@@ -259,31 +278,6 @@ public class PlayerVFXController : NetworkBehaviour
     public void OnRespawnVFX(Vector3 position, Quaternion rotation)
     {
         Instantiate(OnRespawnEffectPrefab, position, rotation);
-    }
-    
-    public void AddVFXOnNet(MyVfxType vfxType, Vector3 pos)
-    {
-        switch (vfxType)
-        {
-            case MyVfxType.shoot:
-                ShootEffect(pos);
-                break;
-            case MyVfxType.hit:
-                BulletHitEffect(pos);
-                break;
-            
-        }
-    }
-    public void ShootEffect(Vector3 pos)
-    {
-        if (IsServer)
-        {
-            ShootEffectClientRpc(pos);
-        }
-        else
-        {
-            CallShootEffectServerRpc(pos);
-        }
     }
     
     public void BulletHitEffect(Vector3 pos)
@@ -300,10 +294,15 @@ public class PlayerVFXController : NetworkBehaviour
     
 
 
-    [ServerRpc]
-    public void CallShootEffectServerRpc(Vector3 pos)
+    
+    [ClientRpc]
+    public void CallShootEffectClientRpc(ulong clientIdToSkip)
     {
-        ShootEffectClientRpc(pos);
+        ShootVFX(ShootEffectPosition.position, Quaternion.identity);
+    }
+    public void ShootEffectLocal()
+    {
+        ShootVFX(ShootEffectPosition.position, Quaternion.identity);
     }
     
     [ServerRpc]

@@ -20,6 +20,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
     public NetworkVariable <int> statsTemplateSelected;
     public PlayerComponentsHandler playerComponentsHandler;
     public StateMachineController stateMachineController;
+    public PlayerVFXController playerVFXController;
     public Transform takeDamagePosition;
     [Header("Stats")]
     [SerializeField] private NetworkVariable<int> haste = new NetworkVariable<int>();
@@ -338,17 +339,18 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
                     //this is wrong stat holder is controlling the health
                     health.Value -= (damage);
                     StartCoroutine(playerComponentsHandler.ShakeCamera(0.3f, 5, 5));
-                    PlayerVFXController.bloodEffectHandle.CreateVFX(takeDamagePosition.position,  Quaternion.identity,IsServer);
+                    playerVFXController.bloodEffectHandle.CreateVFX(takeDamagePosition.position,  Quaternion.identity,IsServer);
                         
                 }
                 else
                 {
                     SetHealthServerRpc(health.Value - (damage));  
                     StartCoroutine(playerComponentsHandler.ShakeCamera(0.3f, 5, 5));
-                    PlayerVFXController.bloodEffectHandle.CreateVFX(takeDamagePosition.position,  Quaternion.identity,IsServer);
-
+                    playerVFXController.bloodEffectHandle.CreateVFX(takeDamagePosition.position,  Quaternion.identity,IsServer);
+                    
 
                 }
+                playerVFXController.BodyDamageVFX();
                 CanvasController.OnUpdateUI?.Invoke();
                 OnStatsChanged?.Invoke();
             }
@@ -392,28 +394,35 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
             {
                 return;
             }
+
+            
             if (IsServer)
             {
                 clientIdInstigator.Value = playerClientID;
                 //this is wrong stat holder is controlling the health
                 health.Value -= (myDamage);
                 StartCoroutine(playerComponentsHandler.ShakeCamera(0.3f, 5, 5));
-                PlayerVFXController.bloodEffectHandle.CreateVFX(takeDamagePosition.position, Quaternion.identity ,IsServer);
+                playerVFXController.bloodEffectHandle.CreateVFX(takeDamagePosition.position, Quaternion.identity ,IsServer);
             }
             else
             {
                 SetClientIdInstigatorServerRpc(playerClientID) ;
                 SetHealthServerRpc(health.Value - (myDamage));  
                 StartCoroutine(playerComponentsHandler.ShakeCamera(0.3f, 5, 5));
-                PlayerVFXController.bloodEffectHandle.CreateVFX(takeDamagePosition.position, Quaternion.identity , IsServer);
+                playerVFXController.bloodEffectHandle.CreateVFX(takeDamagePosition.position, Quaternion.identity , IsServer);
 
             }
+            
             OnStatsChanged?.Invoke();
         
         }
 
     }
-    
+    [ClientRpc]
+    public void SpawnDamageTakenVFXClientRpc(Vector3 pos, Quaternion rot, ulong ownerID,ClientRpcParams clientRpcParams = default)
+    {
+            playerVFXController.BodyDamageVFX();
+    }
 
     [ServerRpc]
     public void SetClientIdInstigatorServerRpc(ulong clientId)
