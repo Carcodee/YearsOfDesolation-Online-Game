@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class HudElementUtilsFunctions : MonoBehaviour
 {
-    
+   
     public void Deactivate()
     {
         gameObject.SetActive(false);

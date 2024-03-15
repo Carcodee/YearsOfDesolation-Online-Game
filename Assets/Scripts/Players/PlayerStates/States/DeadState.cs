@@ -22,7 +22,9 @@ namespace Players.PlayerStates.States
             playerRef.sprintFactor = 1f;
             playerRef.move = Vector3.zero;
             playerRef.playerStats.SetHealth(playerRef.playerStats.GetMaxHealth());
+            PlayerVFXController.OnDeadEffectHandle.CreateVFX(playerRef.transform.position, playerRef.transform.rotation, playerRef.IsServer);
         }
+        
         public override void StateExit()
         {
             //respawn

@@ -48,6 +48,8 @@ public class PlayerVFXController : NetworkBehaviour
     public GameObject takeDamageParticlePrefab;
     public GameObject takeDamageEffectPrefab;
     public VisualEffect takeDamageEffectVFX;
+    public GameObject OnDeadEffectPrefab;
+    
     
     [Header("Respawn")]
     public GameObject respawingEffectPrefab;
@@ -60,8 +62,8 @@ public class PlayerVFXController : NetworkBehaviour
     public PlayerController playerController;
     
     public SkinnedMeshRenderer skinnedMeshRenderer; 
-
     protected MaterialPropertyBlock mPB;
+    
 
     [Header("HP")] 
     public Material hpMat;
@@ -82,7 +84,7 @@ public class PlayerVFXController : NetworkBehaviour
      public HandleVFX bloodEffectHandle;
      public static HandleVFX respawningEffectHandle;
      public static HandleVFX OnRespawnEffectHandle;
-
+     public static HandleVFX OnDeadEffectHandle;
      public static HandleVFX[] vfxHandles= new HandleVFX[5];
 
     public EmbededNetwork embededNetwork;
@@ -104,6 +106,7 @@ public class PlayerVFXController : NetworkBehaviour
              bloodEffectHandle= new HandleVFX(BloodVFX, takeDamageParticlePrefab, HandleVFX.VfxType.Net,2);
              respawningEffectHandle= new HandleVFX(RespawnVFX, respawingEffectPrefab, HandleVFX.VfxType.Net,3);
              OnRespawnEffectHandle= new HandleVFX(OnRespawnVFX, OnRespawnEffectPrefab, HandleVFX.VfxType.Net,4);
+             OnDeadEffectHandle = new HandleVFX(OnDeadVFX, OnDeadEffectPrefab, HandleVFX.VfxType.Net, 5);
             vfxHandles[0] = shootEffectHandle;
             vfxHandles[1] = hitEffectHandle;
             vfxHandles[2] = bloodEffectHandle;
@@ -116,7 +119,6 @@ public class PlayerVFXController : NetworkBehaviour
             playerStatsController.health.OnValueChanged += UpdateHealthEffect;
   
         }
-
 
     }
 
@@ -189,7 +191,6 @@ public class PlayerVFXController : NetworkBehaviour
         
     }
 
-    
     
     public void UpdateHealthEffect(float oldVal, float newVal)
     {
@@ -279,7 +280,10 @@ public class PlayerVFXController : NetworkBehaviour
     {
         Instantiate(OnRespawnEffectPrefab, position, rotation);
     }
-    
+    public void OnDeadVFX(Vector3 position, Quaternion rotation)
+    {
+        Instantiate(OnDeadEffectPrefab, position, rotation);
+    }
     public void BulletHitEffect(Vector3 pos)
     {
         if (IsServer)

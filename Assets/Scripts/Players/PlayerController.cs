@@ -440,8 +440,6 @@ public class PlayerController : NetworkBehaviour
                             };
                             objectRef.SpawnDamageTakenVFXClientRpc(objectRef.takeDamagePosition.position, Quaternion.identity, OwnerClientId, clientRpcParams);
                             objectRef.playerVFXController.BodyDamageVFX();
-                            
-                            if (IsServer)
                             {
                                 objectRef.TakeDamageClientRpc((int)damageToDo, OwnerClientId);
                                 CrosshairCreator.OnHitDetected?.Invoke(hitData.hitType);
@@ -451,6 +449,11 @@ public class PlayerController : NetworkBehaviour
                                 objectRef.TakeDamageServerRpc((int)damageToDo, OwnerClientId);
                                 CrosshairCreator.OnHitDetected?.Invoke(hitData.hitType);
                             }
+                            //
+                            // if (objectRef.health.Value- damageToDo <= 0)
+                            // {
+                            //     playerStats.ShowPlayerKilled("Player");
+                            // }
                         }
                     }
                 // }

@@ -34,7 +34,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
 
     [SerializeField] private NetworkVariable<int> playerLevel = new NetworkVariable<int>();
     [SerializeField] public NetworkVariable<int> avaliblePoints = new NetworkVariable<int>();
-    
+   [SerializeField] public  NetworkVariable<bool> enemyKilled = new NetworkVariable<bool>();
     public NetworkVariable<bool> isInvulnerable = new NetworkVariable<bool>();
 
     [FormerlySerializedAs("StartGameHealth")] public float startGameHealth;
@@ -234,7 +234,12 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
         coinPosition= Instantiate(coinPrefab, pos, quaternion.identity);
         
     }
-    
+
+    public void ShowPlayerKilled(string playerName)
+    {
+        CanvasController.OnEnemyKilled?.Invoke(playerName);
+        
+    }
 
     
     public void RefillAmmo()
@@ -586,6 +591,12 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
     public void addAvaliblePointsServerRpc(int val)
     {
         avaliblePoints.Value+=val;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void NotifyKillServerRpc(bool val)
+    {
+        enemyKilled.Value = val;
     }
 
     

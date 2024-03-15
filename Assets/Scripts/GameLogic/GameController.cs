@@ -254,9 +254,7 @@ public class GameController : NetworkBehaviour
         if (started.Value && !mapLogic.Value.isBattleRoyale)
         {
             farmStageTimer += Time.deltaTime;
-       
-            if (farmStageTimer >= mapLogic.Value.totalTime)
-            {
+       if (farmStageTimer >= mapLogic.Value.totalTime) {
                 if (IsServer)
                 {
                     mapLogic.Value.isBattleRoyale = true;
@@ -271,10 +269,19 @@ public class GameController : NetworkBehaviour
     public void AddPointsOnKillerServerRpc(int points, ulong instigatorClientId,ServerRpcParams serverRpcParams = default)
     {
         
-            NetworkManager.Singleton.ConnectedClients[instigatorClientId].PlayerObject.GetComponent<PlayerStatsController>().AddAvaliblePoint(points);
+        NetworkManager.Singleton.ConnectedClients[instigatorClientId].PlayerObject.GetComponent<PlayerStatsController>().AddAvaliblePoint(points); 
         
     }
     
+   
+    [ServerRpc(RequireOwnership = false)]
+    public void NotifyKillServerRpc(ulong instigatorClientId,ServerRpcParams serverRpcParams = default)
+    {
+        
+        NetworkManager.Singleton.ConnectedClients[instigatorClientId].PlayerObject.GetComponent<PlayerStatsController>().NotifyKillServerRpc(true); 
+        
+    }
+     
     public Vector3 GetRandomPointFromCollider(Collider col)
     {
         Vector3 newPos=new Vector3(UnityEngine.Random.Range(col.bounds.min.x, col.bounds.max.x), 2.5f ,UnityEngine.Random.Range(col.bounds.min.z, col.bounds.max.z));
@@ -395,12 +402,16 @@ public class GameController : NetworkBehaviour
             var rpcParams = new ServerRpcParams { };
             rpcParams.Receive.SenderClientId=players[playerIndex].GetComponent<PlayerStatsController>().clientIdInstigator.Value;
             AddPointsOnKillerServerRpc(1, players[playerIndex].GetComponent<PlayerStatsController>().clientIdInstigator.Value,rpcParams);            
+            NotifyKillServerRpc(players[playerIndex].GetComponent<PlayerStatsController>().clientIdInstigator.Value,rpcParams);     
+      
+            
         if (PlayerVFXController.respawningEffectHandle!=null)
         {
             PlayerVFXController.respawningEffectHandle.CreateVFX(players[playerIndex].transform.position, Quaternion.identity, false);
         }
         Debug.Log("Called on client");
     }
+    
     [ClientRpc]
     public void SendMapBattleRoyaleValueClientRpc(bool val)
     {
@@ -408,6 +419,9 @@ public class GameController : NetworkBehaviour
     }
 
 
+
+        
+    
     [ClientRpc]
     public void AddPlayerToListClientRpc()
     {

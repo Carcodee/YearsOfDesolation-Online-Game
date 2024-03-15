@@ -64807,6 +64807,11 @@ PrefabInstance:
       propertyPath: GlobalObjectIdHash
       value: 2520399832
       objectReference: {fileID: 0}
+    - target: {fileID: 2686711140574451488, guid: 490029e4403e35044ba461465cd8aabf,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3940185642830209463, guid: 490029e4403e35044ba461465cd8aabf,
         type: 3}
       propertyPath: m_Name
@@ -64817,7 +64822,42 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4081821813927255409, guid: 490029e4403e35044ba461465cd8aabf,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.data[1].m_Value.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4081821813927255409, guid: 490029e4403e35044ba461465cd8aabf,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.data[1].m_Value.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4081821813927255409, guid: 490029e4403e35044ba461465cd8aabf,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.data[1].m_Value.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4081821813927255409, guid: 490029e4403e35044ba461465cd8aabf,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.data[2].m_Value.x
+      value: 1.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4081821813927255409, guid: 490029e4403e35044ba461465cd8aabf,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.data[2].m_Value.y
+      value: 1.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4081821813927255409, guid: 490029e4403e35044ba461465cd8aabf,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.data[2].m_Value.z
+      value: 1.1
+      objectReference: {fileID: 0}
     - target: {fileID: 4913650482613005107, guid: 490029e4403e35044ba461465cd8aabf,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5743769336294010465, guid: 490029e4403e35044ba461465cd8aabf,
         type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -64827,6 +64867,16 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7202190310037287023, guid: 490029e4403e35044ba461465cd8aabf,
+        type: 3}
+      propertyPath: m_Bindings.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7202190310037287023, guid: 490029e4403e35044ba461465cd8aabf,
+        type: 3}
+      propertyPath: m_Bindings.Array.data[1]
+      value: 
+      objectReference: {fileID: 1181714952}
     - target: {fileID: 7769146971403445877, guid: 490029e4403e35044ba461465cd8aabf,
         type: 3}
       propertyPath: m_Enabled
@@ -64840,8 +64890,33 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 565450233354065853, guid: 490029e4403e35044ba461465cd8aabf,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1181714952}
   m_SourcePrefab: {fileID: 100100000, guid: 490029e4403e35044ba461465cd8aabf, type: 3}
+--- !u!1 &1181714951 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 565450233354065853, guid: 490029e4403e35044ba461465cd8aabf,
+    type: 3}
+  m_PrefabInstance: {fileID: 1181714950}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1181714952
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1181714951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d80994697e576624b97a67538d27ddcd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Property:
+    m_Name: Velocity
+  Target: {fileID: 0}
 --- !u!1 &1184168901
 GameObject:
   m_ObjectHideFlags: 0

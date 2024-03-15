@@ -26,7 +26,7 @@ public class CanvasController : MonoBehaviour
     public static Action OnUpdateUI;
     public static Action OnBulletsAddedUI;
     public static Action OnMoneyAddedUI;
-    
+    public static Action <string>OnEnemyKilled;
     public Michsky.UI.Heat.ProgressBar timeLeftBar;
     public TextMeshProUGUI timeLeftBarText;
     
@@ -93,13 +93,16 @@ public class CanvasController : MonoBehaviour
     [Header("Notifications")]
     public TextMeshProUGUI ammoAddedText;
     public TextMeshProUGUI moneyAddedText;
-
+    public GameObject killNotification;
+    public TextMeshProUGUI killNotificationText;
     [Header("CoinUI")]
     public GameObject coinUI;
     public float closeDistance=10;
     public float largeDistance=40;
     public CanvasGroup coinImageGroup;
     public TextMeshProUGUI distanceToCoinText;
+    
+    
     void Start()
     {
     
@@ -119,10 +122,28 @@ public class CanvasController : MonoBehaviour
         healthsStack.Push(greenHealth);
         canvasRect = canvas.GetComponent<RectTransform>();
         coinImageGroup = coinUI.GetComponent<CanvasGroup>();
+        // OnEnemyKilled += KillNotification; 
+        playerAssigned.enemyKilled.OnValueChanged += KillNotification;
     }
 
 
-
+    
+    
+    public void KillNotification(bool old, bool newVal)
+    {
+        if (old==false)
+        {
+            killNotification.SetActive(true);
+            killNotificationText.gameObject.SetActive(true);
+            killNotificationText.text = "You killed "+"<color=red>Player</color>";
+        }
+        playerAssigned.NotifyKillServerRpc(false);
+    }
+    public void DeactivateKillNotification()
+    {
+        playerAssigned.NotifyKillServerRpc(false);
+        killNotification.SetActive(false);
+    }
     public void TrackCoin()
     {
         if (playerAssigned.coinPosition==null)
