@@ -22,6 +22,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
     public StateMachineController stateMachineController;
     public PlayerVFXController playerVFXController;
     public Transform takeDamagePosition;
+    public Vector3 deadPosition;
     [Header("Stats")]
     [SerializeField] private NetworkVariable<int> haste = new NetworkVariable<int>();
     [SerializeField] public NetworkVariable<float> health = new NetworkVariable<float>();
@@ -401,6 +402,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
             }
 
             
+            deadPosition = transform.position;
             if (IsServer)
             {
                 clientIdInstigator.Value = playerClientID;
@@ -417,7 +419,6 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
                 playerVFXController.bloodEffectHandle.CreateVFX(takeDamagePosition.position, Quaternion.identity , IsServer);
 
             }
-            
             OnStatsChanged?.Invoke();
         
         }

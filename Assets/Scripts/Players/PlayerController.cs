@@ -449,11 +449,7 @@ public class PlayerController : NetworkBehaviour
                                 objectRef.TakeDamageServerRpc((int)damageToDo, OwnerClientId);
                                 CrosshairCreator.OnHitDetected?.Invoke(hitData.hitType);
                             }
-                            //
-                            // if (objectRef.health.Value- damageToDo <= 0)
-                            // {
-                            //     playerStats.ShowPlayerKilled("Player");
-                            // }
+                            
                         }
                     }
                 // }

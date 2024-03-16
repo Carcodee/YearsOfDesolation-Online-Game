@@ -117,8 +117,8 @@ public class PlayerVFXController : NetworkBehaviour
             stateMachineController = GetComponent<StateMachineController>();
             playerStatsController = GetComponent<PlayerStatsController>();
             playerStatsController.health.OnValueChanged += UpdateHealthEffect;
-  
         }
+        // takeDamageEffectPrefab.transform.parent = null;
 
     }
 
@@ -270,6 +270,7 @@ public class PlayerVFXController : NetworkBehaviour
         {
             takeDamageEffectPrefab.SetActive(true);
         }
+        // takeDamageEffectVFX.transform.position = transform.position;
         takeDamageEffectVFX.Play();
     }
     public void RespawnVFX(Vector3 position, Quaternion rotation)
