@@ -20,12 +20,11 @@ public class AnimationRiggingController : MonoBehaviour
     {
         playerStatsController.playerStats.OnWeaponChanged += OnWeaponChanged;
         handLTarget.position = playerStatsController.playerStats.weaponNoBuildGripPoint.position;
-
     }
 
     void Update()
     {
-
+        
         if (playerStatsController.isSprinting)
         {
             multiAimConstraint.weight = 0;
@@ -49,6 +48,20 @@ public class AnimationRiggingController : MonoBehaviour
 
         }
 
+        if (playerStatsController.playerStats.currentWeaponSelected==null)
+        {
+           return;   
+        }
+        Debug.Log(playerStatsController.playerStats.currentWeaponSelected.weaponObjectController.useTwoBoneIK);
+        if (playerStatsController.playerStats.currentWeaponSelected.weaponObjectController.useTwoBoneIK)
+        {
+           twoBoneIKConstraint.weight = 1;
+        }
+        else if (!playerStatsController.playerStats.currentWeaponSelected.weaponObjectController.useTwoBoneIK)
+        {
+            twoBoneIKConstraint.weight = 0;
+        }
+        
         
     }
     

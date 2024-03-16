@@ -7,4 +7,5 @@ public class WeaponObjectController : MonoBehaviour
     public Transform weaponGripPoint;
     public Transform weaponBulletSpawnPoints;
     public bool useTwoBoneIK=true;
+    
 }

@@ -43,7 +43,8 @@ public class CanvasController : MonoBehaviour
     public Image currentWeaponImage;
     public Image secondWeaponImage;
     public TextMeshProUGUI secondWeaponBullets;
-    
+    // TODO: when a weapon have a cooldown bigger than 3 sec show this bar
+    public GameObject weaponCooldown; 
     
     [Header("DeadScreen")] 
     public TextMeshProUGUI timeToSpawn;
@@ -126,7 +127,13 @@ public class CanvasController : MonoBehaviour
         playerAssigned.enemyKilled.OnValueChanged += KillNotification;
     }
 
-
+    public void ShowTimeToShoot()
+    {
+        if (playerAssigned.currentWeaponSelected.weapon.shootRate.statValue>1.5f)
+        {
+            //TODO: show the bar
+        }
+    } 
     
     
     public void KillNotification(bool old, bool newVal)

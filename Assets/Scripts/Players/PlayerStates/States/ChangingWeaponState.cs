@@ -45,6 +45,8 @@ public class ChangingWeaponState : PlayerStateBase
         {
             // playerRef.playerStats.currentWeaponSelected = weaponToChange;
             playerRef.lockShoot = false;
+           
+            playerRef.playerStats.currentWeaponSelected.weapon.shootTimer= playerRef.playerStats.currentWeaponSelected.weapon.shootRate.statValue+0.1f;
             if(isAimingInAtLastFrame)
             {
                 playerRef.playerStats.playerComponentsHandler.cinmachineCloseLookCameraIntance.Priority = 20;
