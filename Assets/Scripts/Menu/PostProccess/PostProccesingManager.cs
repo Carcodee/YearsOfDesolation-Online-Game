@@ -13,6 +13,7 @@ public class PostProccesingManager : MonoBehaviour
     // Start is called before the first frame update
 
     public Material fullScreenPassMaterial;
+    public Material fullScreenPassMaterialMenu;
     private void Awake()
     {
         if (instance == null)
@@ -27,6 +28,10 @@ public class PostProccesingManager : MonoBehaviour
 
     // Update is called once per frame
 
+    public void DeactivateMenuBlur()
+    {
+        fullScreenPassMaterialMenu.SetFloat("_ActivateBlur", 0);
+    }
 
     public void ActivateBlur(float intensity)
     {
@@ -36,6 +41,8 @@ public class PostProccesingManager : MonoBehaviour
     private void OnApplicationQuit()
     {
         fullScreenPassMaterial.SetFloat("_ActivateBlur", 0);
+        fullScreenPassMaterialMenu.SetFloat("_ActivateBlur", 1);
+
         
     }
 

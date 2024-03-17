@@ -98,6 +98,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
             OnSpawnPlayer?.Invoke();
             _isInNetwork = true;
         }
+        PostProccesingManager.instance.DeactivateMenuBlur();
     }
 
 
@@ -121,7 +122,8 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
 #if UNITY_EDITOR
             DebugManager.instance.playerStatsController = this;
 #endif
-            
+            PostProccesingManager.instance.DeactivateMenuBlur();
+
         }
     }
 
