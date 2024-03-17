@@ -15,6 +15,7 @@ namespace Players.PlayerStates.States
         public override void StateEnter()
         {
             base.StateEnter();
+            playerRef.playerStats.playerVFXController.JumpVFX();
             moveDir = playerRef.move;
             this.playerRef.Jump();
             this.playerRef.gravityMultiplier = 1;

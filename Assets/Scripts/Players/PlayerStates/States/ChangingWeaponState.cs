@@ -27,16 +27,16 @@ public class ChangingWeaponState : PlayerStateBase
             networkAnimator.Animator.SetFloat("Aiming", 0);
             playerRef.playerStats.playerComponentsHandler.cinmachineCloseLookCameraIntance.Priority = 5;
             playerRef.lockShoot = true;
-            layerIndex = networkAnimator.Animator.GetLayerIndex(weaponToChange.weapon.changeWeaponAnimation.LayerName);
+            layerIndex = networkAnimator.Animator.GetLayerIndex(weaponToChange.weapon.weaponAnimation.LayerName);
             oldWeapon = playerRef.playerStats.currentWeaponSelected;
             playerRef.playerStats.SetWeapon(weaponToChange);
             
-            networkAnimator.Animator.Play(weaponToChange.weapon.changeWeaponAnimation.weaponChange);
+            networkAnimator.Animator.Play(weaponToChange.weapon.weaponAnimation.weaponChange);
             
-            MyUtilities.SetDefaultUpperLayer(networkAnimator.Animator, weaponToChange.weapon.changeWeaponAnimation.LayerName, 
-                oldWeapon.weapon.changeWeaponAnimation.LayerName);
+            MyUtilities.SetDefaultUpperLayer(networkAnimator.Animator, weaponToChange.weapon.weaponAnimation.LayerName, 
+                oldWeapon.weapon.weaponAnimation.LayerName);
             
-            networkAnimator.Animator.GetLayerIndex(weaponToChange.weapon.changeWeaponAnimation.LayerName);
+            networkAnimator.Animator.GetLayerIndex(weaponToChange.weapon.weaponAnimation.LayerName);
             playerRef.playerStats.currentWeaponSelected = weaponToChange;
 
         }
@@ -57,7 +57,7 @@ public class ChangingWeaponState : PlayerStateBase
 
         public override void StateLateUpdate()
         {
-            if (!MyUtilities.IsAnimationPlaying(networkAnimator.Animator, weaponToChange.weapon.changeWeaponAnimation.weaponChange,layerIndex))
+            if (!MyUtilities.IsAnimationPlaying(networkAnimator.Animator, weaponToChange.weapon.weaponAnimation.weaponChange,layerIndex))
             {
                 stateMachineController.SetChangingWeaponState(weaponToChange, "OnWeapon");
                 return;

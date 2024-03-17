@@ -95,8 +95,8 @@ public class PlayerVFXController : NetworkBehaviour
         playerController = GetComponent<PlayerController>();
         playerStatsController = GetComponent<PlayerStatsController>();
         playerStatsController.OnLevelUp += LevelUpEffect;
-        hpObject.SetActive(IsOwner);
-        followHpObject.SetActive(IsOwner);
+        hpObject.SetActive(!IsOwner);
+        followHpObject.SetActive(!IsOwner);
         if (IsOwner)
         {
             // playerController.OnBulletHit += BulletHitEffect;
@@ -169,11 +169,6 @@ public class PlayerVFXController : NetworkBehaviour
     {
         if (IsOwner)
         {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                Instantiate(jumpEffectPrefab, jumpEffectPosition.position, Quaternion.identity);
-            }
-
             FollowHPBar();
         }
        
@@ -191,7 +186,10 @@ public class PlayerVFXController : NetworkBehaviour
         
     }
 
-    
+    public void JumpVFX()
+    {
+        Instantiate(jumpEffectPrefab, jumpEffectPosition.position, Quaternion.identity);
+    }
     public void UpdateHealthEffect(float oldVal, float newVal)
     {
         targetVal = playerStatsController.GetHealth() / playerStatsController.GetMaxHealth();

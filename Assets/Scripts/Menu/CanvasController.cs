@@ -45,6 +45,7 @@ public class CanvasController : MonoBehaviour
     public TextMeshProUGUI secondWeaponBullets;
     // TODO: when a weapon have a cooldown bigger than 3 sec show this bar
     public GameObject weaponCooldown; 
+    public Material weaponShootRateMat;
     
     [Header("DeadScreen")] 
     public TextMeshProUGUI timeToSpawn;
@@ -96,6 +97,7 @@ public class CanvasController : MonoBehaviour
     public TextMeshProUGUI moneyAddedText;
     public GameObject killNotification;
     public TextMeshProUGUI killNotificationText;
+    
     [Header("CoinUI")]
     public GameObject coinUI;
     public float closeDistance=10;
@@ -127,11 +129,18 @@ public class CanvasController : MonoBehaviour
         playerAssigned.enemyKilled.OnValueChanged += KillNotification;
     }
 
+    
+    
     public void ShowTimeToShoot()
     {
-        if (playerAssigned.currentWeaponSelected.weapon.shootRate.statValue>1.5f)
+        if (playerAssigned.currentWeaponSelected.weapon.shootRate.statValue>=1.0f)
         {
-            //TODO: show the bar
+            weaponCooldown.SetActive(true);
+            float barValue = playerAssigned.currentWeaponSelected.weapon.shootTimer/playerAssigned.currentWeaponSelected.weapon.shootRate.statValue;
+            weaponShootRateMat.SetFloat("_BarValue",barValue);
+        }else
+        {
+            weaponCooldown.SetActive(false);
         }
     } 
     
@@ -204,6 +213,7 @@ public class CanvasController : MonoBehaviour
     void Update()
     {
         stageObjectPlaying = stagesObject.activeSelf;
+        ShowTimeToShoot();
         SetTimer();
         DisplayPlayersConnected();
         DisplayBullets();
@@ -366,7 +376,7 @@ public class CanvasController : MonoBehaviour
     private void OnApplicationQuit()
     {
         SetDefaultVaues(hpUIMat);
-        
+        weaponShootRateMat.SetFloat("_BarValue",0);
         // followUIHpMat.SetFloat("_HP",1);
 
     }
@@ -498,11 +508,7 @@ public class CanvasController : MonoBehaviour
 
 
     }
-    private void DisplayHP()
-    {
 
-
-    }
     private void DisplayLevel()
     {
 

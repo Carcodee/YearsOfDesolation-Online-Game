@@ -25,4 +25,7 @@ public struct WeaponAnimations
     
     public string LayerName;
     public string weaponChange;
+    public string weaponShoot;
+    public string weaponReload;
+    public string WeaponSprint;
 }

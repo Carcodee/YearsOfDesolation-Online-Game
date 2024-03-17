@@ -28,18 +28,21 @@ Material:
   m_ValidKeywords:
   - _DISABLE_SSR_TRANSPARENT
   - _DOUBLESIDED_ON
+  - _ENABLE_BLOOD
   - _FLIP_NORMAL_GREEN_CHANNEL
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 1
   m_CustomRenderQueue: 2225
-  stringTagMap: {}
+  stringTagMap:
+    MotionVector: User
   disabledShaderPasses:
   - TransparentDepthPrepass
   - TransparentDepthPostpass
   - TransparentBackface
   - RayTracingPrepass
+  - MOTIONVECTORS
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
@@ -77,7 +80,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Emission_Map:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 578508ae76eff0d46ba4dccb7517279e, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
@@ -130,11 +133,11 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _1_Blood_Intensity: 8
+    - _1_Blood_Intensity: 10
     - _1_Dirt_Intensity: 1
-    - _2_Blood_Intensity: 4
+    - _2_Blood_Intensity: 5
     - _2_Dirt_Intensity: 1
-    - _3_Blood_Intensity: 1
+    - _3_Blood_Intensity: 5
     - _3_Dirt_Intensity: 1
     - _ADD_MICRODETAIL: 0
     - _AO_Strength: 1.25
@@ -147,7 +150,7 @@ Material:
     - _BUILTIN_QueueControl: 0
     - _BUILTIN_QueueOffset: 0
     - _BlendMode: 0
-    - _Blood_Roughness: 0.31
+    - _Blood_Roughness: 0.71
     - _Blur_1: 0
     - _Blur_2: 0
     - _Blur_3: 0
@@ -169,7 +172,7 @@ Material:
     - _DoubleSidedGIMode: 0
     - _DoubleSidedNormalMode: 2
     - _DstBlend: 0
-    - _ENABLE_BLOOD: 0
+    - _ENABLE_BLOOD: 1
     - _ENABLE_DIRT: 0
     - _EnableBlendModePreserveSpecularLighting: 1
     - _EnableFogOnTransparent: 1
@@ -187,11 +190,11 @@ Material:
     - _Glossiness: 0.5
     - _GlossyReflections: 1
     - _Metallic: 0
-    - _Metallic_Strength: 1
+    - _Metallic_Strength: 10
     - _Microdetail_Size: 32
     - _Microdetail_Strength: 0.8
     - _Mode: 0
-    - _Normal_Strength: 1
+    - _Normal_Strength: 1.76
     - _OcclusionStrength: 1
     - _OpaqueCullMode: 2
     - _Parallax: 0.02
@@ -231,7 +234,7 @@ Material:
     - _RenderQueueType: 1
     - _RequireSplitLighting: 0
     - _SmoothnessTextureChannel: 0
-    - _Smoothness_Strength: 1
+    - _Smoothness_Strength: 0.74
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _StencilRef: 0
@@ -260,16 +263,16 @@ Material:
     - _ZTestTransparent: 4
     - _ZWrite: 1
     m_Colors:
-    - _1_Blood_Color: {r: 0.47058815, g: 0.29411766, b: 0.30588236, a: 0}
+    - _1_Blood_Color: {r: 1, g: 0, b: 0.0666666, a: 1}
     - _1_Dirt_Color: {r: 0.9529411, g: 0.9058824, b: 0.8627451, a: 0}
-    - _2_Blood_Color: {r: 0.6078432, g: 0.44313726, b: 0, a: 0}
+    - _2_Blood_Color: {r: 0.6078432, g: 0.44313723, b: 0, a: 1}
     - _2_Dirt_Color: {r: 0.6078432, g: 0.44313726, b: 0, a: 0}
     - _3_Blood_Color: {r: 0, g: 0, b: 0, a: 0}
     - _3_Dirt_Color: {r: 0.5882353, g: 0.5411765, b: 0.48627448, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _DoubleSidedConstants: {r: 1, g: 1, b: 1, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Emission_Color: {r: 0, g: 0, b: 0, a: 0}
+    - _Emission_Color: {r: 0, g: 0.86985016, b: 1, a: 1}
     - _From_MatID_Color_1: {r: 1, g: 1, b: 1, a: 0}
     - _From_MatID_Color_2: {r: 1, g: 1, b: 1, a: 0}
     - _From_MatID_Color_3: {r: 1, g: 1, b: 1, a: 0}

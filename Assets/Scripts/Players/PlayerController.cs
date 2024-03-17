@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.ComponentModel;
 using Players.PlayerStates;
 using Unity.Mathematics;
 using Unity.Netcode;
@@ -108,7 +109,8 @@ public class PlayerController : NetworkBehaviour
     public bool isGrounded;
     public Vector3 sphereOffset;
     
-    
+    [Header("Reload")]
+    bool hasStartedReloading=false;
     void Start()
     {
         cam= GetComponentInChildren<Camera>();
@@ -146,11 +148,15 @@ public class PlayerController : NetworkBehaviour
 
         if (IsOwner)
         {
-
             
             isGroundedCheck();
             //be care
             Reloading();
+            playerStats.currentWeaponSelected.weapon.shootTimer += Time.deltaTime;
+            if (playerStats.currentWeaponSelected.weapon.shootTimer>=playerStats.currentWeaponSelected.weapon.shootRate.statValue)
+            {
+                playerStats.currentWeaponSelected.weapon.shootTimer = playerStats.currentWeaponSelected.weapon.shootRate.statValue+0.1f;
+            }
             stateMachineController.StateUpdate();
 
             if (playerComponentsHandler.IsPlayerLocked())
@@ -182,6 +188,9 @@ public class PlayerController : NetworkBehaviour
             {
                 playerStats.currentWeaponSelected.weapon.shootRefraction = 0.1f; 
             }
+
+            StartCurrentWeaponReload();
+
         }
 }
     private void FixedUpdate()
@@ -224,6 +233,19 @@ public class PlayerController : NetworkBehaviour
             isGrounded = false;
         }
 
+    }
+    public void StartCurrentWeaponReload()
+    {
+        if (!playerStats.currentWeaponSelected.ammoBehaviour.isReloading)
+        {
+            hasStartedReloading = false;
+        }
+        if (!hasStartedReloading&&playerStats.currentWeaponSelected.ammoBehaviour.isReloading)
+        {
+            hasStartedReloading = true;
+            playerStats.stateMachineController.networkAnimator.Animator.Play(playerStats.currentWeaponSelected.weapon.weaponAnimation.weaponReload);
+        }
+        
     }
     public void DeactivatePlayer()
     {
@@ -388,12 +410,11 @@ public class PlayerController : NetworkBehaviour
         
         Vector3 direction = Vector3.zero;
         float randomRefraction =Random.Range(-playerStats.currentWeaponSelected.weapon.shootRefraction , playerStats.currentWeaponSelected.weapon.shootRefraction);
-        playerStats.currentWeaponSelected.weapon.shootTimer += Time.deltaTime;
         if (Input.GetKey(KeyCode.Mouse0) && playerStats.currentWeaponSelected.weapon.shootTimer > playerStats.currentWeaponSelected.weapon.shootRate.statValue && 
             playerStats.currentWeaponSelected.ammoBehaviour.currentBullets > 0 && !playerStats.currentWeaponSelected.ammoBehaviour.isReloading)
         {
             CrosshairCreator.OnCrosshairChange?.Invoke();
-            stateMachineController.networkAnimator.Animator.Play("Shoot", 1);
+            stateMachineController.networkAnimator.Animator.Play(playerStats.currentWeaponSelected.weapon.weaponAnimation.weaponShoot);
             StartCoroutine(playerStats.playerComponentsHandler.ShakeCamera(0.1f, .9f, .7f));
             playerStats.currentWeaponSelected.ammoBehaviour.currentBullets--;
             //TODO : Spawn vfx on local player 
@@ -618,7 +639,7 @@ public class WeaponItem
 [System.Serializable]
 public class Weapon
 {
-    public WeaponAnimations changeWeaponAnimation;
+    public WeaponAnimations weaponAnimation;
     public Sprite weaponImage;
     public AmmoBehaviour ammoBehaviour;
     public WeaponObjectController weaponObjectController;
@@ -633,7 +654,7 @@ public class Weapon
     public Weapon(AmmoBehaviour ammoBehaviour, WeaponTemplate weaponTemplate)
     {
         this.weaponDamage = weaponTemplate.weaponDamage;
-        this.changeWeaponAnimation = weaponTemplate.weaponAnimationState;
+        this.weaponAnimation = weaponTemplate.weaponAnimationState;
         this.weaponImage = weaponTemplate.weaponImage;
         this.ammoBehaviour =ammoBehaviour;
         this.weaponName = weaponTemplate.weaponName;
@@ -719,6 +740,7 @@ public class AmmoBehaviour
         if ((Input.GetKeyDown(KeyCode.R) || currentBullets <= 0) && (currentBullets !=totalBullets.statValue))
         {
             isReloading = true;
+            
             Debug.Log("Reloading");
         }
 

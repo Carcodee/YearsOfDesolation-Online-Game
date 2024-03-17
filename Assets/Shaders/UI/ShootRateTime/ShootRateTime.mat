@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-7303009940133171583
+--- !u!114 &-3433162807338266315
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
@@ -23,8 +23,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: CoinPos
-  m_Shader: {fileID: -6465566751694194690, guid: 7f784b5a6067d004bb0cd391f46689e5,
+  m_Name: ShootRateTime
+  m_Shader: {fileID: -6465566751694194690, guid: 7991ae0f9f3f4a842adc514c11cc0f8f,
     type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -48,16 +48,20 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _BackGroundText:
+        m_Texture: {fileID: 2800000, guid: 2df039799e5bb5a40a15b3c247386a49, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _CurrentBarTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ExtraBarText:
+        m_Texture: {fileID: 2800000, guid: 57b2c596f4084bc44b426791635ec8f9, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 2800000, guid: 2d091f989b9be9b4ab41653ee6efcdef, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _SampleTexture2D_308012702cf84bf9bf7a0cbe18dad860_Texture_1_Texture2D:
-        m_Texture: {fileID: 2800000, guid: b9b8f2bc00d67894ca654978fefbb77b, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _Texture:
-        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -75,10 +79,10 @@ Material:
     m_Ints: []
     m_Floats:
     - _AddPrecomputedVelocity: 0
-    - _Alpha: 1
     - _AlphaCutoffEnable: 0
     - _AlphaDstBlend: 1
     - _AlphaSrcBlend: 1
+    - _BarValue: 0
     - _BlendMode: 1
     - _ConservativeDepthOffsetEnable: 0
     - _CullMode: 2
@@ -88,13 +92,11 @@ Material:
     - _DoubleSidedGIMode: 0
     - _DoubleSidedNormalMode: 2
     - _DstBlend: 1
-    - _Emission: 1.12
     - _EnableBlendModePreserveSpecularLighting: 0
     - _EnableFogOnTransparent: 1
-    - _ExpansionTime: 1.33
+    - _MinGlowOffset: 0
     - _OpaqueCullMode: 2
     - _RenderQueueType: 4
-    - _RotationSpeed: 4.72
     - _SrcBlend: 1
     - _StencilRef: 0
     - _StencilRefDepth: 1
@@ -117,7 +119,11 @@ Material:
     - _ZTestTransparent: 4
     - _ZWrite: 0
     m_Colors:
-    - _Center: {r: 0.5, g: 0.5, b: 0, a: 0}
+    - _BackgroundCol: {r: 0, g: 0, b: 0, a: 1}
+    - _BarCompletedCol: {r: 0, g: 1.9766746, b: 1.9582647, a: 0.64705884}
+    - _BarCompletedCpl: {r: 0, g: 4.8671436, b: 4.821813, a: 1}
+    - _CurrentBarColor: {r: 0.4433962, g: 0.4433962, b: 0.4433962, a: 0}
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
+    - _ExtraHpBarCol: {r: 0, g: 7.048614, b: 8.474191, a: 1}
   m_BuildTextureStacks: []
