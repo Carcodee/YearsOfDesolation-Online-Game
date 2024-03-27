@@ -33,12 +33,35 @@ public static class MyUtilities
         float currentTime = stateInfo.length * stateInfo.normalizedTime;
         bool result = currentTime < stateInfo.length;
         Debug.Log("Playing?>  " + result);
+        Debug.Log("Current Time: " + currentTime);
         return result;
         
+    }
+    public static bool IsThisAnimationPlaying(Animator animator, string stateName, int layer)
+    {
+        
+        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(layer);
+        bool result = stateInfo.IsName(stateName);
+        Debug.Log("Playing? this anim:  " + result);
+        return result;
     }
     public static void SetDefaultUpperLayer(Animator animator, string newLayerName, string oldLayerName)
     {
         animator.SetLayerWeight(animator.GetLayerIndex(oldLayerName), 0);
         animator.SetLayerWeight(animator.GetLayerIndex(newLayerName), 1);
+    }
+
+    public static IEnumerator LerpToValueMaterial(float startValue, float endValue, float duration, Material mat, string propertyName)
+    {
+        float time = 0;
+        while (time < duration)
+        {
+
+            time += Time.deltaTime;
+            float normalizedTime = time / duration;
+            mat.SetFloat(propertyName, Mathf.Lerp(startValue, endValue, normalizedTime));
+            yield return null;
+        }
+        mat.SetFloat(propertyName, endValue);
     }
 }

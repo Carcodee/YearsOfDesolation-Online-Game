@@ -111,6 +111,7 @@ public class PlayerController : NetworkBehaviour
     
     [Header("Reload")]
     bool hasStartedReloading=false;
+    bool finishReload=false;
     void Start()
     {
         cam= GetComponentInChildren<Camera>();
@@ -189,8 +190,8 @@ public class PlayerController : NetworkBehaviour
                 playerStats.currentWeaponSelected.weapon.shootRefraction = 0.1f; 
             }
 
-            StartCurrentWeaponReload();
 
+            StartCurrentWeaponReload();
         }
 }
     private void FixedUpdate()
@@ -210,6 +211,7 @@ public class PlayerController : NetworkBehaviour
         if (IsOwner)
         {
 
+            CheckReloadAnim();
             isGroundedCheck();
             ApplyMovement(move);
             stateMachineController.StateLateUpdate();
@@ -242,8 +244,36 @@ public class PlayerController : NetworkBehaviour
         }
         if (!hasStartedReloading&&playerStats.currentWeaponSelected.ammoBehaviour.isReloading)
         {
+            
             hasStartedReloading = true;
             playerStats.stateMachineController.networkAnimator.Animator.Play(playerStats.currentWeaponSelected.weapon.weaponAnimation.weaponReload);
+            float reloadTimeMul=playerStats.currentWeaponSelected.ammoBehaviour.reloadTime.statValue; 
+            playerStats.stateMachineController.networkAnimator.Animator.SetFloat("ReloadSpeed", reloadTimeMul);
+            CanvasController.OnReloadStarted?.Invoke();
+        }
+
+        
+        
+    }
+
+    private void CheckReloadAnim()
+    {
+        if (hasStartedReloading&&playerStats.currentWeaponSelected.ammoBehaviour.isReloading)
+        {
+            int layerNIndex = playerStats.stateMachineController.networkAnimator.Animator.GetLayerIndex(playerStats.currentWeaponSelected.weapon.weaponAnimation.LayerName);
+             Debug.Log("Layer Index: " + layerNIndex);
+             Debug.Log("Start reload");
+             
+             if (!MyUtilities.IsThisAnimationPlaying(playerStats.stateMachineController.networkAnimator.Animator,
+                     playerStats.currentWeaponSelected.weapon.weaponAnimation.weaponReload, layerNIndex))
+             {
+                 
+                 CanvasController.OnReloadFinished?.Invoke();
+                 finishReload = true;
+                 playerStats.stateMachineController.networkAnimator.Animator.SetBool("FinishReload", true); 
+                 Debug.Log("Finish reload");
+             }
+           
         }
         
     }
@@ -332,7 +362,8 @@ public class PlayerController : NetworkBehaviour
 
     public void Reloading()
     {
-        playerStats.currentWeaponSelected.weapon.Reload();
+        
+        playerStats.currentWeaponSelected.weapon.Reload(ref finishReload);
 
     }
     public void AimAinimation(ref float aimAnimation, NetworkAnimator networkAnimator)
@@ -673,9 +704,9 @@ public class Weapon
     {
         ammoBehaviour.AddAmmo(ammo);
     }
-    public void Reload()
+    public void Reload(ref bool finishReload)
     {
-        ammoBehaviour.Reload();
+        ammoBehaviour.Reload(ref finishReload);
     }
 }
 [System.Serializable]
@@ -703,7 +734,7 @@ public class AmmoBehaviour
     {
         totalAmmo += ammo;
     }
-    public void Reload()
+    public void Reload(ref bool finishReload)
     {
         if (totalAmmo <= 0)
         {
@@ -711,12 +742,13 @@ public class AmmoBehaviour
             Debug.Log("Out of ammo find coins to fill your bullets");
             return;
         }
-        if (isReloading && reloadCurrentTime < reloadTime.statValue)
+        if (isReloading /*&& reloadCurrentTime< reloadTime.statValue*/)
         {
-            reloadCurrentTime += Time.deltaTime;
-            if (reloadCurrentTime > reloadTime.statValue)
+             // currentReloadAnimTime+= Time.deltaTime;
+            if (finishReload/* reloadCurrentTime> reloadTime.statValue*/)
             {
-                reloadCurrentTime = 0;
+                finishReload = false;
+                 // currentReloadAnimTime= 0;
                 if (totalAmmo <= totalBullets.statValue)
                 {
                     int tempBulletsToFill = totalBullets.statValue - currentBullets;

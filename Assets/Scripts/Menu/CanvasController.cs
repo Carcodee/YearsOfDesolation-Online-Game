@@ -27,6 +27,8 @@ public class CanvasController : MonoBehaviour
     public static Action OnBulletsAddedUI;
     public static Action OnMoneyAddedUI;
     public static Action <string>OnEnemyKilled;
+    public static Action OnReloadFinished;
+    public static Action OnReloadStarted;
     public Michsky.UI.Heat.ProgressBar timeLeftBar;
     public TextMeshProUGUI timeLeftBarText;
     
@@ -63,10 +65,14 @@ public class CanvasController : MonoBehaviour
     private float followValue;
     private float followValTemp;
     private float followTime;
-    private float targetVal; 
+    private float targetVal;
+    private float valBeforeChange;
     private int stackPointer=1;
     private int maxStackPointer=1;
     public HealthType[] healths;
+    [ColorUsage(true, true)]
+    public Color hdr_col;
+    private MaterialPropertyBlock _propBlock;
     
     public Stack<HealthType> healthsStack=new Stack<HealthType>();
     public HealthType greenHealth=new HealthType();
@@ -75,7 +81,6 @@ public class CanvasController : MonoBehaviour
     
 
     [Header("Reloading")]
-    public SliderManager sliderManager;
     public GameObject reloadingObject;
     
     [Header("Ref")]
@@ -90,7 +95,8 @@ public class CanvasController : MonoBehaviour
     bool BattleRoyaleShowed = false;
     bool FarmShowed = false;
     public Animator[] totalHudAnimators;
-    
+
+    public Animator canvasAnimator;
     
     [Header("Notifications")]
     public TextMeshProUGUI ammoAddedText;
@@ -112,9 +118,11 @@ public class CanvasController : MonoBehaviour
         GetComponents();
         timeToSpawnHolder = GameController.instance.respawnTime;
         timeToSpawnTimer = GameController.instance.respawnTime;
+        OnReloadFinished += ReloadAnimation;
         playerAssigned.health.OnValueChanged += SetStats;
         OnUpdateUI += SetUIElements;
         OnBulletsAddedUI += TotalBulletsAnimation;
+        OnReloadStarted+= StartReloadAnimation;
         playerAssigned.avaliblePoints.OnValueChanged+=AddMoneyAnimation;
         //TODO: bullets are not being updated
         currentBullets.text = playerAssigned.currentWeaponSelected.ammoBehaviour.currentBullets.ToString() ;
@@ -129,8 +137,15 @@ public class CanvasController : MonoBehaviour
         playerAssigned.enemyKilled.OnValueChanged += KillNotification;
     }
 
-    
-    
+    private void OnDisable()
+    {
+       OnReloadFinished-= ReloadAnimation;
+       playerAssigned.health.OnValueChanged -= SetStats;
+       OnUpdateUI -= SetUIElements;
+       OnBulletsAddedUI -= TotalBulletsAnimation;
+       playerAssigned.avaliblePoints.OnValueChanged-=AddMoneyAnimation;
+    }
+
     public void ShowTimeToShoot()
     {
         if (playerAssigned.currentWeaponSelected.weapon.shootRate.statValue>=1.0f)
@@ -142,9 +157,16 @@ public class CanvasController : MonoBehaviour
         {
             weaponCooldown.SetActive(false);
         }
-    } 
-    
-    
+    }
+
+    public void ReloadAnimation()
+    {
+        canvasAnimator.Play("Reload");
+    }
+    public void StartReloadAnimation()
+    {
+        canvasAnimator.Play("StartReload");
+    }
     public void KillNotification(bool old, bool newVal)
     {
         if (old==false)
@@ -236,6 +258,7 @@ public class CanvasController : MonoBehaviour
     
     public void SetStats(float oldValue, float newValue)
     {
+        valBeforeChange = targetVal;
         SetUIElements();
     }
 
@@ -246,12 +269,10 @@ public class CanvasController : MonoBehaviour
         {
             return;
         }
-
-
         int newStackPointer= (int)Math.Ceiling(playerAssigned.GetHealth()/playerAssigned.startGameHealth);
         
         targetVal = (playerAssigned.GetHealth()-((newStackPointer-1)*10)) / playerAssigned.startGameHealth;
-        //
+
         if (playerAssigned.GetHealth()>playerAssigned.startGameHealth)
         {
             if (newStackPointer>stackPointer)
@@ -274,8 +295,10 @@ public class CanvasController : MonoBehaviour
             targetVal = playerAssigned.GetHealth() / playerAssigned.startGameHealth;
             SetBarDefaultValues(hpUIMat);
         }
+        Debug.Log("Hp after change: "+ targetVal);
 
-        hpUIMat.SetFloat("_HP",targetVal);
+        StartCoroutine(MyUtilities.LerpToValueMaterial(valBeforeChange, targetVal, .6f, hpUIMat, "_HP"));
+        // hpUIMat.SetFloat("_HP",targetVal);
         isFollowing = true;
         followValTemp = followValue;
         healthValue.text = "%" + ((playerAssigned.GetHealth() / playerAssigned.startGameHealth)*100).ToString();
@@ -286,10 +309,8 @@ public class CanvasController : MonoBehaviour
     {
         HealthType newHealthType = new HealthType();
                 
-
-
         newHealthType.backgroundHealthColor = new Color(Random.Range(0.0f, 1f), Random.Range(0.0f, 1f), Random.Range(0.0f, 1f),1.0f);
-        newHealthType.healthColor =new Vector4(newHealthType.backgroundHealthColor.r,newHealthType.backgroundHealthColor.g,newHealthType.backgroundHealthColor.b,5.0f);
+        newHealthType.healthColor =new Vector4(newHealthType.backgroundHealthColor.r,newHealthType.backgroundHealthColor.g,newHealthType.backgroundHealthColor.b,8.0f);
 
         newHealthType.texture= greenHealth.texture;
         return newHealthType;
@@ -307,10 +328,12 @@ public class CanvasController : MonoBehaviour
             material.SetColor("_BackgroundCol",stackArray[secondTop].healthColor);
             material.SetTexture("_BackGroundText",stackArray[secondTop].texture);
             
-            material.SetColor("_CurrentBarColor",stackArray[top].backgroundHealthColor);
+            hdr_col = stackArray[top].healthColor*50;
+            
+            material.SetColor("_CurrentBarColor",hdr_col);
             material.SetTexture("_CurrentBarTexture",stackArray[top].texture);
-            Debug.Log("Top: " + top);
-            Debug.Log("Second Top: " + secondTop);
+            // Debug.Log("Top: " + top);
+            // Debug.Log("Second Top: " + secondTop);
         }
     }
     private void SetBarDefaultValues(Material material)
@@ -385,9 +408,6 @@ public class CanvasController : MonoBehaviour
         if (playerAssigned.currentWeaponSelected.ammoBehaviour.isReloading)
         {
             reloadingObject.SetActive(true);
-            sliderManager.mainSlider.maxValue = playerAssigned.currentWeaponSelected.ammoBehaviour.reloadTime.statValue;
-            sliderManager.mainSlider.value = playerAssigned.currentWeaponSelected.ammoBehaviour.reloadTime.statValue - playerAssigned.currentWeaponSelected.ammoBehaviour.reloadCurrentTime;
-            sliderManager.UpdateUI();
         }
         else
         {

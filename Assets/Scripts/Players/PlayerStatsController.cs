@@ -380,7 +380,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
     
     public void SetPlayerOnPos(float oldVal, float newVal)
     {
-        Debug.Log("Health: " + newVal);
+        // Debug.Log("Health: " + newVal);
         if (health.Value<=0 && GameController.instance.zoneControllers.Count > 0 && stateMachineController.currentState.stateName!="Dead"){
             
             CallServerOnDeadServerRpc((int)zoneAsigned.Value);
