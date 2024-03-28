@@ -11,19 +11,19 @@ Shader "Hidden/ImageShaderConfifs"
     
     SubShader
     {
-        // No culling or depth
-        Cull off ZWrite On ZTest Always
-        
-        Blend SrcAlpha OneMinusSrcAlpha
-
-        Tags
-	    {
-		    "Queue"="Transparent"
-		    "IgnoreProjector"="True"
-		    "RenderType"="Transparent"
-	    }
         Pass
         {
+            // No culling or depth
+            Cull off ZWrite On ZTest Always
+            
+            Blend SrcAlpha OneMinusSrcAlpha
+
+            Tags
+            {
+                "Queue"="Transparent"
+                "IgnoreProjector"="True"
+                "RenderType"="Transparent"
+	        }
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
@@ -79,7 +79,7 @@ Shader "Hidden/ImageShaderConfifs"
                 float alpha = lerp(_MinDifunationOffset, _MaxDifunationOffset, normalizedDistance);
                 float step= smoothstep( _MinDifunationOffset, sin(_Time.y*2)-1, _MaxDifunationOffset) ;
                 
-                alpha= clamp(alpha,alpha,step);
+                // alpha= clamp(alpha,alpha,step);
                 // Apply the alpha value to the color
                 col = fixed4(col.rgb,alpha);
                 return col ;
