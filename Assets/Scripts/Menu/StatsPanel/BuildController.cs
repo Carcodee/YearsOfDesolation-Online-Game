@@ -15,7 +15,11 @@ public class BuildController : MonoBehaviour
     public WeaponObject[] weaponObjects;
 
     public TextMeshProUGUI totalPrice;
-    
+
+
+    public Color noSelectedColor;
+    public Color selectedColor;
+    public Color previewColor;
     public void Update()
     {
         totalPrice.text = (playerStatsController.playerBuildSelected.totalPrice * 10).ToString()+ "$";        
@@ -73,7 +77,7 @@ public class BuildController : MonoBehaviour
                     playerStatsController.playerBuildSelected.upgradesBuffer[i].ReturnTierFromType(weaponObjects[i].slotObjectController[j].upgradeType);
                     weaponObjects[i].slotObjectController[j].FillSlots(weaponObjects[i].slotObjectController[j].currentSlotsUnlocked,
                     weaponObjects[i].slotObjectController[j].slotsToPreview, 
-                    Color.black);
+                    noSelectedColor);
                 weaponObjects[i].slotObjectController[j].slotsToPreview = weaponObjects[i].slotObjectController[j].currentSlotsUnlocked;
                 
             }
@@ -92,7 +96,7 @@ public class BuildController : MonoBehaviour
             {
                 weaponObjects[i].slotObjectController[j].currentSlotsUnlocked=
                     playerStatsController.playerBuildSelected.upgrades[i].ReturnTierFromType(weaponObjects[i].slotObjectController[j].upgradeType);
-                weaponObjects[i].slotObjectController[j].FillSlots(0,weaponObjects[i].slotObjectController[j].currentSlotsUnlocked, Color.cyan);
+                weaponObjects[i].slotObjectController[j].FillSlots(0,weaponObjects[i].slotObjectController[j].currentSlotsUnlocked,selectedColor);
                 Debug.Log("Slots: "+ weaponObjects[i].slotObjectController[j].currentSlotsUnlocked);
             }    
         }
@@ -106,7 +110,7 @@ public class BuildController : MonoBehaviour
             {
                 weaponObjects[i].slotObjectController[j].slotsToPreview=
                     playerStatsController.playerBuildSelected.upgradesBuffer[i].ReturnTierFromType(weaponObjects[i].slotObjectController[j].upgradeType);
-                weaponObjects[i].slotObjectController[j].FillSlots(weaponObjects[i].slotObjectController[j].currentSlotsUnlocked, weaponObjects[i].slotObjectController[j].slotsToPreview, Color.green);
+                weaponObjects[i].slotObjectController[j].FillSlots(weaponObjects[i].slotObjectController[j].currentSlotsUnlocked, weaponObjects[i].slotObjectController[j].slotsToPreview, previewColor);
             }    
         }
     }

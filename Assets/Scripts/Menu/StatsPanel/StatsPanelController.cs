@@ -60,6 +60,9 @@ namespace Menu.StatsPanel
         public Animator moneyAnimator;
 
 
+        [Header("FadeIn_FadeOut")] 
+        
+        public F_In_F_Out_Obj[] f_In_F_Out_Obj;
         private void OnEnable()
         {
             OnPannelOpen += OpenPanel;
@@ -165,6 +168,11 @@ namespace Menu.StatsPanel
                 return;
             }
 
+            if (playerStatsController.hasPlayerSelectedBuild)
+            {
+                F_In_F_Out_Obj.OnFadeInSkillElements?.Invoke();
+                
+            }
             avaliblePoints = playerStatsController.GetAvaliblePoints();
             avaliblePointsText.text = "Avalible Points: " + avaliblePoints.ToString();
             level.text = "Level: " + playerStatsController.GetLevel().ToString();
