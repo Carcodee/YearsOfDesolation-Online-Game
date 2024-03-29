@@ -25,8 +25,8 @@ public class F_In_F_Out_Obj : MonoBehaviour
         }
         else if (uiElement==UIElement.StatsPanel)
         {
-            OnFadeInStatsElementsWeapon_1+=FadeIn;
-            OnFadeInStatsElementsWeapon_2+=FadeIn;
+            OnFadeInStatsElementsWeapon_1+=FadeInStats;
+            OnFadeInStatsElementsWeapon_2+=FadeInStats;
             OnSetElementsWithWeapon_1+=SetStatsPanel;
             OnSetElementsWithWeapon_2+=SetStatsPanel;
         }
@@ -40,8 +40,8 @@ public class F_In_F_Out_Obj : MonoBehaviour
          }
          else if (uiElement==UIElement.StatsPanel) 
          {
-            OnFadeInStatsElementsWeapon_1-=FadeIn;
-            OnFadeInStatsElementsWeapon_2-=FadeIn; 
+            OnFadeInStatsElementsWeapon_1-=FadeInStats;
+            OnFadeInStatsElementsWeapon_2-=FadeInStats; 
             OnSetElementsWithWeapon_1-=SetStatsPanel;
             OnSetElementsWithWeapon_2-=SetStatsPanel;
          }
@@ -49,6 +49,10 @@ public class F_In_F_Out_Obj : MonoBehaviour
         
     }
 
+    public void FadeInStats()
+    {
+        animator.Play("FadeInStats");
+    }
     public void SetStatsPanel()
     {
         animator.Play("SetStats");

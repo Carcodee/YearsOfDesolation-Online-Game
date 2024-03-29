@@ -60,7 +60,8 @@ public class StatsDisplayer : MonoBehaviour
         currentWeaponStats = DeserializeWeaponData(weaponItem);
         previewWeaponStats = DeserializeWeaponData(weaponItem);
         PreviewStatsDeserializer(ref previewWeaponStats,buildController.weaponObjects[weaponIndex]);
-
+        currentWeaponStats.InitializePreviews();
+        
         LinkDataToUI(currentWeaponStats, currentStats);
         currentStats.BaseDamage.text = baseDamage.ToString("0.0");       
         previewStats.BaseDamage.gameObject.SetActive(false);
@@ -72,6 +73,7 @@ public class StatsDisplayer : MonoBehaviour
         }
         previewStats.gameObject.SetActive(true);
         
+        previewWeaponStats.SetPreviews(currentWeaponStats);
         LinkDataToUI(previewWeaponStats, previewStats);
         // CompareUIStrings(currentStats, previewStats);
         
@@ -175,9 +177,16 @@ public class StatsDisplayer : MonoBehaviour
     {
 
         layoutGroup.clipSize.text = stats.clipSize.value.ToString("0.0");
+        layoutGroup.clipSize.gameObject.SetActive(stats.clipSize.isPreview);
+        
         layoutGroup.fireRate.text = stats.fireRate.value.ToString("0.0");
+        layoutGroup.fireRate.gameObject.SetActive(stats.fireRate.isPreview);
+        
         layoutGroup.reloadSpeed.text = stats.reloadSpeed.value.ToString("0.0");
+        layoutGroup.reloadSpeed.gameObject.SetActive(stats.reloadSpeed.isPreview);
+        
         layoutGroup.recoilAmount.text = (stats.recoilAmount.value*10000).ToString("0.0");
+        layoutGroup.recoilAmount.gameObject.SetActive(stats.recoilAmount.isPreview);
     }
     public void CompareUIStrings(TextLayoutGroup current, TextLayoutGroup preview)
     {
@@ -217,7 +226,42 @@ public class StatsDisplayer : MonoBehaviour
             {
                 return true;
             }
+            
+           
             return false;
+        }
+
+        public void InitializePreviews()
+        {
+            reloadSpeed.isPreview = true;
+            fireRate.isPreview = true;
+            clipSize.isPreview = true;
+            recoilAmount.isPreview = true;
+        }
+        public void SetPreviews(WeaponStats other)
+        {
+            reloadSpeed.isPreview = true;
+            fireRate.isPreview = true;
+            clipSize.isPreview = true;
+            recoilAmount.isPreview = true;
+            if ((int)(100*reloadSpeed.value) ==(int)(100* other.reloadSpeed.value))
+            {
+               reloadSpeed.isPreview = false; 
+            }
+            if ((int)(100*fireRate.value) == (int)(100*other.fireRate.value))
+            {
+                fireRate.isPreview = false;
+            }
+            if ((int)clipSize.value == (int)other.clipSize.value)
+            {
+                clipSize.isPreview = false;
+            }
+            if ((int)recoilAmount.value*100000 == (int)other.recoilAmount.value*100000)
+            {
+                recoilAmount.isPreview = false;
+            }
+            
+                
         }
     }
    
@@ -226,6 +270,8 @@ public class StatsDisplayer : MonoBehaviour
     {
         public SlotObjectController slotObjectController;
         public UpgradeType upgradeType;
+        public bool isPreview;
         public float value;
+
     }
 }
