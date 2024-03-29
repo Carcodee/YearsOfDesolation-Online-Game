@@ -70,7 +70,8 @@ public class BuildController : MonoBehaviour
         playerStatsController.SetAvaliblePointsServerRpc(playerStatsController.GetAvaliblePoints() - playerStatsController.playerBuildSelected.totalPrice);
         playerStatsController.playerBuildSelected.SetUpgrades();
         DisplaySlots();
-
+        F_In_F_Out_Obj.OnSetElementsWithWeapon_1?.Invoke();
+        F_In_F_Out_Obj.OnSetElementsWithWeapon_2?.Invoke();
     }
 
     public void Cancel() {
@@ -104,7 +105,6 @@ public class BuildController : MonoBehaviour
                 Debug.Log("Slots: "+ weaponObjects[i].slotObjectController[j].currentSlotsUnlocked);
             }    
         }
-        StatsDisplayer.OnReloadUpated?.Invoke();
     }
 
     public void PreviewSlots()
@@ -119,6 +119,8 @@ public class BuildController : MonoBehaviour
             }    
         }
         StatsDisplayer.OnReloadUpated?.Invoke();
+        F_In_F_Out_Obj.OnFadeInStatsElementsWeapon_1?.Invoke();
+        F_In_F_Out_Obj.OnFadeInStatsElementsWeapon_2?.Invoke();
     }
     [System.Serializable]
     public struct WeaponObject

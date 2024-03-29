@@ -242,12 +242,14 @@ public class PlayerComponentsHandler : NetworkBehaviour
             elapsed += Time.deltaTime;
             MyUtilities.StartCameraShake(cinemachineVirtualCameraInstance, magnitude, frecuency, 0);
             MyUtilities.StartCameraShake(cinmachineCloseLookCameraIntance, magnitude, frecuency, 0);
+            MyUtilities.StartCameraShake(cinmachineSprintCameraIntance, magnitude, frecuency, 0);
 
             yield return null;
         }
 
         MyUtilities.StopCameraShake(cinemachineVirtualCameraInstance);
         MyUtilities.StopCameraShake(cinmachineCloseLookCameraIntance);
+        MyUtilities.StopCameraShake(cinmachineSprintCameraIntance);
         
     }
 }

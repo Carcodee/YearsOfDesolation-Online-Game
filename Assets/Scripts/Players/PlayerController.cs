@@ -455,7 +455,7 @@ public class PlayerController : NetworkBehaviour
             playerStats.currentWeaponSelected.weapon.shootTimer = 0;
             Vector3 shotDirection = new Vector3(cameraRef.transform.forward.x + randomRefraction, cameraRef.transform.forward.y + randomRefraction, cameraRef.transform.forward.z);
             
-            if (Physics.Raycast(cameraRef.transform.position, shotDirection, out RaycastHit hit, 
+            if (Physics.Raycast(spawnBulletPoint.position, shotDirection, out RaycastHit hit, 
                     distanceFactor, playerHitLayer))
             {
                 

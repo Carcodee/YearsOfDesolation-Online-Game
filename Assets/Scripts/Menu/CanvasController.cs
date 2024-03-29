@@ -73,6 +73,7 @@ public class CanvasController : MonoBehaviour
     [ColorUsage(true, true)]
     public Color hdr_col;
     private MaterialPropertyBlock _propBlock;
+    public AnimationCurve healthcCurve;
     
     public Stack<HealthType> healthsStack=new Stack<HealthType>();
     public HealthType greenHealth=new HealthType();
@@ -297,7 +298,7 @@ public class CanvasController : MonoBehaviour
         }
         Debug.Log("Hp after change: "+ targetVal);
 
-        StartCoroutine(MyUtilities.LerpToValueMaterial(valBeforeChange, targetVal, .6f, hpUIMat, "_HP"));
+        StartCoroutine(MyUtilities.LerpToValueMaterialAnimationCurve(valBeforeChange, targetVal, .6f, hpUIMat, "_HP", healthcCurve));
         // hpUIMat.SetFloat("_HP",targetVal);
         isFollowing = true;
         followValTemp = followValue;

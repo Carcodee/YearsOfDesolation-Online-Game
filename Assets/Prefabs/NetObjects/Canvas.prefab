@@ -6297,13 +6297,113 @@ MonoBehaviour:
   playerStatsController: {fileID: 0}
   BuildName: {fileID: 3280975847206924649}
   weaponObjects:
-  - slotObjectController:
+  - weapon:
+      weapon:
+        weaponAnimation:
+          LayerName: 
+          weaponChange: 
+          weaponShoot: 
+          weaponReload: 
+          WeaponSprint: 
+        weaponImage: {fileID: 0}
+        ammoBehaviour:
+          totalAmmo: 0
+          currentBullets: 0
+          isReloading: 0
+          totalBullets:
+            statValue: 0
+            tier: 0
+            upgradeType: 0
+          reloadTime:
+            statValue: 0
+            tier: 0
+            upgradeType: 0
+          reloadCurrentTime: 0
+        weaponObjectController: {fileID: 0}
+        weaponDamage: 0
+        weaponName: 
+        shootTimer: 0
+        shootRefraction: 0
+        currentShootRefraction: 0
+        shootRate:
+          statValue: 0
+          tier: 0
+          upgradeType: 0
+        minShootRefraction:
+          statValue: 0
+          tier: 0
+          upgradeType: 0
+      ammoBehaviour:
+        totalAmmo: 0
+        currentBullets: 0
+        isReloading: 0
+        totalBullets:
+          statValue: 0
+          tier: 0
+          upgradeType: 0
+        reloadTime:
+          statValue: 0
+          tier: 0
+          upgradeType: 0
+        reloadCurrentTime: 0
+      weaponObjectController: {fileID: 0}
+    slotObjectController:
     - {fileID: 6671337992644162367}
     - {fileID: 2105546804171758084}
     - {fileID: 8118904050130153372}
     weaponImage: {fileID: 6884778456519159345}
     weaponTitle: {fileID: 6861901800894139423}
-  - slotObjectController:
+  - weapon:
+      weapon:
+        weaponAnimation:
+          LayerName: 
+          weaponChange: 
+          weaponShoot: 
+          weaponReload: 
+          WeaponSprint: 
+        weaponImage: {fileID: 0}
+        ammoBehaviour:
+          totalAmmo: 0
+          currentBullets: 0
+          isReloading: 0
+          totalBullets:
+            statValue: 0
+            tier: 0
+            upgradeType: 0
+          reloadTime:
+            statValue: 0
+            tier: 0
+            upgradeType: 0
+          reloadCurrentTime: 0
+        weaponObjectController: {fileID: 0}
+        weaponDamage: 0
+        weaponName: 
+        shootTimer: 0
+        shootRefraction: 0
+        currentShootRefraction: 0
+        shootRate:
+          statValue: 0
+          tier: 0
+          upgradeType: 0
+        minShootRefraction:
+          statValue: 0
+          tier: 0
+          upgradeType: 0
+      ammoBehaviour:
+        totalAmmo: 0
+        currentBullets: 0
+        isReloading: 0
+        totalBullets:
+          statValue: 0
+          tier: 0
+          upgradeType: 0
+        reloadTime:
+          statValue: 0
+          tier: 0
+          upgradeType: 0
+        reloadCurrentTime: 0
+      weaponObjectController: {fileID: 0}
+    slotObjectController:
     - {fileID: 3576242595541234801}
     - {fileID: 6791895966155175220}
     - {fileID: 8928211534834197165}
@@ -21146,6 +21246,30 @@ MonoBehaviour:
   followUIHpMat: {fileID: 0}
   healths: []
   hdr_col: {r: 506.02856, g: 506.02856, b: 506.02856, a: 0}
+  healthcCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   greenHealth:
     healthColor: {r: 0, g: 8, b: 0.3432083, a: 1}
     backgroundHealthColor: {r: 0, g: 1, b: 0.05882353, a: 1}

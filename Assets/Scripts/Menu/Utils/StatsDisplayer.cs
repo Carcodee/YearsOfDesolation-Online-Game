@@ -59,16 +59,21 @@ public class StatsDisplayer : MonoBehaviour
         weaponItem = buildController.weaponObjects[weaponIndex].weapon;
         currentWeaponStats = DeserializeWeaponData(weaponItem);
         previewWeaponStats = DeserializeWeaponData(weaponItem);
+        PreviewStatsDeserializer(ref previewWeaponStats,buildController.weaponObjects[weaponIndex]);
 
         LinkDataToUI(currentWeaponStats, currentStats);
+        currentStats.BaseDamage.text = baseDamage.ToString("0.0");       
+        previewStats.BaseDamage.gameObject.SetActive(false);
         
-        if (!currentWeaponStats.CompareValues(previewWeaponStats))
+        if (currentWeaponStats.CompareValues(previewWeaponStats))
         {
+            previewStats.gameObject.SetActive(false);
             return;
         }
+        previewStats.gameObject.SetActive(true);
         
-        PreviewStatsDeserializer(ref previewWeaponStats,buildController.weaponObjects[weaponIndex]);
         LinkDataToUI(previewWeaponStats, previewStats);
+        // CompareUIStrings(currentStats, previewStats);
         
         
     }
@@ -112,28 +117,30 @@ public class StatsDisplayer : MonoBehaviour
        if (weaponToLink.clipSize.slotObjectController!=null)
        {
             int clipSizeSlotsDiff= weaponToLink.clipSize.slotObjectController.slotsToPreview-weaponToLink.clipSize.slotObjectController.currentSlotsUnlocked;
-            weaponToLink.clipSize.value= weaponToLink.clipSize.value + (clipSizeSlotsDiff * clipSizeUpgrade.value.floatValue);
-           
+            if (clipSizeSlotsDiff<0)clipSizeSlotsDiff=0;
+            weaponToLink.clipSize.value= weaponToLink.clipSize.value + (clipSizeSlotsDiff * clipSizeUpgrade.value.intValue);
        }
 
        if (weaponToLink.fireRate.slotObjectController!=null)
        {
             int fireRateSlotsDiff= weaponToLink.fireRate.slotObjectController.slotsToPreview-weaponToLink.fireRate.slotObjectController.currentSlotsUnlocked;
+            if(fireRateSlotsDiff<0)fireRateSlotsDiff=0;
             weaponToLink.fireRate.value= weaponToLink.fireRate.value + (fireRateSlotsDiff * fireRateUpgrade.value.floatValue);
-           
        }
 
        if (weaponToLink.reloadSpeed.slotObjectController!=null)
        {
             int reloadSpeedSlotsDiff= weaponToLink.reloadSpeed.slotObjectController.slotsToPreview-weaponToLink.reloadSpeed.slotObjectController.currentSlotsUnlocked;
+            if(reloadSpeedSlotsDiff<0)reloadSpeedSlotsDiff=0;
             weaponToLink.reloadSpeed.value= weaponToLink.reloadSpeed.value + (reloadSpeedSlotsDiff * reloadSpeedUpgrade.value.floatValue);
+
        }
 
        if (weaponToLink.recoilAmount.slotObjectController!=null)
        {
             int recoilAmountSlotsDiff= weaponToLink.recoilAmount.slotObjectController.slotsToPreview-weaponToLink.recoilAmount.slotObjectController.currentSlotsUnlocked;
+            if(recoilAmountSlotsDiff<0)recoilAmountSlotsDiff=0;
             weaponToLink.recoilAmount.value= weaponToLink.recoilAmount.value + (recoilAmountSlotsDiff * recoilAmountUpgrade.value.floatValue);
-           
        }
        
        
@@ -166,12 +173,33 @@ public class StatsDisplayer : MonoBehaviour
     
     public void LinkDataToUI(WeaponStats stats, TextLayoutGroup layoutGroup)
     {
-        layoutGroup.BaseDamage.text = baseDamage.ToString("0.0");
+
         layoutGroup.clipSize.text = stats.clipSize.value.ToString("0.0");
         layoutGroup.fireRate.text = stats.fireRate.value.ToString("0.0");
         layoutGroup.reloadSpeed.text = stats.reloadSpeed.value.ToString("0.0");
-        layoutGroup.recoilAmount.text = stats.recoilAmount.value.ToString("0.0");
+        layoutGroup.recoilAmount.text = (stats.recoilAmount.value*10000).ToString("0.0");
     }
+    public void CompareUIStrings(TextLayoutGroup current, TextLayoutGroup preview)
+    {
+        if (current.clipSize.text == preview.clipSize.text)
+        {
+            preview.clipSize.gameObject.SetActive(false);
+        }
+        if (current.fireRate.text == preview.fireRate.text)
+        {
+            preview.fireRate.gameObject.SetActive(false);
+        }
+        if (current.reloadSpeed.text == preview.reloadSpeed.text)
+        {
+            preview.reloadSpeed.gameObject.SetActive(false);
+        }
+        if (current.recoilAmount.text == preview.recoilAmount.text)
+        {
+            preview.recoilAmount.gameObject.SetActive(false);
+        }
+    }
+    
+    
     [System.Serializable]
     public struct WeaponStats
     {
@@ -182,8 +210,10 @@ public class StatsDisplayer : MonoBehaviour
         
         public bool CompareValues(WeaponStats other)
         {
-            if (reloadSpeed.value == other.reloadSpeed.value && fireRate.value == other.fireRate.value &&
-                clipSize.value == other.clipSize.value && recoilAmount.value == other.recoilAmount.value)
+            if ((int)(100*reloadSpeed.value) ==(int)(100* other.reloadSpeed.value) &&
+                (int)(100*fireRate.value) == (int)(100*other.fireRate.value) &&
+                (int)clipSize.value == (int)other.clipSize.value &&
+                (int)recoilAmount.value*100000 == (int)other.recoilAmount.value*100000)
             {
                 return true;
             }

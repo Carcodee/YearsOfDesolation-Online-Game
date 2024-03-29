@@ -32,8 +32,6 @@ public static class MyUtilities
         AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(Layer);
         float currentTime = stateInfo.length * stateInfo.normalizedTime;
         bool result = currentTime < stateInfo.length;
-        Debug.Log("Playing?>  " + result);
-        Debug.Log("Current Time: " + currentTime);
         return result;
         
     }
@@ -42,7 +40,6 @@ public static class MyUtilities
         
         AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(layer);
         bool result = stateInfo.IsName(stateName);
-        Debug.Log("Playing? this anim:  " + result);
         return result;
     }
     public static void SetDefaultUpperLayer(Animator animator, string newLayerName, string oldLayerName)
@@ -63,5 +60,38 @@ public static class MyUtilities
             yield return null;
         }
         mat.SetFloat(propertyName, endValue);
+    }
+
+    public static IEnumerator LerpToValueMaterialAnimationCurve(float startValue, float endValue, float duration, Material mat, string propertyName, AnimationCurve animationCurve) 
+    {
+        float time = 0;
+        while (time < duration)
+        {
+
+            time += Time.deltaTime;
+            float normalizedTime = time / duration;
+            mat.SetFloat(propertyName, Mathf.Lerp(startValue, endValue, animationCurve.Evaluate(normalizedTime)));
+            yield return null;
+        }
+        mat.SetFloat(propertyName, endValue);
+    }
+    public static IEnumerator EasyLerpToValue<T>(float startValue, float endValue, float duration, AnimationCurve animationCurve, T valueToLerp)
+    {
+        float time = 0;
+        while (time < duration)
+        {
+
+            time += Time.deltaTime;
+            float normalizedTime = time / duration;
+            
+            Mathf.Lerp(startValue, endValue, Mathf.Lerp(0, 1,animationCurve.Evaluate(normalizedTime)));
+            yield return null;
+        }
+    }
+    public static void LerpTo(float startVal, float endVal, ref float time, ref float valueToChange, float duration, AnimationCurve animationCurve)
+    {
+        time += Time.deltaTime;
+        float normalizedTime = time / duration;
+        valueToChange = Mathf.Lerp(startVal, endVal, animationCurve.Evaluate(normalizedTime));
     }
 }
