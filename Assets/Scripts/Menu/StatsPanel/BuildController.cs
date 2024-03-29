@@ -30,13 +30,16 @@ public class BuildController : MonoBehaviour
 
         weaponObjects[0].weaponImage.sprite = playerStatsController.playerBuildSelected.first_weapon.weapon.weaponImage;
         weaponObjects[0].weaponTitle.text = playerStatsController.playerBuildSelected.first_weapon.weapon.weaponName;
+        weaponObjects[0].weapon = playerStatsController.playerBuildSelected.first_weapon;
         
         weaponObjects[1].weaponImage.sprite = playerStatsController.playerBuildSelected.second_weapon.weapon.weaponImage;
         weaponObjects[1].weaponTitle.text = playerStatsController.playerBuildSelected.second_weapon.weapon.weaponName;
+        weaponObjects[1].weapon = playerStatsController.playerBuildSelected.second_weapon;
 
             
-
+        
         DisplaySlots();
+        StatsDisplayer.OnReloadUpated?.Invoke();
     }
     public void Upgrade (StatsTierUpgrades upgrades)
     {
@@ -83,6 +86,7 @@ public class BuildController : MonoBehaviour
             }
         }
         playerStatsController.playerBuildSelected.restartBuffer();
+        StatsDisplayer.OnReloadUpated?.Invoke();
         // Debug.Log(("ReloadTier: "+ playerStatsController.playerBuildSelected.upgrades[0].reloadSpeed.tier));
         // Debug.Log(("RecoilTier: " + playerStatsController.playerBuildSelected.upgrades[0].recoil.tier));
         // Debug.Log(("shootrateTier: " + playerStatsController.playerBuildSelected.upgrades[0].shootRate.tier));
@@ -100,6 +104,7 @@ public class BuildController : MonoBehaviour
                 Debug.Log("Slots: "+ weaponObjects[i].slotObjectController[j].currentSlotsUnlocked);
             }    
         }
+        StatsDisplayer.OnReloadUpated?.Invoke();
     }
 
     public void PreviewSlots()
@@ -113,10 +118,12 @@ public class BuildController : MonoBehaviour
                 weaponObjects[i].slotObjectController[j].FillSlots(weaponObjects[i].slotObjectController[j].currentSlotsUnlocked, weaponObjects[i].slotObjectController[j].slotsToPreview, previewColor);
             }    
         }
+        StatsDisplayer.OnReloadUpated?.Invoke();
     }
     [System.Serializable]
     public struct WeaponObject
     {
+        public WeaponItem weapon;
         public SlotObjectController [] slotObjectController;
         public Image weaponImage;
         public TextMeshProUGUI weaponTitle;
