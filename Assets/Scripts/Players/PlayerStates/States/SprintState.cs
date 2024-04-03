@@ -16,13 +16,13 @@ namespace Players.PlayerStates.States
             playerRef.lockShoot = true;
             playerRef.sprintFactor = 1.6f;
             playerRef.isSprinting = true;
-            this.networkAnimator.Animator.SetBool("Sprint", playerRef.isSprinting);
+            // this.networkAnimator.Animator.SetBool("Sprint", playerRef.isSprinting);
 
         }
 
         public override void StateExit()
         {
-            // this.networkAnimator.Animator.SetBool("Sprint", false);
+            this.networkAnimator.Animator.SetBool("Sprint", false);
             lerpTimeToSprint=0;
             playerRef.lockShoot =false;
             playerRef.isSprinting = false;
@@ -93,6 +93,9 @@ namespace Players.PlayerStates.States
         }
         float easeOutQuart(float time) {
             return 1 - Mathf.Pow(1 - time, 4);
+        }
+        float easeInOutSine(float time) {
+            return -(Mathf.Cos(Mathf.PI * time) - 1) / 2;
         }
         float LerpToMovement(int Start, int End,ref float  lerpTime)
         {

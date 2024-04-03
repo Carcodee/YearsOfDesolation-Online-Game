@@ -8,6 +8,8 @@ public class F_In_F_Out_Obj : MonoBehaviour
     public Animator animator;
     public static Action OnFadeInSkillElements;
     public static Action OnFadeOutSkillElements;
+    public static Action OnBuyDecliend;
+    public static Action OnBuyAccepted;
     public static Action OnFadeInStatsElementsWeapon_1;
     public static Action OnFadeInStatsElementsWeapon_2;
     public static Action OnSetElementsWithWeapon_1;
@@ -47,6 +49,16 @@ public class F_In_F_Out_Obj : MonoBehaviour
             {
                 OnFadeOutSkillElements+=FadeOut;
             }
+
+            if (uiElement[i] == UIElement.DeclinedBuy)
+            {
+                OnBuyDecliend+=BuyDeclined;
+            }
+
+            if (uiElement[i]==UIElement.AcceptedBuy)
+            {
+                OnBuyAccepted+=BuyAccepted;
+            }
                 
         }
     }
@@ -75,6 +87,15 @@ public class F_In_F_Out_Obj : MonoBehaviour
             if (uiElement[i]==UIElement.FadeOutSkillElements)
             {
                 OnFadeOutSkillElements-=FadeOut;
+            }
+            if (uiElement[i] == UIElement.DeclinedBuy)
+            {
+                OnBuyDecliend-=BuyDeclined;
+            }
+
+            if (uiElement[i]==UIElement.AcceptedBuy)
+            {
+                OnBuyAccepted-=BuyAccepted;
             }
         }
         
@@ -113,6 +134,14 @@ public class F_In_F_Out_Obj : MonoBehaviour
     {
         gameObject.SetActive(false);
     }
+    public void BuyAccepted()
+    {
+        animator.Play("BuyAccepted");
+    }
+    public void BuyDeclined()
+    {
+        animator.Play("BuyDeclined");
+    }
     
 }
 
@@ -122,5 +151,7 @@ public enum UIElement
     StatsPanel,
     BuildSelected,
     FadeOutSkillElements,
+    DeclinedBuy,
+    AcceptedBuy,
     Pause
 }

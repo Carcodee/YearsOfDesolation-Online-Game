@@ -72,6 +72,7 @@ public class BuildController : MonoBehaviour
         DisplaySlots();
         F_In_F_Out_Obj.OnSetElementsWithWeapon_1?.Invoke();
         F_In_F_Out_Obj.OnSetElementsWithWeapon_2?.Invoke();
+        F_In_F_Out_Obj.OnBuyAccepted?.Invoke();
     }
 
     public void Cancel() {
@@ -88,6 +89,7 @@ public class BuildController : MonoBehaviour
         }
         playerStatsController.playerBuildSelected.restartBuffer();
         StatsDisplayer.OnReloadUpated?.Invoke();
+        F_In_F_Out_Obj.OnBuyDecliend?.Invoke();
         // Debug.Log(("ReloadTier: "+ playerStatsController.playerBuildSelected.upgrades[0].reloadSpeed.tier));
         // Debug.Log(("RecoilTier: " + playerStatsController.playerBuildSelected.upgrades[0].recoil.tier));
         // Debug.Log(("shootrateTier: " + playerStatsController.playerBuildSelected.upgrades[0].shootRate.tier));

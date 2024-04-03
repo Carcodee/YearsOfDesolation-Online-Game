@@ -50,10 +50,17 @@ namespace Players.PlayerStates.States
             this.networkAnimator.Animator.SetFloat("X", moveDir.x);
             this.networkAnimator.Animator.SetFloat("Y", moveDir.z);
             slidingTimer += Time.deltaTime;
-            
-            
+
+
             if (slidingTimer > slidingTime)
             {
+                if (Input.GetKey(KeyCode.LeftShift))
+                {
+                    slidingTimer = 0;
+                    stateMachineController.SetState("Sprint");
+                    // networkAnimator.Animator.Play("Movement");
+                    return;
+                }
                 slidingTimer = 0;
                 stateMachineController.SetState("Movement");
             }
