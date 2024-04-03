@@ -111,10 +111,14 @@ namespace Menu.StatsPanel
 
                 if (isPanelOpen)
                 {
+                    
+                    PostProccesingManager.instance.LerpActivateMenuBlur();
                     isPanelRefreshed = false;
                 }
                 else
                 {
+                    F_In_F_Out_Obj.OnFadeOutSkillElements?.Invoke();
+                    PostProccesingManager.instance.LerpDeactivateMenuBlur();
                     isPanelRefreshed = true;
                 }
                 // HandlePanel();
@@ -170,6 +174,7 @@ namespace Menu.StatsPanel
 
             if (playerStatsController.hasPlayerSelectedBuild)
             {
+                
                 F_In_F_Out_Obj.OnFadeInSkillElements?.Invoke();
                 
             }

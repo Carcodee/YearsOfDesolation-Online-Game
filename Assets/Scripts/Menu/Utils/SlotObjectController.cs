@@ -42,6 +42,7 @@ public class SlotObjectController : MonoBehaviour
         float time = 0;
         while (isOnPreview)
         {
+        
             time += Time.deltaTime;
             for (int i = currentSlotsUnlocked; i < slotsToPreview; i++)
             {

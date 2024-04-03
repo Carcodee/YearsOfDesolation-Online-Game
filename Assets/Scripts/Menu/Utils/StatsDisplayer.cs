@@ -35,7 +35,7 @@ public class StatsDisplayer : MonoBehaviour
 
     private void OnEnable()
     {
-        OnReloadUpated += UpdateUI; 
+        OnReloadUpated += UpdateUI;
     }
 
     private void OnDisable()
@@ -66,6 +66,7 @@ public class StatsDisplayer : MonoBehaviour
         currentStats.BaseDamage.text = baseDamage.ToString("0.0");       
         previewStats.BaseDamage.gameObject.SetActive(false);
         
+        weaponName.text = weaponItem.weapon.weaponName;
         if (currentWeaponStats.CompareValues(previewWeaponStats))
         {
             previewStats.gameObject.SetActive(false);

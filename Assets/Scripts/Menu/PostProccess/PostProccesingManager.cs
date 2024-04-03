@@ -32,12 +32,26 @@ public class PostProccesingManager : MonoBehaviour
     {
         fullScreenPassMaterialMenu.SetFloat("_ActivateBlur", 0);
     }
-
+    public void LerpDeactivateMenuBlur()
+    {
+        StartCoroutine(MyUtilities.LerpToValueMaterial(1.0f, 0.0f, 0.5f, fullScreenPassMaterialMenu, "_ActivateBlur"));
+    }
+    public void LerpActivateMenuBlur()
+    {
+        StartCoroutine(MyUtilities.LerpToValueMaterial(0.0f, 1.0f, 0.5f, fullScreenPassMaterialMenu, "_ActivateBlur"));
+    }
     public void ActivateBlur(float intensity)
     {
         fullScreenPassMaterial.SetFloat("_ActivateBlur", intensity);
     }
-
+    public void LerpDeactivateNormalBlur()
+    {
+        StartCoroutine(MyUtilities.LerpToValueMaterial(1.0f, 0.0f, 0.5f, fullScreenPassMaterial, "_ActivateBlur"));
+    }
+    public void LerpActivateNormalBlur()
+    {
+        StartCoroutine(MyUtilities.LerpToValueMaterial(0.0f, 1.0f, 0.5f, fullScreenPassMaterial, "_ActivateBlur"));
+    }
     private void OnApplicationQuit()
     {
         fullScreenPassMaterial.SetFloat("_ActivateBlur", 0);

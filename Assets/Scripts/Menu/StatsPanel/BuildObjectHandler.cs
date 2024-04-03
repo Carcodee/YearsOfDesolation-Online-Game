@@ -78,7 +78,7 @@ namespace Menu.StatsPanel
         {
             shopButtonManager.buttonTitle = playerBuildObjectSelected.buildDescription;
             shopButtonManager.buttonDescription = playerBuildObjectSelected.buildName;
-            Debug.Log("DisplayData");
+            // Debug.Log("DisplayData");
             //Debug.Log(playerBuildObjectSelected.buildDescription);
             //Debug.Log(playerBuildObjectSelected.buildName);
             if (playerStatsController.GetLevel()<2)

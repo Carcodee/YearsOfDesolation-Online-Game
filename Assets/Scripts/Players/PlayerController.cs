@@ -261,8 +261,8 @@ public class PlayerController : NetworkBehaviour
         if (hasStartedReloading&&playerStats.currentWeaponSelected.ammoBehaviour.isReloading)
         {
             int layerNIndex = playerStats.stateMachineController.networkAnimator.Animator.GetLayerIndex(playerStats.currentWeaponSelected.weapon.weaponAnimation.LayerName);
-             Debug.Log("Layer Index: " + layerNIndex);
-             Debug.Log("Start reload");
+             // Debug.Log("Layer Index: " + layerNIndex);
+             // Debug.Log("Start reload");
              
              if (!MyUtilities.IsThisAnimationPlaying(playerStats.stateMachineController.networkAnimator.Animator,
                      playerStats.currentWeaponSelected.weapon.weaponAnimation.weaponReload, layerNIndex))
@@ -271,7 +271,7 @@ public class PlayerController : NetworkBehaviour
                  CanvasController.OnReloadFinished?.Invoke();
                  finishReload = true;
                  playerStats.stateMachineController.networkAnimator.Animator.SetBool("FinishReload", true); 
-                 Debug.Log("Finish reload");
+                 // Debug.Log("Finish reload");
              }
            
         }

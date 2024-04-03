@@ -7,45 +7,77 @@ public class F_In_F_Out_Obj : MonoBehaviour
 {
     public Animator animator;
     public static Action OnFadeInSkillElements;
+    public static Action OnFadeOutSkillElements;
     public static Action OnFadeInStatsElementsWeapon_1;
     public static Action OnFadeInStatsElementsWeapon_2;
     public static Action OnSetElementsWithWeapon_1;
     public static Action OnSetElementsWithWeapon_2;
+    public static Action OnBuildSelected;
     
     
-    
-    public UIElement uiElement;
+    public UIElement [] uiElement;
 
 
     private void OnEnable()
     {
-        if (uiElement==UIElement.SkillPanel)
+        if (uiElement.Length==0)
         {
-            OnFadeInSkillElements+=FadeIn;
+           Debug.Log("No UIElement selected from: "+ gameObject.name); 
         }
-        else if (uiElement==UIElement.StatsPanel)
+        for (int i = 0; i < uiElement.Length; i++)
         {
-            OnFadeInStatsElementsWeapon_1+=FadeInStats;
-            OnFadeInStatsElementsWeapon_2+=FadeInStats;
-            OnSetElementsWithWeapon_1+=SetStatsPanel;
-            OnSetElementsWithWeapon_2+=SetStatsPanel;
+            if (uiElement[i]==UIElement.SkillPanel)
+            {
+                OnFadeInSkillElements+=FadeIn;
+            }
+            if (uiElement[i]==UIElement.StatsPanel)
+            {
+                OnFadeInStatsElementsWeapon_1+=FadeInStats;
+                OnFadeInStatsElementsWeapon_2+=FadeInStats;
+                OnSetElementsWithWeapon_1+=SetStatsPanel;
+                OnSetElementsWithWeapon_2+=SetStatsPanel;
+            }
+
+            if (uiElement[i]==UIElement.BuildSelected)
+            {
+                OnBuildSelected+=BuildSelected;
+            }
+
+            if (uiElement[i]==UIElement.FadeOutSkillElements)
+            {
+                OnFadeOutSkillElements+=FadeOut;
+            }
+                
         }
     }
 
     private void OnDisable()
     {
-         if (uiElement==UIElement.SkillPanel)
-         {
-             OnFadeInSkillElements+=FadeIn;
-         }
-         else if (uiElement==UIElement.StatsPanel) 
-         {
-            OnFadeInStatsElementsWeapon_1-=FadeInStats;
-            OnFadeInStatsElementsWeapon_2-=FadeInStats; 
-            OnSetElementsWithWeapon_1-=SetStatsPanel;
-            OnSetElementsWithWeapon_2-=SetStatsPanel;
-         }
-         
+        for (int i = 0; i < uiElement.Length; i++)
+        {
+            
+            if (uiElement[i]==UIElement.SkillPanel)
+            {
+                  OnFadeInSkillElements+=FadeIn;
+            }
+            if (uiElement[i]==UIElement.StatsPanel) 
+            {
+                 OnFadeInStatsElementsWeapon_1-=FadeInStats;
+                 OnFadeInStatsElementsWeapon_2-=FadeInStats; 
+                 OnSetElementsWithWeapon_1-=SetStatsPanel;
+                 OnSetElementsWithWeapon_2-=SetStatsPanel;
+            }
+            if (uiElement[i]==UIElement.BuildSelected)
+            {
+                OnBuildSelected-=BuildSelected;
+            }
+
+            if (uiElement[i]==UIElement.FadeOutSkillElements)
+            {
+                OnFadeOutSkillElements-=FadeOut;
+            }
+        }
+        
         
     }
 
@@ -56,6 +88,10 @@ public class F_In_F_Out_Obj : MonoBehaviour
     public void SetStatsPanel()
     {
         animator.Play("SetStats");
+    }
+    public void BuildSelected()
+    {
+        animator.Play("BuildSelected");
     }
     
     public void FadeIn()
@@ -84,6 +120,7 @@ public enum UIElement
 {
     SkillPanel,
     StatsPanel,
-    BuildPanel,
+    BuildSelected,
+    FadeOutSkillElements,
     Pause
 }

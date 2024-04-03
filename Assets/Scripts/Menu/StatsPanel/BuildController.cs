@@ -36,8 +36,8 @@ public class BuildController : MonoBehaviour
         weaponObjects[1].weaponTitle.text = playerStatsController.playerBuildSelected.second_weapon.weapon.weaponName;
         weaponObjects[1].weapon = playerStatsController.playerBuildSelected.second_weapon;
 
-            
-        
+        F_In_F_Out_Obj.OnBuildSelected?.Invoke();
+        F_In_F_Out_Obj.OnFadeInSkillElements?.Invoke();
         DisplaySlots();
         StatsDisplayer.OnReloadUpated?.Invoke();
     }

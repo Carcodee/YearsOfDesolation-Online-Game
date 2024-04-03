@@ -64,9 +64,16 @@ namespace Players.PlayerStates.States
         {
             playerRef.RotatePlayer();
             playerRef.ApplyGravity();
+            if (playerRef.isGrounded&& Input.GetKey(KeyCode.LeftShift))
+            {
+                stateMachineController.SetState("Sprint");
+                networkAnimator.Animator.Play("Movement");
+                return;
+            }
             if (playerRef.isGrounded)
             {
                 stateMachineController.SetState("Movement");
+                return;
             }
         }
 
