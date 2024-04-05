@@ -15,16 +15,38 @@ public class AnimationRiggingController : MonoBehaviour
     public TwoBoneIKConstraint twoBoneIKConstraint;
     public MultiAimConstraint multiAimConstraint;
 
-
+    private MultiAimConstraintData bakedAimOffsetData;
+    private MultiAimConstraintData bakedNoAimOffsetData;
+    
+    
     private void Start()
     {
         playerStatsController.playerStats.OnWeaponChanged += OnWeaponChanged;
         handLTarget.position = playerStatsController.playerStats.weaponNoBuildGripPoint.position;
+
+        bakedNoAimOffsetData = multiAimConstraint.data;
+        bakedNoAimOffsetData.offset =Vector3.zero;
+        bakedNoAimOffsetData.constrainedXAxis = true;
+        
+        Vector3 aimOffset = new Vector3(-40.0f, 0.0f, 0.0f);
+
+        bakedAimOffsetData= multiAimConstraint.data;
+        bakedAimOffsetData.offset = aimOffset;
+        
     }
 
     void Update()
     {
         
+
+        if (playerStatsController.stateMachineController.networkAnimator.Animator.GetFloat("Aiming")>0.1f)
+        {
+            // Debug.Log("aiming");
+            multiAimConstraint.data=bakedAimOffsetData;
+        }else
+        {
+            multiAimConstraint.data = bakedNoAimOffsetData;
+        }
         if (playerStatsController.isSprinting)
         {
             multiAimConstraint.weight = 0;
@@ -47,7 +69,7 @@ public class AnimationRiggingController : MonoBehaviour
             handLTarget.rotation = currentHandLTarget.rotation;
 
         }
-
+        
         if (playerStatsController.playerStats.currentWeaponSelected==null)
         {
            return;   
@@ -64,6 +86,8 @@ public class AnimationRiggingController : MonoBehaviour
         
         
     }
+    
+    
     
     public void OnWeaponChanged(Transform gripPoint)
     {

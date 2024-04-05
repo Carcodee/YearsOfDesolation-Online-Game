@@ -76,6 +76,7 @@ public class PlayerController : NetworkBehaviour
     public Vector3 motionSpeed;
     public bool isSprinting=false;
     public float airTimeToPlane=1.0f;
+    public bool isAiming;
     
     [Header("Camera Direction")]
     private int distanceFactor = 100;
