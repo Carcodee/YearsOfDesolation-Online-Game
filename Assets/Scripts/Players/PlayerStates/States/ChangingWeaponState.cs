@@ -57,7 +57,7 @@ public class ChangingWeaponState : PlayerStateBase
 
         public override void StateLateUpdate()
         {
-            if (!MyUtilities.IsAnimationPlaying(networkAnimator.Animator, weaponToChange.weapon.weaponAnimation.weaponChange,layerIndex))
+            if (!MyUtilities.IsThisAnimationPlaying(networkAnimator.Animator, weaponToChange.weapon.weaponAnimation.weaponChange,layerIndex))
             {
                 stateMachineController.SetChangingWeaponState(weaponToChange, "OnWeapon");
                 return;
