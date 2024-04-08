@@ -77,6 +77,7 @@ public class PlayerController : NetworkBehaviour
     public bool isSprinting=false;
     public float airTimeToPlane=1.0f;
     public bool isAiming;
+    public bool isShooting;
     
     [Header("Camera Direction")]
     private int distanceFactor = 100;
@@ -216,9 +217,23 @@ public class PlayerController : NetworkBehaviour
             isGroundedCheck();
             ApplyMovement(move);
             stateMachineController.StateLateUpdate();
-
+            CheckIsShootingAnimPlaying();
         }
 
+    }
+
+    void CheckIsShootingAnimPlaying()
+    {
+        
+        int layerNIndex = playerStats.stateMachineController.networkAnimator.Animator.GetLayerIndex(playerStats.currentWeaponSelected.weapon.weaponAnimation.LayerName);
+        if (MyUtilities.IsThisAnimationPlaying(playerStats.stateMachineController.networkAnimator.Animator, "Shoot", layerNIndex))
+        {
+            isShooting = true;
+        }
+        else
+        {
+            isShooting = false;
+        }
     }
 
     public void SetSpawnPoint(Transform transform)  
@@ -450,14 +465,11 @@ public class PlayerController : NetworkBehaviour
             StartCoroutine(playerStats.playerComponentsHandler.ShakeCamera(0.1f, .9f, .7f));
             playerStats.currentWeaponSelected.ammoBehaviour.currentBullets--;
             //TODO : Spawn vfx on local player 
-            // playerStats.playerVFXController.CallShootEffectClientRpc(OwnerClientId);
-            // playerStats.playerVFXController.ShootEffectLocal();
             PlayerVFXController.shootEffectHandle.CreateVFX(spawnBulletPoint.position, transform.rotation ,IsServer);
             playerStats.currentWeaponSelected.weapon.shootTimer = 0;
             Vector3 shotDirection = new Vector3(cameraRef.transform.forward.x + randomRefraction, cameraRef.transform.forward.y + randomRefraction, cameraRef.transform.forward.z);
-            
-            if (Physics.Raycast(spawnBulletPoint.position, shotDirection, out RaycastHit hit, 
-                    distanceFactor, playerHitLayer))
+            Vector3 spawnPoint = (cameraRef.transform.forward * 2)+cameraRef.transform.position;
+            if (Physics.Raycast(spawnPoint, shotDirection, out RaycastHit hit, distanceFactor, playerHitLayer))
             {
                 
                 // OnPlayerVfxAction?.Invoke(MyVfxType.hit ,hit.point);

@@ -6,7 +6,7 @@ using UnityEngine.Animations.Rigging;
 
 public class AnimationRiggingController : MonoBehaviour
 {
-    
+    public static Action<float> OnAimOffsetChanged;
     public Rig animationRigging;
     public PlayerController playerStatsController;
     public Transform handLTarget;
@@ -39,7 +39,7 @@ public class AnimationRiggingController : MonoBehaviour
     {
         
 
-        if (playerStatsController.stateMachineController.networkAnimator.Animator.GetFloat("Aiming")>0.1f)
+        if ((playerStatsController.stateMachineController.networkAnimator.Animator.GetFloat("Aiming")>0.1) || playerStatsController.isShooting)
         {
             // Debug.Log("aiming");
             multiAimConstraint.data=bakedAimOffsetData;
@@ -86,9 +86,15 @@ public class AnimationRiggingController : MonoBehaviour
         
         
     }
-    
-    
-    
+
+
+    public void SetRotationOffset(Vector3 offset)
+    {
+        var data = multiAimConstraint.data;
+        data.offset =Vector3.zero;
+        data.constrainedXAxis = true;
+        multiAimConstraint.data = data;
+    }
     public void OnWeaponChanged(Transform gripPoint)
     {
         if (playerStatsController.playerStats.playerBuildSelected.first_weapon.weapon.weaponObjectController != null)
