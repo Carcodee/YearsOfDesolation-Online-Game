@@ -13,6 +13,7 @@ using Unity.VisualScripting;
 
 public class PlayerComponentsHandler : NetworkBehaviour
 {
+    public static Action<string> OnStationaryStepAttempted;
     public PlayerInput playerInput;
 
     public StarterAssetsInputs input;
@@ -49,7 +50,9 @@ public class PlayerComponentsHandler : NetworkBehaviour
     public Transform cinemachineCameraTarget;
     private float _cinemachineTargetYaw;
     private float _cinemachineTargetPitch;
-
+    public float rotationDetector;
+    public float maxForRotation=10.5f;
+    
     [Tooltip("How far in degrees can you move the camera up")]
     public float TopClamp = 70.0f;
     [Tooltip("How far in degrees can you move the camera down")]
@@ -196,12 +199,22 @@ public class PlayerComponentsHandler : NetworkBehaviour
 
             _cinemachineTargetYaw += look.x * deltaTimeMultiplier;
             _cinemachineTargetPitch += look.y * deltaTimeMultiplier;
+            rotationDetector += look.x * deltaTimeMultiplier;
         }
         // clamp our rotations so our values are limited 360 degrees
 
         _cinemachineTargetYaw = ClampAngle(_cinemachineTargetYaw, float.MinValue, float.MaxValue);
         _cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);
-
+        Debug.Log("Rotationacum: "+rotationDetector);
+        if (rotationDetector<-maxForRotation)
+        {
+            rotationDetector = 0;
+            OnStationaryStepAttempted?.Invoke("RotatingLeft");
+        }else if (rotationDetector>maxForRotation)
+        {
+            rotationDetector = 0;
+            OnStationaryStepAttempted?.Invoke("RotatingRight");
+        }
         // Cinemachine will follow this target
         cinemachineCameraTarget.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + CameraAngleOverride,
             _cinemachineTargetYaw, 0.0f);

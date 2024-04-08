@@ -78,6 +78,7 @@ public class PlayerController : NetworkBehaviour
     public float airTimeToPlane=1.0f;
     public bool isAiming;
     public bool isShooting;
+    public bool isRotating=false;
     
     [Header("Camera Direction")]
     private int distanceFactor = 100;
@@ -137,6 +138,7 @@ public class PlayerController : NetworkBehaviour
             playerStats = GetComponent<PlayerStatsController>();
             playerComponentsHandler = GetComponent<PlayerComponentsHandler>();
             playerStats.OnPlayerDead += PlayerDeadCallback;
+            PlayerComponentsHandler.OnStationaryStepAttempted += AttempRotation; 
             // DoRagdoll(false);
             playerStats.currentWeaponSelected.weapon.shootRefraction = 0.1f;
             playerStats.OnWeaponChanged+= SetSpawnPoint;
@@ -169,6 +171,7 @@ public class PlayerController : NetworkBehaviour
                 return;
             }
 //NO SHOOT
+
             Shoot();
             if (Input.GetKey(KeyCode.Mouse1))
             {
@@ -293,6 +296,19 @@ public class PlayerController : NetworkBehaviour
         }
         
     }
+
+    public void AttempRotation(string animSide)
+    {
+        float x = Input.GetAxis("Horizontal");
+        float y = Input.GetAxis("Vertical");
+    bool isNotMoving = x == 0 && y == 0; 
+    if (stateMachineController.currentState.stateName== "Movement" && isNotMoving)
+        {
+            isRotating = true;
+            stateMachineController.networkAnimator.Animator.SetBool(animSide,true);
+        }
+    }
+    
     public void DeactivatePlayer()
     {
 

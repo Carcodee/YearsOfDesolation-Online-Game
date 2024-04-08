@@ -281,19 +281,26 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
         // if(!hasPlayerSelectedBuild)return;
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
+            
+            if (currentWeaponSelected == playerBuildSelected.first_weapon) return;
             stateMachineController.SetChangingWeaponState(playerBuildSelected.first_weapon, "ChangingWeapon");
             currentWeaponSelected.weaponObjectController.gameObject.SetActive(true);
             onBagWeapon = playerBuildSelected.second_weapon;
             onBagWeapon.weaponObjectController.gameObject.SetActive(false);
             OnWeaponChanged.Invoke(currentWeaponSelected.weapon.weaponObjectController.weaponBulletSpawnPoints);
+            F_In_F_Out_Obj.OnWeapontChangedAnim?.Invoke();
+            CanvasController.OnReloadFinished?.Invoke();
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
+            if (currentWeaponSelected == playerBuildSelected.second_weapon) return;
             stateMachineController.SetChangingWeaponState(playerBuildSelected.second_weapon,"ChangingWeapon");
             currentWeaponSelected.weaponObjectController.gameObject.SetActive(true);
             onBagWeapon = playerBuildSelected.first_weapon;
             onBagWeapon.weaponObjectController.gameObject.SetActive(false);
             OnWeaponChanged.Invoke(currentWeaponSelected.weapon.weaponObjectController.weaponBulletSpawnPoints);
+            F_In_F_Out_Obj.OnWeapontChangedAnim?.Invoke();
+            CanvasController.OnReloadFinished?.Invoke();
 
         }
 

@@ -84,6 +84,24 @@ namespace Players.PlayerStates.States
         public override void StateLateUpdate()
         {
             this.playerRef.RotatePlayer();
+            if (MyUtilities.IsThisAnimationPlaying(networkAnimator.Animator, "StepLeft", 0)&&playerRef.isRotating)
+            {
+            }
+            else
+            {
+                playerRef.isRotating = false;
+                networkAnimator.Animator.SetBool("RotatingLeft", false);
+                
+            }
+            if (MyUtilities.IsThisAnimationPlaying(networkAnimator.Animator, "StepRight", 0)&&playerRef.isRotating)
+            {
+            }
+            else
+            {
+                playerRef.isRotating = false;
+                networkAnimator.Animator.SetBool("RotatingRight", false);
+            }
         }
+        
     }
 }

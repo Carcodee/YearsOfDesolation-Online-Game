@@ -15,7 +15,7 @@ public class F_In_F_Out_Obj : MonoBehaviour
     public static Action OnSetElementsWithWeapon_1;
     public static Action OnSetElementsWithWeapon_2;
     public static Action OnBuildSelected;
-    
+    public static Action OnWeapontChangedAnim;
     
     public UIElement [] uiElement;
 
@@ -59,7 +59,10 @@ public class F_In_F_Out_Obj : MonoBehaviour
             {
                 OnBuyAccepted+=BuyAccepted;
             }
-                
+            if (uiElement[i]==UIElement.WeaponChanged)
+            {
+                OnWeapontChangedAnim += WeaponChanged;
+            }    
         }
     }
 
@@ -96,6 +99,11 @@ public class F_In_F_Out_Obj : MonoBehaviour
             if (uiElement[i]==UIElement.AcceptedBuy)
             {
                 OnBuyAccepted-=BuyAccepted;
+            }
+
+            if (uiElement[i]==UIElement.WeaponChanged)
+            {
+                OnWeapontChangedAnim -= WeaponChanged;
             }
         }
         
@@ -142,6 +150,11 @@ public class F_In_F_Out_Obj : MonoBehaviour
     {
         animator.Play("BuyDeclined");
     }
+
+    public void WeaponChanged()
+    {
+        animator.Play("WeaponChange");
+    }
     
 }
 
@@ -153,5 +166,6 @@ public enum UIElement
     FadeOutSkillElements,
     DeclinedBuy,
     AcceptedBuy,
+    WeaponChanged,
     Pause
 }

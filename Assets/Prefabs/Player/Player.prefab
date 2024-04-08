@@ -1425,6 +1425,8 @@ MonoBehaviour:
   motionSpeed: {x: 0, y: 0, z: 0}
   isSprinting: 0
   airTimeToPlane: 1
+  isAiming: 0
+  isShooting: 0
   ground:
     serializedVersion: 2
     m_Bits: 256
@@ -1873,6 +1875,8 @@ MonoBehaviour:
   statsPanelController: {fileID: 0}
   pauseController: {fileID: 0}
   cinemachineCameraTarget: {fileID: 2578975527992398695}
+  rotationDetector: 0
+  maxForRotation: 18
   TopClamp: 70
   BottomClamp: -30
   CameraAngleOverride: 0

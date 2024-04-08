@@ -27,8 +27,10 @@ public class AnimationRiggingController : MonoBehaviour
         bakedNoAimOffsetData = multiAimConstraint.data;
         bakedNoAimOffsetData.offset =Vector3.zero;
         bakedNoAimOffsetData.constrainedXAxis = true;
+        bakedNoAimOffsetData.constrainedYAxis = true;
+        bakedNoAimOffsetData.constrainedZAxis = true;
         
-        Vector3 aimOffset = new Vector3(-40.0f, 0.0f, 0.0f);
+        Vector3 aimOffset = new Vector3(-50.0f, 0.0f, 0.0f);
 
         bakedAimOffsetData= multiAimConstraint.data;
         bakedAimOffsetData.offset = aimOffset;
