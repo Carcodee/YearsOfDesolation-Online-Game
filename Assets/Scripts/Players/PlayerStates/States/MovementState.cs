@@ -16,7 +16,14 @@ namespace Players.PlayerStates.States
             base.StateEnter();
             playerRef.hasPlaned = false;
             playerRef.sprintFactor = 1;
-            networkAnimator.Animator.Play("Movement");
+            
+            float x= Input.GetAxis("Horizontal");
+            float y= Input.GetAxis("Vertical");
+            Vector2 moveInputAtEnter = new Vector2(x, y);
+            if (moveInputAtEnter.magnitude>0.1f)
+            {
+                networkAnimator.Animator.Play("Movement");
+            }
             
         }
 

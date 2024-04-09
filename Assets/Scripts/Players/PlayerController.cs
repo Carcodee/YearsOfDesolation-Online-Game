@@ -148,11 +148,13 @@ public class PlayerController : NetworkBehaviour
 
     }
 
+    
     void Update()
     {
 
         if (IsOwner)
         {
+
             
             isGroundedCheck();
             //be care

@@ -205,7 +205,6 @@ public class PlayerComponentsHandler : NetworkBehaviour
 
         _cinemachineTargetYaw = ClampAngle(_cinemachineTargetYaw, float.MinValue, float.MaxValue);
         _cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);
-        Debug.Log("Rotationacum: "+rotationDetector);
         if (rotationDetector<-maxForRotation)
         {
             rotationDetector = 0;

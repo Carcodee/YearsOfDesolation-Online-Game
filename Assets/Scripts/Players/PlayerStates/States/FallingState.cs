@@ -16,6 +16,7 @@ namespace Players.PlayerStates.States
         {
             
             networkAnimator.Animator.SetBool("Fall",true);
+            networkAnimator.Animator.SetBool("Land",false);
             playerRef._bodyVelocity.y = 0;
             moveDir = playerRef.move;
             this.playerRef.gravityMultiplier = 1;
@@ -28,6 +29,7 @@ namespace Players.PlayerStates.States
         {
             //animation
             networkAnimator.Animator.SetBool("Fall",false);
+            networkAnimator.Animator.SetBool("Land",true);
             airTime = 0;
 
         }

@@ -31,7 +31,7 @@ public class GameController : NetworkBehaviour
     
     [Header("References")]
     [SerializeField] private CoinBehaivor coinPrefab;
-    public SphereCollider sphereRadius;
+    public CapsuleCollider sphereRadius;
     
     [Header("Zones")]
     public Transform[] spawnPoints;
