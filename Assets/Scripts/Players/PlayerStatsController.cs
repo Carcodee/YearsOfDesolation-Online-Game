@@ -31,7 +31,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
     [SerializeField] private NetworkVariable<int> stamina = new NetworkVariable<int>();
     [SerializeField] private NetworkVariable<float> damage = new NetworkVariable<float>();
     [SerializeField] private NetworkVariable<int> armor = new NetworkVariable<int>();
-    [SerializeField] private NetworkVariable<int> speed = new NetworkVariable<int>();
+    [SerializeField] private NetworkVariable<float> speed = new NetworkVariable<float>();
 
     [SerializeField] private NetworkVariable<int> playerLevel = new NetworkVariable<int>();
     [SerializeField] public NetworkVariable<int> avaliblePoints = new NetworkVariable<int>();
@@ -577,7 +577,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
         stamina.Value = staminaPoint;
     }
     [ServerRpc]
-    public void SetSpeedServerRpc(int speedPoint)
+    public void SetSpeedServerRpc(float speedPoint)
     {
         speed.Value = speedPoint;
 

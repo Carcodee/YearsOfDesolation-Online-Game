@@ -11,6 +11,6 @@ public class StatsTemplate : ScriptableObject
     public int stamina; 
     public int damage;
     public int armor;
-    public int speed;
+    public float speed;
 
 }

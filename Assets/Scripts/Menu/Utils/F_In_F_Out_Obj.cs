@@ -16,6 +16,7 @@ public class F_In_F_Out_Obj : MonoBehaviour
     public static Action OnSetElementsWithWeapon_2;
     public static Action OnBuildSelected;
     public static Action OnWeapontChangedAnim;
+    public static Action <string> OnInfoTextDisplayed;
     
     public UIElement [] uiElement;
 
@@ -59,10 +60,19 @@ public class F_In_F_Out_Obj : MonoBehaviour
             {
                 OnBuyAccepted+=BuyAccepted;
             }
-            if (uiElement[i]==UIElement.WeaponChanged)
+
+            if (uiElement[i] == UIElement.WeaponChanged)
             {
                 OnWeapontChangedAnim += WeaponChanged;
-            }    
+            }
+
+            if (uiElement[i]==UIElement.DisplayTutorial)
+            {
+                OnInfoTextDisplayed += DisplayTutorialInfo;
+            }
+            
+                
+            
         }
     }
 
@@ -104,6 +114,13 @@ public class F_In_F_Out_Obj : MonoBehaviour
             if (uiElement[i]==UIElement.WeaponChanged)
             {
                 OnWeapontChangedAnim -= WeaponChanged;
+            }
+
+            if (uiElement[i]==UIElement.DisplayTutorial)
+            {
+
+
+                OnInfoTextDisplayed -= DisplayTutorialInfo;
             }
         }
         
@@ -155,6 +172,12 @@ public class F_In_F_Out_Obj : MonoBehaviour
     {
         animator.Play("WeaponChange");
     }
+
+    public void DisplayTutorialInfo(string text)
+    {
+        NotificationItem.OnTextDisplay?.Invoke(text);
+        animator.Play("DisplayText");
+    }
     
 }
 
@@ -167,5 +190,6 @@ public enum UIElement
     DeclinedBuy,
     AcceptedBuy,
     WeaponChanged,
+    DisplayTutorial,
     Pause
 }
