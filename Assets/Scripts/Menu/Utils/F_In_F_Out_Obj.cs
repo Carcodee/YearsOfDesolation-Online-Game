@@ -178,6 +178,12 @@ public class F_In_F_Out_Obj : MonoBehaviour
         NotificationItem.OnTextDisplay?.Invoke(text);
         animator.Play("DisplayText");
     }
+
+    public void RemoveTutorialInfo(string text)
+    {
+        NotificationItem.OnTextDisplay?.Invoke(text);
+        animator.Play("QuitText"); 
+    }
     
 }
 

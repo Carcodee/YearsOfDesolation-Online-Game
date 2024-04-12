@@ -68,50 +68,70 @@ public class GameController : NetworkBehaviour
 
     void Start()
     {
-
-        //Check if a player connected to the server
-        NetworkManager.Singleton.OnClientConnectedCallback += (clientId) =>
+        if (GameManager.Instance.isOnTutorial)
         {
-            if (IsServer) {
-                AddPlayerToListClientRpc();
-            }
-
-            if (IsClient && IsOwner)
-            {
-                OnPlayerEnterServerRpc();
-                SetMapLogicClientServerRpc(numberOfPlayers.Value, numberOfPlayersAlive.Value, reduceZoneSpeed, timeToFarm, 3, zoneRadius);
-                SetNumberOfPlayerListServerRpc(clientId);
-            }
-
-        };
-
-        NetworkManager.Singleton.OnClientDisconnectCallback += (clientId) =>
+            
+        }
+        else
         {
-
-            if (IsServer)
-            {
-                AddPlayerToListClientRpc();
-            }
-
-            if (IsClient && IsOwner)
-            {
-
-                OnPlayerOutServerRpc();
-                SetMapLogicClientServerRpc(numberOfPlayers.Value, numberOfPlayersAlive.Value, reduceZoneSpeed, timeToFarm, 3, zoneRadius);
-                SetNumberOfPlayerListServerRpc(clientId);
-
-            }
-
-        };
+           LoadGameOptions(); 
+        }
 
 
 
     }
 
+    public void LoadTutorialOptions()
+    {
+        
+        SetMapLogicClientServerRpc(numberOfPlayers.Value, numberOfPlayersAlive.Value, reduceZoneSpeed, timeToFarm, 3, zoneRadius);
+    }
+    public void LoadGameOptions()
+    {
+         //Check if a player connected to the server
+         NetworkManager.Singleton.OnClientConnectedCallback += (clientId) =>
+         {
+             if (IsServer) {
+                 AddPlayerToListClientRpc();
+             }
+ 
+             if (IsClient && IsOwner)
+             {
+                 OnPlayerEnterServerRpc();
+                 SetMapLogicClientServerRpc(numberOfPlayers.Value, numberOfPlayersAlive.Value, reduceZoneSpeed, timeToFarm, 3, zoneRadius);
+                 SetNumberOfPlayerListServerRpc(clientId);
+             }
+ 
+         };
+ 
+         NetworkManager.Singleton.OnClientDisconnectCallback += (clientId) =>
+         {
+ 
+             if (IsServer)
+             {
+                 AddPlayerToListClientRpc();
+             }
+ 
+             if (IsClient && IsOwner)
+             {
+ 
+                 OnPlayerOutServerRpc();
+                 SetMapLogicClientServerRpc(numberOfPlayers.Value, numberOfPlayersAlive.Value, reduceZoneSpeed, timeToFarm, 3, zoneRadius);
+                 SetNumberOfPlayerListServerRpc(clientId);
+ 
+             }
+ 
+         };
+       
+    }
+
     void Update()
     {
 
-        UpdateTime();
+        if (!GameManager.Instance.isOnTutorial)
+        {
+            UpdateTime();
+        }
 
         
         

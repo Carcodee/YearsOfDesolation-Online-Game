@@ -9,6 +9,7 @@ using System.Collections.Generic;
     using Unity.Services.Relay;
     using Unity.Services.Relay.Models;
     using UnityEngine;
+    using UnityEngine.SceneManagement;
     using UnityEngine.UI;
 
     public class MainMenuController : MonoBehaviour
@@ -25,6 +26,12 @@ using System.Collections.Generic;
         public void OpenModalWindow()
         {
             modalWindowTabs.OpenWindow();
+        }
+
+        public void LoadTutorial()
+        {
+            networkSceneManager.StartTutorialHost();
+            GameManager.Instance.isOnTutorial = true;
         }
         public async void LoadAllLobbies()
         {

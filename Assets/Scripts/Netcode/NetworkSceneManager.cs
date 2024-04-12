@@ -23,6 +23,7 @@ public class NetworkSceneManager : NetworkBehaviour
     /// INFO: You can remove the #if UNITY_EDITOR code segment and make SceneName public,
     /// </summary>
 
+    // public static NetworkSceneManager instance;
     private UnityTransport _transport;
     public GameObject menu;
     public GameObject canvas;
@@ -33,7 +34,12 @@ public class NetworkSceneManager : NetworkBehaviour
     
     private async void Awake()
     {
-     
+        // if (instance!=null)
+        // {
+           // Destroy(this); 
+        // }
+
+        // instance = this;
         _transport= FindObjectOfType<UnityTransport>();
 
         await Authenticate();
@@ -101,6 +107,14 @@ public class NetworkSceneManager : NetworkBehaviour
         await NetworkingHandling.HostManager.instance.SetAllocation(_transport);
         await NetworkingHandling.HostManager.instance.StartHost();
 
+    }
+
+    public async void StartTutorialHost()
+    {
+        m_SceneName = "Tutorial";
+        await NetworkingHandling.HostManager.instance.SetAllocation(_transport);
+         
+        NetworkingHandling.HostManager.instance.StartHostNoLobby();
     }
     
 

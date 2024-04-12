@@ -8,7 +8,9 @@ public class NotificationItem : MonoBehaviour
 {
     public static Action<string> OnTextDisplay;
 
-    private TextMeshProUGUI textToDisplay;
+    public TextMeshProUGUI Title;
+    public TextMeshProUGUI textToDisplay;
+    
     private void Start()
     {
 

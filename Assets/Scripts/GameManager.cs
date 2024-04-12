@@ -7,6 +7,7 @@ public class GameManager :NetworkBehaviour
 {
     public static GameManager Instance;
 
+    public bool isOnTutorial=false;
 
     private void Awake()
     {
@@ -19,8 +20,23 @@ public class GameManager :NetworkBehaviour
         Instance = this;
     }
 
+    public override void OnDestroy()
+    {
+        DontDestroyOnLoad(this);
+    }
+
+    public void LoadTutorialConfigs()
+    {
+        
+    }
+
+    public void LoadDeafaults()
+    {
+        
+    }
     void Start()
     {
+        
         
 
     }

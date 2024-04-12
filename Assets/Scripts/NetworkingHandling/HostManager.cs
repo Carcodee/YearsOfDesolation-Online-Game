@@ -81,6 +81,11 @@ namespace NetworkingHandling
         
             NetworkManager.Singleton.StartHost();
         }
+
+        public void StartHostNoLobby()
+        {
+            NetworkManager.Singleton.StartHost();
+        }
         public IEnumerator Heartbeat(float waitTime)
         {
             var delay= new WaitForSeconds(waitTime);
