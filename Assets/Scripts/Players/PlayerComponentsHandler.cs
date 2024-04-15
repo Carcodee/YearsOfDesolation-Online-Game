@@ -62,7 +62,7 @@ public class PlayerComponentsHandler : NetworkBehaviour
     [Tooltip("For locking the camera position on all axis")]
     public bool LockCameraPosition = false;
 
-    private bool IsCurrentDeviceMouse=true;
+    public static bool IsCurrentDeviceMouse=false;
     private const float _threshold = 0;
 
     
@@ -94,11 +94,11 @@ public class PlayerComponentsHandler : NetworkBehaviour
     {
         if (IsOwner)
         {
-            IsCurrentDeviceMouse = !statsPanelController.isPanelOpen && !pauseController.pauseMenu.activeSelf ;
-            if (IsCurrentDeviceMouse)
+            // IsCurrentDeviceMouse = !statsPanelController.isPanelOpen && !pauseController.pauseMenu.activeSelf ;
+            if (!IsCurrentDeviceMouse)
             {
                 //on game
-                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = false;
                 TransitionCamera();
             }
@@ -132,7 +132,7 @@ public class PlayerComponentsHandler : NetworkBehaviour
 
     public bool IsPlayerLocked()
     {
-        return !IsCurrentDeviceMouse;
+        return IsCurrentDeviceMouse;
     }
 
     void InstanciateComponents()
@@ -195,7 +195,7 @@ public class PlayerComponentsHandler : NetworkBehaviour
         {
             //Don't multiply mouse input by Time.deltaTime;
 
-            float deltaTimeMultiplier =(IsCurrentDeviceMouse) ? 1.0f : Time.deltaTime;
+            float deltaTimeMultiplier =(!IsCurrentDeviceMouse) ? 1.0f : Time.deltaTime;
 
             _cinemachineTargetYaw += look.x * deltaTimeMultiplier;
             _cinemachineTargetPitch += look.y * deltaTimeMultiplier;

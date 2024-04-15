@@ -113,11 +113,13 @@ namespace Menu.StatsPanel
                 {
                     
                     PostProccesingManager.instance.LerpActivateMenuBlur();
+                    PlayerComponentsHandler.IsCurrentDeviceMouse = true;
                     isPanelRefreshed = false;
                 }
                 else
                 {
                     F_In_F_Out_Obj.OnFadeOutSkillElements?.Invoke();
+                    PlayerComponentsHandler.IsCurrentDeviceMouse = false;
                     PostProccesingManager.instance.LerpDeactivateMenuBlur();
                     isPanelRefreshed = true;
                 }

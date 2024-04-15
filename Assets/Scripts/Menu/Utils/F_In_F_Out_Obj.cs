@@ -17,6 +17,7 @@ public class F_In_F_Out_Obj : MonoBehaviour
     public static Action OnBuildSelected;
     public static Action OnWeapontChangedAnim;
     public static Action <string> OnInfoTextDisplayed;
+    public static Action OnCleanScreen;
     
     public UIElement [] uiElement;
 
@@ -29,6 +30,11 @@ public class F_In_F_Out_Obj : MonoBehaviour
         }
         for (int i = 0; i < uiElement.Length; i++)
         {
+            if (uiElement[i]==UIElement.CleanableObject)
+            {
+
+                OnCleanScreen += RemoveTutorialInfo;
+            }
             if (uiElement[i]==UIElement.SkillPanel)
             {
                 OnFadeInSkillElements+=FadeIn;
@@ -80,7 +86,11 @@ public class F_In_F_Out_Obj : MonoBehaviour
     {
         for (int i = 0; i < uiElement.Length; i++)
         {
+            if (uiElement[i]==UIElement.CleanableObject)
+            {
             
+                OnCleanScreen -= RemoveTutorialInfo;
+            }
             if (uiElement[i]==UIElement.SkillPanel)
             {
                   OnFadeInSkillElements+=FadeIn;
@@ -179,9 +189,8 @@ public class F_In_F_Out_Obj : MonoBehaviour
         animator.Play("DisplayText");
     }
 
-    public void RemoveTutorialInfo(string text)
+    public void RemoveTutorialInfo()
     {
-        NotificationItem.OnTextDisplay?.Invoke(text);
         animator.Play("QuitText"); 
     }
     
@@ -197,5 +206,6 @@ public enum UIElement
     AcceptedBuy,
     WeaponChanged,
     DisplayTutorial,
+    CleanableObject,
     Pause
 }

@@ -96,10 +96,13 @@ public class PauseController : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Escape) && !pauseMenu.activeSelf)
         {
+            PlayerComponentsHandler.IsCurrentDeviceMouse = true;
             PauseGame();
         }
         else if(Input.GetKeyDown(KeyCode.Escape) && pauseMenu.activeSelf)
         {
+            
+            PlayerComponentsHandler.IsCurrentDeviceMouse = false;
             ResumeGame();
         }    
     }

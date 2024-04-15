@@ -15,18 +15,17 @@ public class TutorialManager : MonoBehaviour
 
     public string fileName;
     private int dialogCounter=1;
-
-    private int HUBCounter=2;
-    
+    public int HUBCounter=0;
+    public int maxHubCounter = 5;
     public TextAsset dialogs;
-    
     public DialogData tutorialTextData;
-
     public TableData tableData;
-
+    public HUDStage currentHUDStage = HUDStage.BeforeProvingGrounds;
    private void Awake()
    {
         fileName = Application.dataPath + "/TextFiles/Tutorial/TutorialDialog.csv";
+        dialogCounter = 1;
+        HUBCounter = 0; 
         if (instance!=null)
         {
             Destroy(this);
@@ -42,25 +41,50 @@ public class TutorialManager : MonoBehaviour
     {
         
         InitData();
-        dialogCounter = 1;
-        HUBCounter = 0; 
-        SetUpTutorialData();
+        DisplayTutorialData(1);
+        PlayerComponentsHandler.IsCurrentDeviceMouse = true;
         F_In_F_Out_Obj.OnInfoTextDisplayed?.Invoke(tutorialTextData.text);
         
         
     }
 
-    void SetUpTutorialData()
+    public void NextHUB()
     {
-        if (HUBCounter>4)
+        if (HUBCounter<maxHubCounter)
         {
-            HUBCounter = 0;
+            DisplayTutorialData(dialogCounter);
+            HUBCounter++;
+        }
+    }
+    public void GoBackHUB()
+    {
+        if (HUBCounter<=0)
+        {
+           return; 
+        }
+        HUBCounter--;
+        DisplayTutorialData(dialogCounter);
+    }
+
+    public void StepDone()
+    {
+        HUBCounter = 0;
+        F_In_F_Out_Obj.OnCleanScreen?.Invoke();
+    }
+    void DisplayTutorialData(int currentDialogCounter)
+    {
+        string HUBText= GetValueFromIndex(dialogCounter, 2+HUBCounter);
+        dialogCounter = currentDialogCounter;
+        if (HUBText=="none" && HUBCounter<maxHubCounter)
+        {
+            HUBCounter = maxHubCounter;
+            return;
         }
         tutorialTextData.id = int.Parse(GetValueFromIndex(dialogCounter, 0));
         Debug.Log(tutorialTextData.id);
         tutorialTextData.specification = GetValueFromIndex(dialogCounter, 1);
         Debug.Log(tutorialTextData.specification);
-        tutorialTextData.text = GetValueFromIndex(dialogCounter, 2+HUBCounter);
+        tutorialTextData.text =HUBText;
         Debug.Log(tutorialTextData.text);
     }
     
@@ -74,14 +98,6 @@ public class TutorialManager : MonoBehaviour
        string[] textData= dialogs.text.Split(new string [] {",", "\n"}, StringSplitOptions.None);
        tableData.data = textData;
        int counter = 0;
-       // foreach (var VARIABLE in tableData.data)
-       // {
-       //    Debug.Log("Index: "+ counter +": " +VARIABLE); 
-       //     counter++;
-       // }
-       
-       
-
     }
     void OpenTableFile(String path)
     {
@@ -118,5 +134,18 @@ public class TutorialManager : MonoBehaviour
         public int tableSize;
         public string[] data;
     }
+
+    
+}
+
+public enum HUDStage
+{
+    BeforeProvingGrounds,
+    BuildPick,
+    OnShootingGrounds,
+    NoAmmo,
+    AmmoSearch,
+    UpgradeablePanel,
+    BattleRoyale
 }
  

@@ -16,6 +16,8 @@ namespace Players.PlayerStates.States
         public override void StateEnter()
         {
             networkAnimator.Animator.SetBool("Fall", true);
+            
+            networkAnimator.Animator.SetBool("Land", false);
             playerRef._bodyVelocity.y = 0;
             moveDir = playerRef.move;
             this.playerRef.gravityMultiplier = 0.05f;
@@ -51,6 +53,7 @@ namespace Players.PlayerStates.States
             playerRef.ApplyGravity();
             if (playerRef.isGrounded)
             {
+                networkAnimator.Animator.SetBool("Land", true);
                 stateMachineController.SetState("Movement");
             }
         }
