@@ -23,7 +23,7 @@ public class NotificationItem : MonoBehaviour
     private void Update()
     {
         if (TutorialManager.instance==null)return;
-        if (TutorialManager.instance.HUBCounter>=TutorialManager.instance.maxHubCounter-1)
+        if (TutorialManager.instance.isLastText)
         {
             nextButton.gameObject.SetActive(false); 
             stepDoneButton.gameObject.SetActive(true); 

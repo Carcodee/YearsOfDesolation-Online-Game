@@ -609,6 +609,15 @@ public class PlayerController : NetworkBehaviour
         Gizmos.DrawSphere(transform.position + sphereOffset, sphereCastRadius);
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        
+        if (other.TryGetComponent(out IInteractable myInteractuable))
+        {
+            myInteractuable.Interact(); 
+        }
+    }
+
     #region ServerRpc
 
     

@@ -100,6 +100,7 @@ public class GameController : NetworkBehaviour
                  OnPlayerEnterServerRpc();
                  SetMapLogicClientServerRpc(numberOfPlayers.Value, numberOfPlayersAlive.Value, reduceZoneSpeed, timeToFarm, 3, zoneRadius);
                  SetNumberOfPlayerListServerRpc(clientId);
+                 GameManager.Instance.localPlayerRef = players[0].GetComponent<PlayerController>();
              }
  
          };

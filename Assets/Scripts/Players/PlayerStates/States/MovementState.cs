@@ -37,7 +37,7 @@ namespace Players.PlayerStates.States
             float x= Input.GetAxis("Horizontal");
             float y= Input.GetAxis("Vertical");
 
-            animInput=new Vector2(x/1.5f , y/1.5f);
+            animInput=new Vector2(x , y);
 
             this.playerRef.Move(x, y);
         }

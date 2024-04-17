@@ -6,7 +6,7 @@ using UnityEngine;
 public class GameManager :NetworkBehaviour
 {
     public static GameManager Instance;
-
+    public PlayerController localPlayerRef;
     public bool isOnTutorial=false;
 
     private void Awake()

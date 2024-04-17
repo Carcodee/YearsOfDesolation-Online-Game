@@ -98,7 +98,7 @@ public class PlayerComponentsHandler : NetworkBehaviour
             if (!IsCurrentDeviceMouse)
             {
                 //on game
-                Cursor.lockState = CursorLockMode.None;
+                Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
                 TransitionCamera();
             }

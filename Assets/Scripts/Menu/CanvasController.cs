@@ -111,11 +111,12 @@ public class CanvasController : MonoBehaviour
     public float largeDistance=40;
     public CanvasGroup coinImageGroup;
     public TextMeshProUGUI distanceToCoinText;
-    
-    
+
+    public GameObject []ObjectsToDeactivateOnTutorial;
     void Start()
     {
     
+        
         GetComponents();
         timeToSpawnHolder = GameController.instance.respawnTime;
         timeToSpawnTimer = GameController.instance.respawnTime;
@@ -136,6 +137,11 @@ public class CanvasController : MonoBehaviour
         coinImageGroup = coinUI.GetComponent<CanvasGroup>();
         // OnEnemyKilled += KillNotification; 
         playerAssigned.enemyKilled.OnValueChanged += KillNotification;
+
+        for (int i = 0; i < ObjectsToDeactivateOnTutorial.Length; i++)
+        {
+           ObjectsToDeactivateOnTutorial[i].SetActive(false); 
+        }
     }
 
     private void OnDisable()
