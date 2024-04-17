@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ZoneToReach : MonoBehaviour, IInteractable
 {
-    public ZoneToGo nextZoneType;
+    public TutorialStage stageToTrigger;
     public bool hasThisZoneReached = false;
     void Start()
     {
@@ -19,9 +19,7 @@ public class ZoneToReach : MonoBehaviour, IInteractable
     public void Interact()  
     {
         if (hasThisZoneReached) return;
-        PlayerZoneAction();
-        TutorialManager.instance.currentHUDStage = nextZoneType;
-        TutorialManager.instance.wasTutorialStepDone= false;
+        TutorialStagesHandler.instance.SetTutorialStage(stageToTrigger);
         hasThisZoneReached = true;
     }
 

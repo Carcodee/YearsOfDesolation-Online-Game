@@ -14,6 +14,7 @@ public class TutorialManager : MonoBehaviour
     public static TutorialManager instance;
     public ZoneToGo currentHUDStage = ZoneToGo.PlayerZone;
 
+    public PlayerController playerRef;
 
     [Header("Dialogs System")]
     public string fileName;
@@ -29,8 +30,8 @@ public class TutorialManager : MonoBehaviour
 
     [Header("Map")] 
     public Transform spawnPoint;
-    
-    
+    public Transform spawnAmmoPoint;
+    private TutorialStagesHandler tutorialStagesHandler => TutorialStagesHandler.instance; 
     private void Awake()
     {
         fileName = Application.dataPath + "/TextFiles/Tutorial/TutorialDialog.csv";
@@ -48,14 +49,20 @@ public class TutorialManager : MonoBehaviour
 
     private void Update()
     {
-        CheckCurrentZoneToGo();
+        if (GameManager.Instance.localPlayerRef.playerStats.hasPlayerSelectedBuild && currentHUDStage==ZoneToGo.PickBuildZone)
+        {
+            //the player selected a build then it continue with the next step
+            currentHUDStage = ZoneToGo.TakeCoinZone;
+            wasTutorialStepDone = false;
+        }
+        // CheckCurrentZoneToGo();
     }
 
     private void Start()
     {
-        StartCoroutine(SetPlayerInPos());
         InitData();
-        CheckCurrentZoneToGo();
+        StartCoroutine(SetPlayerInPos());
+        // CheckCurrentZoneToGo();
         
     }
 
@@ -73,6 +80,7 @@ public class TutorialManager : MonoBehaviour
                 break;
             case ZoneToGo.TakeCoinZone:
                 DisplayTutorialData(3);
+                playerRef.playerStats.SpawnCoin(playerRef.playerStats.coin, spawnAmmoPoint.position);
                 break;
             case ZoneToGo.UpgradeZone:
                 DisplayTutorialData(4);
@@ -97,6 +105,8 @@ public class TutorialManager : MonoBehaviour
         GameManager.Instance.localPlayerRef.transform.position = spawnPoint.position;
         GameManager.Instance.localPlayerRef.transform.rotation= Quaternion.Euler(0,-180,0);
 
+        playerRef = GameManager.Instance.localPlayerRef;
+        tutorialStagesHandler.Init();
     }
     public void NextHUB()
     {
@@ -121,10 +131,17 @@ public class TutorialManager : MonoBehaviour
     {
         PlayerComponentsHandler.IsCurrentDeviceMouse = false;
         HUBCounter = 0;
+        TutorialStagesHandler.instance.FinishDialogs();
         F_In_F_Out_Obj.OnCleanScreen?.Invoke();
 
     }
-    void DisplayTutorialData(int currentDialogCounter)
+
+    public void FinishUIIntruction()
+    {
+        
+        TutorialStagesHandler.instance.FinishInstructions();
+    }
+    public void DisplayTutorialData(int currentDialogCounter)
     {
         string CheckNextHUB = GetValueFromIndex(dialogCounter, 2 + HUBCounter + 1);
         dialogCounter = currentDialogCounter;
@@ -199,6 +216,7 @@ public class TutorialManager : MonoBehaviour
         public string text;
 
     }
+    [System.Serializable]
     public struct TableData
     {
         public int tableSize;
@@ -208,6 +226,13 @@ public class TutorialManager : MonoBehaviour
     
 }
 
+public enum TutorialStage
+{
+    Intro,
+    PlayerZone,
+    PickBuild,
+    PickAmmo
+}
 public enum ZoneToGo
 {
     PlayerZone,
