@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Stage_ZoneComing : MonoBehaviour
+public class Stage_ZoneComing : MonoBehaviour,IStage
 {
      public TutorialStage stage { get; set; }
      public bool hasDialogFinished { get; set; }

@@ -655,14 +655,21 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
                     OnLevelUp?.Invoke();
                     addAvaliblePointsServerRpc(1);
                     int randomPlayer = UnityEngine.Random.Range(0, GameController.instance.numberOfPlayers.Value);
-                    coinPosition.transform.position = GameController.instance.players[randomPlayer].GetComponent<PlayerStatsController>().playerZoneController.spawnCoinPoint.position;
-                    CanvasController.OnBulletsAddedUI?.Invoke();
-                    CanvasController.OnUpdateUI?.Invoke();
-
+                    if (GameController.instance.players.Count>1)
+                    { 
+                        coinPosition.transform.position = GameController.instance.players[randomPlayer].GetComponent<PlayerStatsController>().playerZoneController.spawnCoinPoint.position;
+                        
+                    }
                     if (GameManager.Instance.isOnTutorial)
                     {
                         TutorialStagesHandler.instance.SetTutorialStage(TutorialStage.ZoneComing);
+                        Debug.Log("Enterrreeed");
+                        Destroy(coinPosition.gameObject);
+                        coinPosition = null;
                     }
+                    CanvasController.OnBulletsAddedUI?.Invoke();
+                    CanvasController.OnUpdateUI?.Invoke();
+
             }
         }
 
