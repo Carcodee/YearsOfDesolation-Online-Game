@@ -109,6 +109,7 @@ public class CanvasController : MonoBehaviour
     public GameObject coinUI;
     public float closeDistance=10;
     public float largeDistance=40;
+    public Material coinImageMaterial;
     public CanvasGroup coinImageGroup;
     public TextMeshProUGUI distanceToCoinText;
 
@@ -238,6 +239,7 @@ public class CanvasController : MonoBehaviour
         float distanceToCoin = Vector3.Distance(playerAssigned.transform.position, playerAssigned.coinPosition.transform.position);
         float alpha = Mathf.InverseLerp(closeDistance,largeDistance, distanceToCoin);
         coinImageGroup.alpha = alpha;
+        coinImageMaterial.SetFloat("_Alpha",alpha);
     }
     void Update()
     {
@@ -407,7 +409,9 @@ public class CanvasController : MonoBehaviour
     {
         SetDefaultVaues(hpUIMat);
         weaponShootRateMat.SetFloat("_BarValue",0);
-        // followUIHpMat.SetFloat("_HP",1);
+        coinImageMaterial.SetFloat("_Alpha",1.0f);
+        coinImageMaterial.SetFloat("Emission",1.33f);
+        // followUIHpMat.SetFloat("_HP",1)
 
     }
     public void Reloading()
@@ -535,7 +539,9 @@ public class CanvasController : MonoBehaviour
 
 
     }
-
+    
+    
+    
     private void DisplayLevel()
     {
 
