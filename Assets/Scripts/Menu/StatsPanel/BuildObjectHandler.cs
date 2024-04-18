@@ -72,7 +72,11 @@ namespace Menu.StatsPanel
         public void SetBuild()
         {
             playerStatsController.SelectBuild(playerBuildObjectSelected);
-            
+
+            if (GameManager.Instance.isOnTutorial)
+            {
+                TutorialStagesHandler.instance.SetTutorialStage(TutorialStage.PickAmmo);
+            }
         }
         public void DisplayData()
         {

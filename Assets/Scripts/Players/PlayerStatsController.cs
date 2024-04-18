@@ -659,6 +659,10 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
                     CanvasController.OnBulletsAddedUI?.Invoke();
                     CanvasController.OnUpdateUI?.Invoke();
 
+                    if (GameManager.Instance.isOnTutorial)
+                    {
+                        TutorialStagesHandler.instance.SetTutorialStage(TutorialStage.ZoneComing);
+                    }
             }
         }
 

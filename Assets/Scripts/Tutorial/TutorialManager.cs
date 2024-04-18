@@ -66,6 +66,10 @@ public class TutorialManager : MonoBehaviour
         
     }
 
+    public void SpawnCoinAtPos()
+    { 
+        playerRef.playerStats.SpawnCoin(playerRef.playerStats.coin, spawnAmmoPoint.position);
+    }
     public void CheckCurrentZoneToGo()
     {
         if (wasTutorialStepDone) return;
@@ -135,10 +139,8 @@ public class TutorialManager : MonoBehaviour
         F_In_F_Out_Obj.OnCleanScreen?.Invoke();
 
     }
-
     public void FinishUIIntruction()
     {
-        
         TutorialStagesHandler.instance.FinishInstructions();
     }
     public void DisplayTutorialData(int currentDialogCounter)
@@ -231,7 +233,8 @@ public enum TutorialStage
     Intro,
     PlayerZone,
     PickBuild,
-    PickAmmo
+    PickAmmo,
+    ZoneComing
 }
 public enum ZoneToGo
 {
