@@ -28,6 +28,7 @@ public class TutorialManager : MonoBehaviour
 
     public bool wasTutorialStepDone;
 
+
     [Header("Map")] 
     public Transform spawnPoint;
     public Transform spawnAmmoPoint;
@@ -148,11 +149,11 @@ public class TutorialManager : MonoBehaviour
         string CheckNextHUB = GetValueFromIndex(dialogCounter, 2 + HUBCounter + 1);
         dialogCounter = currentDialogCounter;
         tutorialTextData.id = int.Parse(GetValueFromIndex(dialogCounter, 0));
-        Debug.Log(tutorialTextData.id);
+        // Debug.Log(tutorialTextData.id);
         tutorialTextData.specification = GetValueFromIndex(dialogCounter, 1);
-        Debug.Log(tutorialTextData.specification);
+        // Debug.Log(tutorialTextData.specification);
         tutorialTextData.text =GetValueFromIndex(dialogCounter, 2+HUBCounter);
-        Debug.Log(tutorialTextData.text);
+        // Debug.Log(tutorialTextData.text);
         if (CheckNextHUB=="none")
         {
             isLastText = true;

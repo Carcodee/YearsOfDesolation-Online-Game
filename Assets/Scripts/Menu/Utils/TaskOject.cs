@@ -15,15 +15,18 @@ public class TaskOject : MonoBehaviour
     public string details;
     public int number;
 
+    public Animator animator;
 
     public void Init()
     {
+        
         descriptionText.text = description;
         detailsText.text = details;
         numberText.text = number.ToString();
+        animator.Play("TaskObjFadeIn");
     }
     public void Done()
     {
-        
+        animator.Play("TaskObjFadeOut");
     }
 }

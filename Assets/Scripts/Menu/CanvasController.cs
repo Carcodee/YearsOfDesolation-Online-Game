@@ -214,7 +214,7 @@ public class CanvasController : MonoBehaviour
         Vector3 coinPos = playerAssigned.transform.position;
         Vector3 coinInScreen=playerController.cam.WorldToScreenPoint(playerAssigned.coinPosition.transform.position);
         Vector3 magYPos=playerController.cam.WorldToScreenPoint(playerAssigned.coinPosition.magPosition.transform.position);
-        Debug.Log("Coin in screen: " + coinInScreen);
+        // Debug.Log("Coin in screen: " + coinInScreen);
 
         coinInScreen.x = coinInScreen.x - canvasRect.sizeDelta.x/2;
         magYPos.y = magYPos.y - canvasRect.sizeDelta.y/2;

@@ -26,6 +26,9 @@ public class StartZone : MonoBehaviour, IStage
     public void OnDialogFinished()
     {
         hasDialogFinished = true;
+        TaskList.instance.gameObject.SetActive(true);
+        TaskList.instance.StartTaskList();   
+        
     }
 
     public void OnUIInstruction()

@@ -7,7 +7,7 @@ public class Stage_PickBuild : MonoBehaviour,IStage
     public TutorialStage stage { get; set; }
     public bool hasDialogFinished { get; set; }
     public bool hasUIIndicationsFinished { get; set; }
-    public int dialogCounter = 3;
+    public int dialogCounter = 2;
      public TutorialStage stageToSet;
     public TutorialStage nextStage ;
 
@@ -18,13 +18,18 @@ public class Stage_PickBuild : MonoBehaviour,IStage
 
     public void OnDialogDisplayed()
     {
+        
+        TutorialManager.instance.DisplayTutorialData(dialogCounter);
         PlayerComponentsHandler.IsCurrentDeviceMouse = true;
         F_In_F_Out_Obj.OnInfoTextDisplayed?.Invoke(TutorialManager.instance.tutorialTextData.text);
+        
+        Debug.Log("Dialog displayed");
     }
 
     public void OnDialogFinished()
     {
         hasDialogFinished = true;
+        
     }
 
     public void OnUIInstruction()
@@ -39,6 +44,6 @@ public class Stage_PickBuild : MonoBehaviour,IStage
 
     public void OnStageEnded()
     {
-        
+        TaskList.instance.realTask.GetValueOrDefault("Pick a build").Done();
     }
 }

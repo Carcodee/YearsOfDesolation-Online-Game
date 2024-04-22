@@ -27,6 +27,7 @@ public class PauseController : MonoBehaviour
     public OptionObjectManager brightness;
     
     
+    
     [Header("Croshair")]
     //Crosshair
     public Dropdown colorDropdown;
