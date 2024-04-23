@@ -7,6 +7,7 @@ public class Stage_TakeAmmo : MonoBehaviour, IStage
     public TutorialStage stage { get; set; }
     public bool hasDialogFinished { get; set; }
     public bool hasUIIndicationsFinished { get; set; }
+    public bool wasStageCompleted { get; set; }
     public int dialogCounter = 3;
      public TutorialStage stageToSet;
     public TutorialStage nextStage ;

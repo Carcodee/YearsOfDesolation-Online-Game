@@ -46,9 +46,14 @@ public class TutorialStagesHandler : MonoBehaviour
 
     public void SetTutorialStage(TutorialStage nextStage)
     {
-        currentStage.OnStageEnded();
-        currentStage = GetStage(nextStage);
-        currentStage.OnDialogDisplayed();
+        IStage newStage=GetStage(nextStage);
+        if (newStage!=currentStage)
+        {
+            currentStage.OnStageEnded();
+            currentStage.wasStageCompleted = true;
+            currentStage = newStage;
+            currentStage.OnDialogDisplayed();
+        }
     }
 
     public void FinishDialogs()
@@ -68,6 +73,10 @@ public class TutorialStagesHandler : MonoBehaviour
             IStage stage = stages[i];
             if (stage.stage==stageToFind)
             {
+                if (stage.wasStageCompleted)
+                {
+                    return currentStage;
+                }
                 return stage;
             }
         } 

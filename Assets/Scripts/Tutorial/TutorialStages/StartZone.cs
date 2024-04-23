@@ -7,6 +7,7 @@ public class StartZone : MonoBehaviour, IStage
     public TutorialStage stage { get; set; }
     public bool hasDialogFinished { get; set; }
     public bool hasUIIndicationsFinished { get; set; }
+    public bool wasStageCompleted { get; set; }
     public int dialogCounter = 1;
      public TutorialStage stageToSet;
     public TutorialStage nextStage ;

@@ -8,6 +8,7 @@ public class Stage_KillEnemy : MonoBehaviour,IStage
     public TutorialStage stage { get; set; }
     public bool hasDialogFinished { get; set; }
     public bool hasUIIndicationsFinished { get; set; }
+    public bool wasStageCompleted { get; set; }
     public int dialogCounter = 5;
     public TutorialStage stageToSet;
     public TutorialStage nextStage ;

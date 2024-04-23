@@ -15,6 +15,11 @@ public interface IStage
          get;
          set;
      }
+      bool wasStageCompleted 
+      {
+          get;
+          set;
+      }
      public void OnDialogDisplayed();
     public void OnDialogFinished();
     public void OnUIInstruction();

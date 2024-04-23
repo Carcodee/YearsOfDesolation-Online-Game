@@ -122,6 +122,9 @@ namespace Menu.StatsPanel
                     PlayerComponentsHandler.IsCurrentDeviceMouse = false;
                     PostProccesingManager.instance.LerpDeactivateMenuBlur();
                     isPanelRefreshed = true;
+                    if (!GameManager.Instance.isOnTutorial)return;
+                    if (!TutorialStagesHandler.instance.currentStage.hasDialogFinished)PlayerComponentsHandler.IsCurrentDeviceMouse = true;
+
                 }
                 // HandlePanel();
             }

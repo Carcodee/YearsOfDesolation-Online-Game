@@ -102,9 +102,12 @@ public class PauseController : MonoBehaviour
         }
         else if(Input.GetKeyDown(KeyCode.Escape) && pauseMenu.activeSelf)
         {
-            
+
             PlayerComponentsHandler.IsCurrentDeviceMouse = false;
             ResumeGame();
+            if (!GameManager.Instance.isOnTutorial)return;
+            if (!TutorialStagesHandler.instance.currentStage.hasDialogFinished)PlayerComponentsHandler.IsCurrentDeviceMouse = true;
+
         }    
     }
     public void ExitGame()
