@@ -23,6 +23,10 @@ namespace Players.PlayerStates.States
             playerRef.move = Vector3.zero;
             playerRef.playerStats.SetHealth(playerRef.playerStats.GetMaxHealth());
             PlayerVFXController.OnDeadEffectHandle.CreateVFX(playerRef.playerStats.deadPosition, playerRef.transform.rotation, playerRef.IsServer);
+            if (GameManager.Instance.isOnTutorial)
+            {
+               TutorialStagesHandler.instance.SetTutorialStage(TutorialStage.ZoneComing);
+            }
         }
         
         public override void StateExit()

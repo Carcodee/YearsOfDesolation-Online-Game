@@ -73,6 +73,10 @@ public class BuildController : MonoBehaviour
         F_In_F_Out_Obj.OnSetElementsWithWeapon_1?.Invoke();
         F_In_F_Out_Obj.OnSetElementsWithWeapon_2?.Invoke();
         F_In_F_Out_Obj.OnBuyAccepted?.Invoke();
+        if (GameManager.Instance.isOnTutorial)
+        {
+            TutorialStagesHandler.instance.SetTutorialStage(TutorialStage.EnemyKill);
+        }
     }
 
     public void Cancel() {

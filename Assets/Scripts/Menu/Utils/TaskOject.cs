@@ -29,4 +29,12 @@ public class TaskOject : MonoBehaviour
     {
         animator.Play("TaskObjFadeOut");
     }
+
+    public void DestroyObj()
+    {
+        transform.parent = null;
+        TaskList.instance.InitTaskList();   
+        Destroy(gameObject);
+    }
+
 }

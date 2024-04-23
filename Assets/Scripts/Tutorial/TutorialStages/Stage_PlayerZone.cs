@@ -26,7 +26,7 @@ public class Stage_PlayerZone : MonoBehaviour, IStage
  
      public void OnDialogFinished()
      {
-         hasDialogFinished = true;
+         TutorialStagesHandler.instance.SetTutorialStage(TutorialStage.PickBuild);
      }
  
      public void OnUIInstruction()

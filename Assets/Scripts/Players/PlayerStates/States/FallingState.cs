@@ -12,6 +12,8 @@ namespace Players.PlayerStates.States
         }
         Vector3 moveDir;
         float airTime;
+        bool hasJumpAlmostAtTheGroud = false;
+        
         public override void StateEnter()
         {
             
@@ -21,13 +23,14 @@ namespace Players.PlayerStates.States
             moveDir = playerRef.move;
             this.playerRef.gravityMultiplier = 1;
             airTime = 0;
-
+            hasJumpAlmostAtTheGroud = false;
 
         }
 
         public override void StateExit()
         {
             //animation
+            
             networkAnimator.Animator.SetBool("Fall",false);
             networkAnimator.Animator.SetBool("Land",true);
             airTime = 0;
@@ -46,8 +49,8 @@ namespace Players.PlayerStates.States
             StateInput();
             airTime += Time.deltaTime;
 
-            if ((Input.GetKeyDown(KeyCode.Space)&&!playerRef.hasPlaned && airTime>playerRef.airTimeToPlane) || 
-                (Input.GetKeyDown(KeyCode.Space)&&stateMachineController.lastStateName== "Jump"&&!playerRef.hasPlaned))
+            if ((Input.GetKeyDown(KeyCode.LeftAlt)&&!playerRef.hasPlaned && airTime>playerRef.airTimeToPlane) || 
+                (Input.GetKeyDown(KeyCode.LeftAlt)&&stateMachineController.lastStateName== "Jump"&&!playerRef.hasPlaned))
             {
                 stateMachineController.SetState("Jetpack");
             }
@@ -56,6 +59,28 @@ namespace Players.PlayerStates.States
                 stateMachineController.SetState("Aiming");
             }
 
+            if (playerRef.isGrounded&& Input.GetKey(KeyCode.LeftShift))
+            {
+                stateMachineController.SetState("Sprint");
+                networkAnimator.Animator.Play("Movement");
+                return;
+            }
+
+            if (Input.GetKeyDown(KeyCode.Space)&& IsAlmostAtGround())
+            {
+                hasJumpAlmostAtTheGroud = true;
+            }
+            if (playerRef.isGrounded)
+            {
+                if (hasJumpAlmostAtTheGroud)
+                {
+                    stateMachineController.SetState("Jump");
+                    return;
+                }
+                stateMachineController.SetState("Movement");
+                playerRef._bodyVelocity= Vector3.zero;
+                return;
+            }
 
         }
         public override void StatePhysicsUpdate()
@@ -66,18 +91,17 @@ namespace Players.PlayerStates.States
         {
             playerRef.RotatePlayer();
             playerRef.ApplyGravity();
-            if (playerRef.isGrounded&& Input.GetKey(KeyCode.LeftShift))
-            {
-                stateMachineController.SetState("Sprint");
-                networkAnimator.Animator.Play("Movement");
-                return;
-            }
-            if (playerRef.isGrounded)
-            {
-                stateMachineController.SetState("Movement");
-                return;
-            }
+
         }
 
+        public bool IsAlmostAtGround()
+        {
+            if (Physics.Raycast(playerRef.transform.position + playerRef.sphereOffset,-playerRef.transform.up,out RaycastHit hit, playerRef.maxDistanceToJumpAgain, playerRef.GroundLayer))
+            {
+                Debug.Log("Ground detected");
+                return true;
+            }
+            return false;
+        }
     }
 }

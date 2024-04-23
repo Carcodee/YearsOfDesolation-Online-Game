@@ -355,15 +355,12 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
                     health.Value -= (damage);
                     StartCoroutine(playerComponentsHandler.ShakeCamera(0.3f, 5, 5));
                     playerVFXController.bloodEffectHandle.CreateVFX(takeDamagePosition.position,  Quaternion.identity,IsServer);
-                        
                 }
                 else
                 {
                     SetHealthServerRpc(health.Value - (damage));  
                     StartCoroutine(playerComponentsHandler.ShakeCamera(0.3f, 5, 5));
                     playerVFXController.bloodEffectHandle.CreateVFX(takeDamagePosition.position,  Quaternion.identity,IsServer);
-                    
-
                 }
                 playerVFXController.BodyDamageVFX();
                 CanvasController.OnUpdateUI?.Invoke();
@@ -662,7 +659,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
                     }
                     if (GameManager.Instance.isOnTutorial)
                     {
-                        TutorialStagesHandler.instance.SetTutorialStage(TutorialStage.ZoneComing);
+                        TutorialStagesHandler.instance.SetTutorialStage(TutorialStage.UpgradeBuild);
                         Debug.Log("Enterrreeed");
                         Destroy(coinPosition.gameObject);
                         coinPosition = null;

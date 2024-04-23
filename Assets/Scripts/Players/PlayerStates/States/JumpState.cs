@@ -15,8 +15,14 @@ namespace Players.PlayerStates.States
         public override void StateEnter()
         {
             base.StateEnter();
+            playerRef._bodyVelocity= Vector3.zero;
             playerRef.playerStats.playerVFXController.JumpVFX();
-            moveDir = playerRef.move;
+            float x = Input.GetAxis("Horizontal");
+            float y = Input.GetAxis("Vertical");
+
+            Vector3 dir = new Vector3(x, 0, y);
+            moveDir = dir;
+            playerRef.move = dir;
             this.playerRef.Jump();
             this.playerRef.gravityMultiplier = 1;
             networkAnimator.Animator.Play("Jump");
@@ -50,7 +56,7 @@ namespace Players.PlayerStates.States
             {
                 stateMachineController.SetState("Falling");
             }
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.LeftAlt))
             {
                 stateMachineController.SetState("Jetpack");
             }

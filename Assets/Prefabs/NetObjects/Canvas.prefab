@@ -7889,17 +7889,27 @@ MonoBehaviour:
   taskPrefab: {fileID: 509619730953295202, guid: 2e7cd93d6a4a7224fa2489f08b75b5e7,
     type: 3}
   tasksToCreate:
+  - description: Go there!
+    details: Reach your zone for more indicantions
+    number: 1
   - description: Pick a build
     details: Open build menu with B
-    number: 1
+    number: 2
   - description: Take Ammo
     details: Go to the indication
-    number: 2
+    number: 3
+  - description: Upgrade Build
+    details: Pick an upgrade in the build panel
+    number: 4
   - description: Kill the enemy
     details: There is an enemy close
-    number: 3
+    number: 5
+  - description: Die
+    details: the zone is coming...
+    number: 6
   container: {fileID: 8744399749590121784}
   animator: {fileID: 1785879455960443961}
+  maxListCount: 3
 --- !u!95 &1785879455960443961
 Animator:
   serializedVersion: 5

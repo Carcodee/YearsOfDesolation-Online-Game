@@ -64,7 +64,6 @@ public class TutorialManager : MonoBehaviour
         InitData();
         StartCoroutine(SetPlayerInPos());
         // CheckCurrentZoneToGo();
-        
     }
 
     public void SpawnCoinAtPos()
@@ -235,6 +234,8 @@ public enum TutorialStage
     PlayerZone,
     PickBuild,
     PickAmmo,
+    UpgradeBuild,
+    EnemyKill,
     ZoneComing
 }
 public enum ZoneToGo

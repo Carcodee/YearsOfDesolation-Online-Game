@@ -25,7 +25,6 @@ public class StartZone : MonoBehaviour, IStage
 
     public void OnDialogFinished()
     {
-        hasDialogFinished = true;
         TaskList.instance.gameObject.SetActive(true);
         TaskList.instance.StartTaskList();   
         
@@ -43,6 +42,8 @@ public class StartZone : MonoBehaviour, IStage
 
     public void OnStageEnded()
     {
-        
+        TaskList.instance.RemoveTaksObjFromKey("Go there!", 0);
     }
+    
 }
+

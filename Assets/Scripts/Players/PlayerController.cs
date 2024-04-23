@@ -100,6 +100,7 @@ public class PlayerController : NetworkBehaviour
     public float gravityMultiplier = 1f;
     public Vector3 _bodyVelocity;
     public bool hasPlaned = false;
+    public float maxDistanceToJumpAgain = 3;
 
     [Header("AnimConfigs")]
     public float moveAnimationSpeed;
@@ -115,6 +116,13 @@ public class PlayerController : NetworkBehaviour
     [Header("Reload")]
     bool hasStartedReloading=false;
     bool finishReload=false;
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(transform.position+ sphereOffset, Vector3.down*maxDistanceToJumpAgain);
+    }
+
     void Start()
     {
         cam= GetComponentInChildren<Camera>();

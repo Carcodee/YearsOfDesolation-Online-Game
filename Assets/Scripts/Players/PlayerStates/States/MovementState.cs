@@ -20,6 +20,7 @@ namespace Players.PlayerStates.States
             float x= Input.GetAxis("Horizontal");
             float y= Input.GetAxis("Vertical");
             Vector2 moveInputAtEnter = new Vector2(x, y);
+            networkAnimator.Animator.SetBool("Fall",false);
             if (moveInputAtEnter.magnitude>0.1f)
             {
                 networkAnimator.Animator.Play("Movement");

@@ -26,7 +26,6 @@ public class Stage_TakeAmmo : MonoBehaviour, IStage
 
     public void OnDialogFinished()
     {
-        hasDialogFinished = true;
         
     }
 
@@ -43,5 +42,8 @@ public class Stage_TakeAmmo : MonoBehaviour, IStage
     public void OnStageEnded()
     {
         
+        TaskList.instance.realTask.GetValueOrDefault("Take Ammo").Done();
+        TaskList.instance.tasksToCreate.RemoveAt(0);
+                
     }
 }

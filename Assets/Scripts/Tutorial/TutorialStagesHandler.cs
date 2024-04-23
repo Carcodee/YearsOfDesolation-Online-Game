@@ -54,6 +54,7 @@ public class TutorialStagesHandler : MonoBehaviour
     public void FinishDialogs()
     {
         currentStage.OnDialogFinished();
+        currentStage.hasDialogFinished = true;
         currentStage.OnUIInstruction();
     }
      public void FinishInstructions()
