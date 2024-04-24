@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using System.Linq;
 using System.Text;
 using Unity.Mathematics;
 using UnityEngine.TextCore.Text;
@@ -151,7 +152,9 @@ public class TutorialManager : MonoBehaviour
         // Debug.Log(tutorialTextData.id);
         tutorialTextData.specification = GetValueFromIndex(dialogCounter, 1);
         // Debug.Log(tutorialTextData.specification);
-        tutorialTextData.text =GetValueFromIndex(dialogCounter, 2+HUBCounter);
+        tutorialTextData.text =GetValueFromIndex(dialogCounter, 2+HUBCounter); 
+        tutorialTextData.text = AnaliseText(tutorialTextData.text, "red", true);
+        
         // Debug.Log(tutorialTextData.text);
         if (CheckNextHUB=="none")
         {
@@ -197,18 +200,45 @@ public class TutorialManager : MonoBehaviour
          }       
     }
 
-    public void AnaliseText(string text)
+    public string AnaliseText(string text, string color, bool bold)
     {
-        List<int> positionsToSave = new List<int>();
-        List<string> newWorld = new List<string>();
-        char[] textArray = text.ToCharArray();
-                   
-        for (int i = 0; i < textArray.Length; i++)
+
+        List<string> slicedStrings = new List<string>();
+        slicedStrings = text.Split('$', StringSplitOptions.None).ToList();
+        for (int i = 0; i < slicedStrings.Count; i++)
         {
-            if (textArray[i]=='<')
+            if (slicedStrings[i].Contains("key"))
             {
-            } 
+                int kPos = -1;
+                foreach (char charsInKey in slicedStrings[i])
+                {
+                    kPos++;
+                    if (charsInKey=='k')
+                    { 
+                        break; 
+                    }
+                } 
+                slicedStrings[i]= slicedStrings[i].Remove(kPos,3);
+                string prefix = $"<color={color}>"; 
+                string final = "</color>";
+                if (bold)
+                {
+                    prefix = prefix + "<b>";
+                    final = final + "</b>";
+                }
+
+                slicedStrings[i] = prefix + slicedStrings[i] + final;   
+
+            }
         }
+
+        string formatedString = "";
+        foreach (var slicedString in slicedStrings)
+        {
+            formatedString += slicedString;
+        }
+
+        return formatedString;
     }
     public struct DialogData
     {
