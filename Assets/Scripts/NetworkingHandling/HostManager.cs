@@ -18,6 +18,7 @@ namespace NetworkingHandling
         public string lobbyName;
         public string lobbyId;
         public string hostCode;
+        public int maxNumberOfPlayers = 8;
 
         public MyAllocation myAllocation=new MyAllocation();
 

@@ -55,22 +55,19 @@ using System.Collections.Generic;
                         value: "0"
                     )
                 };
-                var lobbies = await Lobbies.Instance.QueryLobbiesAsync(options);
-
-
                 
-                // for (int i = 1; i < lobbyList.childCount; i++)
-                // {
-                //     
-                //     Destroy(lobbyList.GetChild(i).gameObject);
-                //     
-                // }
+                await DeleteTask();
+                var lobbies = await Lobbies.Instance.QueryLobbiesAsync(options);
+                
+
+               
                 
                 for (int i = 0; i < lobbies.Results.Count; i++)
                 {
                     var item = Instantiate(lobbyPrefab,lobbyList);
                     item.Initialise(this, lobbies.Results[i]);
                     item.lobbyName.text = lobbies.Results[i].Name;
+                    item.playerCount.text = lobbies.Results[i].Players.Count.ToString()+"/8 players";
                     Debug.Log("Lobby: " + lobbies.Results[i].Name);
                 }
                 Debug.Log("Lobbies: " + lobbies.Results.Count);
@@ -110,7 +107,16 @@ using System.Collections.Generic;
             }
             isJoining = false;
         }
-        
+
+        public async Task DeleteTask()
+        {
+              
+            for (int i = 1; i < lobbyList.childCount; i++)
+            {
+                Destroy(lobbyList.GetChild(i).gameObject);
+            }
+               
+        }
         public async Task BeginConnection(Lobby lobby)
         { 
 
