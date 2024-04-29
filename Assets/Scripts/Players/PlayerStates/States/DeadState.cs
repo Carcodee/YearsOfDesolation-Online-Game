@@ -1,3 +1,4 @@
+using Demo_Project;
 using UnityEngine;
 
 namespace Players.PlayerStates.States
@@ -17,6 +18,11 @@ namespace Players.PlayerStates.States
     
         public override void StateEnter()
         {
+            // if (GameManager.Instance.isOnTutorial)
+            // {
+            //    playerRef.playerStats.GoMenuOnDead(); 
+            // }
+ 
             playerRef.lockShoot = true;
             currentRespawnTimer= 0;
             playerRef.sprintFactor = 1f;

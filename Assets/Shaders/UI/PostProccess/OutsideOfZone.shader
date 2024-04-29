@@ -58,7 +58,7 @@ Shader "Hidden/Shader/OutsideOfZone"
         float nDistance = distance/0.5;
 
         // Apply greyscale effect
-        float3 color = lerp(sourceColor, LinearToGamma20(sourceColor), _Intensity)*  float3(0.2126, 1, 1);
+        float3 color = lerp(sourceColor, LinearToGamma20(sourceColor), _Intensity)*  float3(1.0f, 0.2f, 0.2f);
          float timeBasedEffect = sin(_Time.y * 2.0 * 3.14159 * 0.5); // Oscillates every 2 seconds
     
         color = lerp(color, float3(0.0, 0.0, 0.0), nDistance * vigneeteIntensity * timeBasedEffect);

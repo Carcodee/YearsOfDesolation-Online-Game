@@ -23,6 +23,7 @@ public class PlayerController : NetworkBehaviour
     public Transform cinemachineCameraTarget;
     public CharacterController characterController;
     public PlayerComponentsHandler playerComponentsHandler;
+
     // public Collider [] ragdollColliders;
     // public Rigidbody[] ragdollRigidbodies;
     
@@ -528,16 +529,26 @@ public class PlayerController : NetworkBehaviour
                                 {
                                     TargetClientIds = new[] {objectRef.OwnerClientId}            
                                 }
-                            };
-                            objectRef.SpawnDamageTakenVFXClientRpc(objectRef.takeDamagePosition.position, Quaternion.identity, OwnerClientId, clientRpcParams);
-                            objectRef.playerVFXController.BodyDamageVFX();
+                            }; 
+                            if (objectRef.IsSpawned)
                             {
-                                objectRef.TakeDamageClientRpc((int)damageToDo, OwnerClientId);
-                                CrosshairCreator.OnHitDetected?.Invoke(hitData.hitType);
+                                objectRef.playerVFXController.BodyDamageVFX();
+                                objectRef.SpawnDamageTakenVFXClientRpc(objectRef.takeDamagePosition.position, Quaternion.identity, OwnerClientId, clientRpcParams);
+                                {
+                                    objectRef.TakeDamageClientRpc((int)damageToDo, OwnerClientId);
+                                    CrosshairCreator.OnHitDetected?.Invoke(hitData.hitType);
+                                }
+                                if (IsClient)
+                                {
+                                    objectRef.TakeDamageServerRpc((int)damageToDo, OwnerClientId);
+                                    CrosshairCreator.OnHitDetected?.Invoke(hitData.hitType);
+                                }
                             }
-                            if (IsClient)
+                            else
                             {
-                                objectRef.TakeDamageServerRpc((int)damageToDo, OwnerClientId);
+                                
+                                objectRef.playerVFXController.BodyDamageVFX();
+                                objectRef.TakeDamageOffline(damageToDo);
                                 CrosshairCreator.OnHitDetected?.Invoke(hitData.hitType);
                             }
                             

@@ -23,15 +23,33 @@ using System.Collections.Generic;
         bool isRefreshing = false;
         bool isJoining = false;
 
+        public bool isLobbyWindowOpen = false;
         public void OpenModalWindow()
         {
             modalWindowTabs.OpenWindow();
+        }
+
+        private void Update()
+        {
+            // if (isLobbyWindowOpen)
+            // {
+            //     var timer = HearthBeat();
+            // }
+            //
         }
 
         public void LoadTutorial()
         {
             networkSceneManager.StartTutorialHost();
             GameManager.Instance.isOnTutorial = true;
+        }
+
+        public async Task HearthBeat()
+        {
+            await Task.Delay(15);
+            
+            LoadAllLobbies();
+            
         }
         public async void LoadAllLobbies()
         {
@@ -58,19 +76,17 @@ using System.Collections.Generic;
                 
                 await DeleteTask();
                 var lobbies = await Lobbies.Instance.QueryLobbiesAsync(options);
-                
 
-               
-                
-                for (int i = 0; i < lobbies.Results.Count; i++)
-                {
-                    var item = Instantiate(lobbyPrefab,lobbyList);
-                    item.Initialise(this, lobbies.Results[i]);
-                    item.lobbyName.text = lobbies.Results[i].Name;
-                    item.playerCount.text = lobbies.Results[i].Players.Count.ToString()+"/8 players";
-                    Debug.Log("Lobby: " + lobbies.Results[i].Name);
-                }
-                Debug.Log("Lobbies: " + lobbies.Results.Count);
+      
+                    for (int i = 0; i < lobbies.Results.Count; i++)
+                    {
+                        var item = Instantiate(lobbyPrefab,lobbyList);
+                        item.Initialise(this, lobbies.Results[i]);
+                        item.lobbyName.text = lobbies.Results[i].Name;
+                        item.playerCount.text = lobbies.Results[i].Players.Count.ToString()+"/8 players";
+                        Debug.Log("Lobby: " + lobbies.Results[i].Name);
+                    }
+                    
             }
             catch (LobbyServiceException e)
             {

@@ -25,6 +25,7 @@ public class PlayerComponentsHandler : NetworkBehaviour
 
     [Header("UI and Gameplay Canvases")]
     public Canvas canvasObject;
+    public CanvasController canvasController;
     public Canvas canvasRenderer;
     
     public GameObject cameraPrefab;
@@ -180,6 +181,7 @@ public class PlayerComponentsHandler : NetworkBehaviour
         canvasObject = Instantiate(canvasPrefab,transform);
         canvasObject.worldCamera = camera;
         canvasObject.planeDistance = 0.35f;
+        canvasController = canvasObject.GetComponent<CanvasController>();
 
         canvasRenderer= Instantiate(UIRenderer,transform);
         playerNameText = canvasObject.GetComponentInChildren<TextMeshProUGUI>();

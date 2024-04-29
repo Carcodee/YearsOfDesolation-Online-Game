@@ -70,6 +70,7 @@ public class CanvasController : MonoBehaviour
     private int stackPointer=1;
     private int maxStackPointer=1;
     public HealthType[] healths;
+    
     [ColorUsage(true, true)]
     public Color hdr_col;
     private MaterialPropertyBlock _propBlock;
@@ -139,9 +140,12 @@ public class CanvasController : MonoBehaviour
         // OnEnemyKilled += KillNotification; 
         playerAssigned.enemyKilled.OnValueChanged += KillNotification;
 
-        for (int i = 0; i < ObjectsToDeactivateOnTutorial.Length; i++)
+        if (GameManager.Instance.isOnTutorial)
         {
-           ObjectsToDeactivateOnTutorial[i].SetActive(false); 
+            for (int i = 0; i < ObjectsToDeactivateOnTutorial.Length; i++)
+            {
+               ObjectsToDeactivateOnTutorial[i].SetActive(false); 
+            }
         }
     }
 

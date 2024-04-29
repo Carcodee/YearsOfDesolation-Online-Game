@@ -275,12 +275,14 @@ public class GameController : NetworkBehaviour
         if (started.Value && !mapLogic.Value.isBattleRoyale)
         {
             farmStageTimer += Time.deltaTime;
-       if (farmStageTimer >= mapLogic.Value.totalTime) {
+            if (farmStageTimer >= mapLogic.Value.totalTime) {
+                
                 if (IsServer)
                 {
                     mapLogic.Value.isBattleRoyale = true;
                     SendMapBattleRoyaleValueClientRpc(true);
                 }
+                
             }
         }
 

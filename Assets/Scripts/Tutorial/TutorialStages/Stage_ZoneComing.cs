@@ -22,7 +22,10 @@ public class Stage_ZoneComing : MonoBehaviour,IStage
          TutorialManager.instance.DisplayTutorialData(dialogCounter);
          PlayerComponentsHandler.IsCurrentDeviceMouse = true;
          F_In_F_Out_Obj.OnInfoTextDisplayed?.Invoke(TutorialManager.instance.tutorialTextData.text);
-         
+         GameController.instance.started.Value = true;
+         GameController.instance.mapLogic.Value.isBattleRoyale = true;
+
+
      }
  
      public void OnDialogFinished()

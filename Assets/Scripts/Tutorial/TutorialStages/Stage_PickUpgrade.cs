@@ -46,6 +46,5 @@ public class Stage_PickUpgrade : MonoBehaviour,IStage
     public void OnStageEnded()
     {
         TaskList.instance.RemoveTaksObjFromKey("Upgrade Build",0);
-        
     }
 }

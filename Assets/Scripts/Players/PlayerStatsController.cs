@@ -4,6 +4,7 @@ using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using Random = Unity.Mathematics.Random;
 
@@ -328,13 +329,21 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
 
     }
 
+    public void GoMenuOnDead()
+    {
+        if (health.Value<=0&& GameController.instance.mapLogic.Value.isBattleRoyale)
+        {
+            SceneManager.LoadScene("Menu");
+            Destroy(gameObject);
+        }
+    }
     public void TakeDamage(float damage)
     {
         if (IsOwner)
         {
             if (stateMachineController.currentState.stateName == "Dead" && GameController.instance.mapLogic.Value.isBattleRoyale)
             {
-                Application.Quit();
+                // Application.Quit();
                 return;
             }
             if (stateMachineController.currentState.stateName == "Dead" || health.Value<=0)
@@ -369,13 +378,33 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
         }
     }
 
+    public void TakeDamageOffline(float damage)
+    {
+            //this is wrong stat holder is controlling the health
+            health.Value -= (damage);
+            if (health.Value<=0)
+            { 
+                Instantiate(playerVFXController.OnDeadEffectPrefab, transform.position, quaternion.identity);
+                if (GameManager.Instance.isOnTutorial)
+                {
+                    TutorialStagesHandler.instance.SetTutorialStage(TutorialStage.ZoneComing);
+                }
+                Destroy(gameObject); 
+                return;
+            }
+            playerVFXController.bloodEffectHandle.CreateVFX(takeDamagePosition.position,  Quaternion.identity,IsServer);
+            playerVFXController.bloodEffectHandle.CreateVFX(takeDamagePosition.position,  Quaternion.identity,IsServer);
+            playerVFXController.BodyDamageVFX();
+            // OnStatsChanged?.Invoke();
+    }
+
     [ServerRpc(RequireOwnership = false)]
     public void TakeDamageServerRpc(int myDamage, ulong clientId)
     {
         //TODO> money is being added to the player that is dead
         TakeDamageClientRpc(myDamage, clientId);
     }
-
+    
     [ServerRpc]
     public void CallServerOnDeadServerRpc(int zoneAssigned)
     {

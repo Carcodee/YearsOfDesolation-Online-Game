@@ -25,13 +25,7 @@ public class PlayerVFXController : NetworkBehaviour
     public float shaderVariableRate=0.1f;
     public float shaderVariableRefreshRate=0.05f;
 
-    [Header("LevelUpGlow")]
-    public Material levelUpMat;
-    public float levelUpGlowTime= 0.05f;
-    public float shaderVariableGlowRate = 0.1f;
-    public float glowGoalValue= -7.0f;
-    public string shaderVariableNameGlow;
-    
+   
     public GameObject applyPointsEffectPrefabVFX;
     public GameObject levelUpEffectPrefabVFX;
 
@@ -325,11 +319,6 @@ public class PlayerVFXController : NetworkBehaviour
     public void HitEffectClientRpc(Vector3 position)
     {
         Instantiate(hitEffectPrefab, position, Quaternion.identity);
-    }
-    public void AnimateGlowMaterial()
-    {
-        levelUpMat.GetFloat("_FresnelIntensity");
-        StartCoroutine(AnimateMaterial(levelUpMat, glowGoalValue, shaderVariableGlowRate, levelUpGlowTime, shaderVariableNameGlow));
     }
     public IEnumerator ActiveTrail(float timeActive)
     {

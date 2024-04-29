@@ -22,7 +22,7 @@ public class ChangingWeaponState : PlayerStateBase
         bool isAimingInAtLastFrame;
         public override void StateEnter()
         {
-            playerRef.sprintFactor = 1;
+            // playerRef.sprintFactor = 1;
             playerRef.hasPlaned = false;
             networkAnimator.Animator.SetFloat("Aiming", 0);
             playerRef.playerStats.playerComponentsHandler.cinmachineCloseLookCameraIntance.Priority = 5;
