@@ -114,7 +114,7 @@ public class CanvasController : MonoBehaviour
     public CanvasGroup coinImageGroup;
     public TextMeshProUGUI distanceToCoinText;
 
-    public GameObject []ObjectsToDeactivateOnTutorial;
+    public GameObject [] ObjectsToDeactivateOnTutorial;
     void Start()
     {
     
@@ -493,7 +493,7 @@ public class CanvasController : MonoBehaviour
                 FarmShowed = true;                
             }
 
-            float temp =  GameController.instance.mapLogic.Value.totalTime - GameController.instance.farmStageTimer;
+            float temp =  GameController.instance.mapLogic.Value.totalTime - GameController.instance.currentFarmStageTimer;
             timeLeft.text = "Farm time: " + temp.ToString("0.0");
 
             timeLeftBarText.text = "Current Stage: Farm";

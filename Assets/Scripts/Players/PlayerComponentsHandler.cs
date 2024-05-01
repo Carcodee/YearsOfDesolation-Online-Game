@@ -10,6 +10,8 @@ using UnityEngine.UI;
 using StarterAssets;
 using UnityEngine.InputSystem;
 using Unity.VisualScripting;
+using UnityEditor.VersionControl;
+using Task = System.Threading.Tasks.Task;
 
 public class PlayerComponentsHandler : NetworkBehaviour
 {
@@ -66,31 +68,27 @@ public class PlayerComponentsHandler : NetworkBehaviour
     public static bool IsCurrentDeviceMouse=false;
     private const float _threshold = 0;
 
+    public bool ready = false;
     
+    public List<GameObject> objectsToDisable= new List<GameObject>();
 
+    public CameraType playerCameraType;
     public override void OnNetworkSpawn()
     {
+
         if (IsOwner)
         {
             InstanciateComponents();
+            
+            
+            var task=DeactiveNotOwnerObjects();
 
             // Attach input events
             playerInput.onActionTriggered += HandleAction;
         }
-
+        
     }
-    private void Awake()
-    {
-        if (IsOwner)
-        {
 
-        }
-    }
-    void Start()
-    {
-
-
-    }
     void Update()
     {
         if (IsOwner)
@@ -136,6 +134,31 @@ public class PlayerComponentsHandler : NetworkBehaviour
         return IsCurrentDeviceMouse;
     }
 
+    // public void SerCameraType(CameraType cameraType)
+    // {
+    //     if (cameraType==playerCameraType)return;
+    //     switch (cameraType)
+    //     {
+    //         case CameraType.NormalCamera:
+    //             cinemachineVirtualCameraInstance.Priority = 10;
+    //             cinmachineCloseLookCameraIntance.Priority = 5;
+    //             cinmachineSprintCameraIntance.Priority = 5;
+    //             break;
+    //         case CameraType.CloseLook:
+    //             cinmachineCloseLookCameraIntance.Priority =10;
+    //             cinmachineSprintCameraIntance.Priority = 5;
+    //             cinemachineVirtualCameraInstance.Priority = 5;
+    //             break;
+    //         case CameraType.Sprint:
+    //             cinmachineSprintCameraIntance.Priority = 10;
+    //             cinmachineCloseLookCameraIntance.Priority = 5;
+    //             cinemachineVirtualCameraInstance.Priority = 5;
+    //             break;
+    //         default:
+    //             throw new ArgumentOutOfRangeException(nameof(cameraType), cameraType, null);
+    //     }
+    // }
+
     void InstanciateComponents()
     {
         playerInput = GetComponent<PlayerInput>();
@@ -162,7 +185,10 @@ public class PlayerComponentsHandler : NetworkBehaviour
         cinmachineSprintCameraIntance.Follow = cinemachineCameraTarget;
         
         //Minimap
-        playerMinimapCamera.transform.SetParent(null);
+        playerMinimapCamera.transform.SetParent(null); 
+        objectsToDisable.Add(camera);
+        objectsToDisable.Add(cameraZoom);
+        objectsToDisable.Add(sprintCamera);
         //Canvas
         // canvasObject = Instantiate(canvasPrefab,transform);
         // canvasObject.GetComponentInChildren<Button>().onClick.AddListener(transform.GetComponent<PlayerStatsController>().OnSpawnPlayer);
@@ -171,11 +197,20 @@ public class PlayerComponentsHandler : NetworkBehaviour
         // pauseController = GetComponentInChildren<PauseController>();
 
 
+
         //rb = GetComponent<Rigidbody>();
         //rb.isKinematic = true;
     }
 
 
+    public async Task DeactiveNotOwnerObjects()
+    {
+        for (int i = 0; i < objectsToDisable.Count; i++)
+        {
+            objectsToDisable[i].SetActive(IsOwner);
+        }
+
+    }
     public void CreateCanvas(Camera camera)
     {
         canvasObject = Instantiate(canvasPrefab,transform);
@@ -230,21 +265,27 @@ public class PlayerComponentsHandler : NetworkBehaviour
     private void TransitionCamera()
     {
         
-        if (Input.GetKeyDown(KeyCode.Mouse1))
+        if (Input.GetKeyDown(KeyCode.Mouse1)&& !playerController.isSprinting)
         {
             cinmachineCloseLookCameraIntance.Priority = 25;
+            
+            cinmachineCloseLookCameraIntance.gameObject.SetActive(true);
+            // return;
         }
-        if (Input.GetKeyUp(KeyCode.Mouse1))
+        if (Input.GetKeyUp(KeyCode.Mouse1) || playerController.isSprinting)
         {
             cinmachineCloseLookCameraIntance.Priority = 5;
+            cinmachineCloseLookCameraIntance.gameObject.SetActive(false);
         }
         if (playerController.isSprinting)
         {
             cinmachineSprintCameraIntance.Priority = 20;
+            cinmachineSprintCameraIntance.gameObject.SetActive(true);
         }   
         if (!playerController.isSprinting)
         {
             cinmachineSprintCameraIntance.Priority = 5;
+            cinmachineSprintCameraIntance.gameObject.SetActive(false);
         }
     }
     
@@ -266,4 +307,11 @@ public class PlayerComponentsHandler : NetworkBehaviour
         MyUtilities.StopCameraShake(cinmachineSprintCameraIntance);
         
     }
+}
+
+public enum CameraType 
+{
+    NormalCamera,
+    CloseLook,
+    Sprint
 }

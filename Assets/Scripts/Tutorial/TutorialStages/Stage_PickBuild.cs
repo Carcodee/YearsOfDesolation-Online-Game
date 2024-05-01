@@ -20,12 +20,15 @@ public class Stage_PickBuild : MonoBehaviour,IStage
     public void OnDialogDisplayed()
     {
         
+        TutorialManager.instance.playerRef.canMove = false;
+        
         PlayerComponentsHandler.IsCurrentDeviceMouse = true;
     }
 
     public void OnDialogFinished()
     {
         
+        TutorialManager.instance.playerRef.canMove = true;
     }
 
     public void OnUIInstruction()

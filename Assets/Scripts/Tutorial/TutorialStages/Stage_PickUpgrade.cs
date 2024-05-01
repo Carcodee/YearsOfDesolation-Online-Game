@@ -20,6 +20,7 @@ public class Stage_PickUpgrade : MonoBehaviour,IStage
 
     public void OnDialogDisplayed()
     {
+        TutorialManager.instance.playerRef.canMove = false;
         
         TutorialManager.instance.DisplayTutorialData(dialogCounter);
         PlayerComponentsHandler.IsCurrentDeviceMouse = true;
@@ -30,6 +31,7 @@ public class Stage_PickUpgrade : MonoBehaviour,IStage
 
     public void OnDialogFinished()
     {
+        TutorialManager.instance.playerRef.canMove = true;
         
     }
 

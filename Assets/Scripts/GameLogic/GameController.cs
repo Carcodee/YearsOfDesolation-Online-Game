@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
@@ -15,8 +16,8 @@ public class GameController : NetworkBehaviour
     public NetworkVariable<float> netTimeToStart = new NetworkVariable<float>();
     public float waitingTime;
 
-    [Header("MapLogic")]
-    public float farmStageTimer;
+    [Header("MapLogic")] 
+    public float currentFarmStageTimer=0;
     public List<Transform> players=new List<Transform>();
     public NetworkVariable<MapLogic> mapLogic = new NetworkVariable<MapLogic>();
     public NetworkVariable<int> numberOfPlayers = new NetworkVariable<int>();
@@ -24,7 +25,7 @@ public class GameController : NetworkBehaviour
     public NetworkVariable <Vector3> randomPoint = new NetworkVariable<Vector3>();
     public Transform sphereRadiusMesh;
     
-    public int timeToFarm=20;
+    public int timeToFarm=120;
     public float reduceZoneSpeed=2.0f;
     public float zoneRadius=2.0f;
     public int respawnTime=5;
@@ -52,9 +53,6 @@ public class GameController : NetworkBehaviour
         {
             Destroy(this);
         }
-
-  
-
     }
     private void OnEnable()
     {
@@ -68,14 +66,8 @@ public class GameController : NetworkBehaviour
 
     void Start()
     {
-        if (GameManager.Instance.isOnTutorial)
-        {
-            
-        }
-        else
-        {
-           LoadGameOptions(); 
-        }
+       
+        LoadGameOptions(); 
 
 
 
@@ -83,7 +75,6 @@ public class GameController : NetworkBehaviour
 
     public void LoadTutorialOptions()
     {
-        
         SetMapLogicClientServerRpc(numberOfPlayers.Value, numberOfPlayersAlive.Value, reduceZoneSpeed, timeToFarm, 3, zoneRadius);
     }
     public void LoadGameOptions()
@@ -132,6 +123,7 @@ public class GameController : NetworkBehaviour
         if (!GameManager.Instance.isOnTutorial)
         {
             UpdateTime();
+            Debug.Log(mapLogic.Value.isBattleRoyale);
         }
 
         
@@ -156,23 +148,23 @@ public class GameController : NetworkBehaviour
     /// </summary>
     public void StartGame()
     {
-            for (int i = 0; i < numberOfPlayers.Value; i++)
+        for (int i = 0; i < numberOfPlayers.Value; i++)
+        {
+
+            if (IsOwner)
             {
 
-                if (IsOwner)
-                {
+                CreateZonesOnNet(i);
 
-                    CreateZonesOnNet(i);
-
-                }
-
-                if (IsServer)
-                {
-                    SetPlayerPosClientRpc(zoneControllers[i].playerSpawn.position, i);
-                }
             }
-            // if (IsServer) SpawnCoins();
-            started.Value = true;
+
+            if (IsServer)
+            {
+                SetPlayerPosClientRpc(zoneControllers[i].playerSpawn.position, i);
+            }
+        }
+        // if (IsServer) SpawnCoins();
+        started.Value = true;
     }
 
 
@@ -274,8 +266,8 @@ public class GameController : NetworkBehaviour
         }
         if (started.Value && !mapLogic.Value.isBattleRoyale)
         {
-            farmStageTimer += Time.deltaTime;
-            if (farmStageTimer >= mapLogic.Value.totalTime) {
+            currentFarmStageTimer += Time.deltaTime;
+            if (currentFarmStageTimer >= mapLogic.Value.totalTime) {
                 
                 if (IsServer)
                 {

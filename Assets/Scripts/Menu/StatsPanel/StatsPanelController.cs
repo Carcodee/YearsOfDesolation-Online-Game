@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Michsky.UI.ModernUIPack;
 using TMPro;
 using UnityEngine;
@@ -10,9 +11,8 @@ namespace Menu.StatsPanel
 {
     public class StatsPanelController : MonoBehaviour
     {
-        public UnityAction OnPannelOpen;
-        public UnityAction OnPannelClosed;
-
+        public static Action OnPanelClosed;
+        public static Action OnPanelOpen;
         [Header("References")] [SerializeField]
         private PlayerStatsController playerStatsController;
 
@@ -60,21 +60,13 @@ namespace Menu.StatsPanel
         public Animator moneyAnimator;
 
 
+        public GameObject [] objectsToDeactivate;
+        public bool hasBeenDeactivated;
         [Header("FadeIn_FadeOut")] 
         
         public F_In_F_Out_Obj[] f_In_F_Out_Obj;
-        private void OnEnable()
-        {
-            OnPannelOpen += OpenPanel;
-            OnPannelClosed += ClosePanel;
-        }
 
-        private void OnDisable()
-        {
-            OnPannelOpen -= OpenPanel;
-            OnPannelClosed -= ClosePanel;
-        }
-
+        public bool Ready=false;
         void Start()
         {
 
@@ -89,11 +81,14 @@ namespace Menu.StatsPanel
                 buildObjectsPairs[i].InitialiseBuilds();
                 buildObjectsPairs[i].SetReferences(playerStatsController);
                 buildObjectsPairs[i].DisplayBuilds();
-                
             }
             currentMoney.text = (playerStatsController.GetAvaliblePoints()*10).ToString()+ "$";
 
             playerStatsController.avaliblePoints.OnValueChanged+=AddMoneyAnimationOnPanel;
+            OnPanelClosed += Deactivate;
+            OnPanelOpen += ActivatePanel;
+            WaitForSetup();
+            
         }
         public void AddMoneyAnimationOnPanel(int oldVal, int newVal)
         {
@@ -102,6 +97,7 @@ namespace Menu.StatsPanel
             moneyAnimator.Play("MoneyAddedOnPanel");
 
         }
+        
         void Update()
         {
             if (Input.GetKeyDown(KeyCode.B))
@@ -111,13 +107,14 @@ namespace Menu.StatsPanel
 
                 if (isPanelOpen)
                 {
-                    
                     PostProccesingManager.instance.LerpActivateMenuBlur();
                     PlayerComponentsHandler.IsCurrentDeviceMouse = true;
                     isPanelRefreshed = false;
+                    
                 }
                 else
                 {
+                    hasBeenDeactivated = true;
                     F_In_F_Out_Obj.OnFadeOutSkillElements?.Invoke();
                     PlayerComponentsHandler.IsCurrentDeviceMouse = false;
                     PostProccesingManager.instance.LerpDeactivateMenuBlur();
@@ -141,7 +138,26 @@ namespace Menu.StatsPanel
             AnimatePanel();
             // HandleSelector();
         }
-        
+
+        public async void WaitForSetup()
+        {
+            await Task.Delay(400);
+            gameObject.SetActive(false);
+            Ready = true;
+        }
+
+        public void ActivatePanel()
+        {
+            isPanelOpen = true;
+            PostProccesingManager.instance.LerpActivateMenuBlur();
+            PlayerComponentsHandler.IsCurrentDeviceMouse = true;
+            isPanelRefreshed = false;
+        }
+
+        public void Deactivate()
+        {
+            gameObject.SetActive(false);
+        }
         public void LoadBuildObject()
         {
             buildObject.gameObject.SetActive(true);
@@ -166,6 +182,11 @@ namespace Menu.StatsPanel
 
             float xPos = Mathf.Lerp(startPos.x, endPos.x, animationFunction);
             transform.localPosition = new Vector3(xPos, transform.localPosition.y, 0);
+            
+            if (animationTime<=0)
+            {
+                OnPanelClosed.Invoke();
+            }
         }
 
 

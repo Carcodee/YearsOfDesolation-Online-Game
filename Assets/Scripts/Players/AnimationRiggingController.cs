@@ -76,7 +76,6 @@ public class AnimationRiggingController : MonoBehaviour
         {
            return;   
         }
-        Debug.Log(playerStatsController.playerStats.currentWeaponSelected.weaponObjectController.useTwoBoneIK);
         if (playerStatsController.playerStats.currentWeaponSelected.weaponObjectController.useTwoBoneIK)
         {
            twoBoneIKConstraint.weight = 1;

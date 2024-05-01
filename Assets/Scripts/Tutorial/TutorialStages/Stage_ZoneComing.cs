@@ -19,18 +19,21 @@ public class Stage_ZoneComing : MonoBehaviour,IStage
  
      public void OnDialogDisplayed()
      {
-         TutorialManager.instance.DisplayTutorialData(dialogCounter);
-         PlayerComponentsHandler.IsCurrentDeviceMouse = true;
-         F_In_F_Out_Obj.OnInfoTextDisplayed?.Invoke(TutorialManager.instance.tutorialTextData.text);
-         GameController.instance.started.Value = true;
-         GameController.instance.mapLogic.Value.isBattleRoyale = true;
+        TutorialManager.instance.DisplayTutorialData(dialogCounter);
+        PlayerComponentsHandler.IsCurrentDeviceMouse = true;
+        F_In_F_Out_Obj.OnInfoTextDisplayed?.Invoke(TutorialManager.instance.tutorialTextData.text);
+        GameController.instance.started.Value = true;
+        
+        GameController.instance.mapLogic.Value.isBattleRoyale = true;
 
+        TutorialManager.instance.playerRef.canMove = false;
 
      }
  
      public void OnDialogFinished()
      {
          
+        TutorialManager.instance.playerRef.canMove = true;
      }
  
      public void OnUIInstruction()

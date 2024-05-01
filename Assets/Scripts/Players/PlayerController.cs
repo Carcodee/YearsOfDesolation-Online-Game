@@ -30,9 +30,9 @@ public class PlayerController : NetworkBehaviour
     //TODO : Refactor this cam thing
     [Header("CAMERAS")]
     public Camera cam;
-    public Camera UICam;
-    public Camera gameplayCam;
-
+    
+    
+    
     [SerializeField] private Transform body;
     [SerializeField] private Camera cameraRef;
     public Camera topViewCamera;
@@ -56,6 +56,7 @@ public class PlayerController : NetworkBehaviour
 
     [Header("Hit data")]
     public LayerMask playerHitLayer;
+    public LayerMask enemyLayer;
     public string [] hitTags;
     public int HeadShotDamage => (int) playerStats.GetDamageDone() * 2;
     public int legsShotDamage =>(int) playerStats.GetDamageDone() / 2;
@@ -92,7 +93,7 @@ public class PlayerController : NetworkBehaviour
     float yRotation = 0f;
 
     public bool lockShoot=false;
-    
+    public bool canMove = true;
     
     [Header("Jumping")]
     [SerializeField] private float jumpHeight = 5f;
@@ -126,16 +127,28 @@ public class PlayerController : NetworkBehaviour
 
     void Start()
     {
+        if (!IsOwner)
+        {
+        }
         cam= GetComponentInChildren<Camera>();
         cam.enabled = IsOwner;
-        UICam.enabled = IsOwner;
-        topViewCamera.enabled = IsOwner;
-        gameplayCam.enabled = IsOwner;
-        if (!cam)
-        {
-            Destroy(cam);
-            Destroy(topViewCamera);
-        }
+        // UICam.enabled = IsOwner;
+        // topViewCamera.enabled = IsOwner;
+        // gameplayCam.enabled = IsOwner;
+        //
+        // cam.gameObject.SetActive(IsOwner);
+        // topViewCamera.gameObject.SetActive(IsOwner);
+        // gameplayCam.gameObject.SetActive(IsOwner);
+        // UICam.gameObject.SetActive(IsOwner);
+
+
+        // if (!cam)
+        // {
+        //     Destroy(cam);
+        //     Destroy(topViewCamera);
+        //     
+        // }
+        
         if (IsOwner)
         {
             // ak_99 = new Weapon(new AmmoBehaviour(100, 30, 30, 3),"Ak", 0.1f,
@@ -151,7 +164,7 @@ public class PlayerController : NetworkBehaviour
             // DoRagdoll(false);
             playerStats.currentWeaponSelected.weapon.shootRefraction = 0.1f;
             playerStats.OnWeaponChanged+= SetSpawnPoint;
-            playerComponentsHandler.CreateCanvas(UICam);
+            playerComponentsHandler.CreateCanvas(cam);
             airTimeToPlane = 1;
         }
 
@@ -173,36 +186,34 @@ public class PlayerController : NetworkBehaviour
             {
                 playerStats.currentWeaponSelected.weapon.shootTimer = playerStats.currentWeaponSelected.weapon.shootRate.statValue+0.1f;
             }
+
+            if (!canMove&& isGrounded)
+            {
+                move=Vector3.zero;
+                return;
+            }
             stateMachineController.StateUpdate();
 
             if (playerComponentsHandler.IsPlayerLocked())
             {
-                // stateMachineController.SetState("Movement");
-                // move = Vector3.zero;
+                isAiming = false;
                 return;
             }
 //NO SHOOT
 
             Shoot();
-            if (Input.GetKey(KeyCode.Mouse1))
+            if (Input.GetKeyDown(KeyCode.Mouse1)&& !isSprinting)
             {
+                isAiming=true;
                 this.stateMachineController.networkAnimator.Animator.SetFloat("X", this.move.x);
                 this.stateMachineController.networkAnimator.Animator.SetFloat("Y", this.move.z);
-                //this.playerRef.AimAinimation(ref aimAnimation,networkAnimator);
                 stateMachineController.networkAnimator.Animator.SetFloat("Aiming", 1);
-            }
-            else
-            {
-                stateMachineController.networkAnimator.Animator.SetFloat("Aiming", 0);
-            }
-
-            if (Input.GetKeyDown(KeyCode.Mouse1))
-            {
                 playerStats.currentWeaponSelected.weapon.shootRefraction = 0.01f;
             }
-
-            if (Input.GetKeyUp(KeyCode.Mouse1))
+            if (Input.GetKeyUp(KeyCode.Mouse1)|| isSprinting)
             {
+                isAiming = false;
+                stateMachineController.networkAnimator.Animator.SetFloat("Aiming", 0);
                 playerStats.currentWeaponSelected.weapon.shootRefraction = 0.1f; 
             }
 

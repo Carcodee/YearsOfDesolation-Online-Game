@@ -42,6 +42,7 @@ public class NetworkSceneManager : NetworkBehaviour
         // instance = this;
         _transport= FindObjectOfType<UnityTransport>();
 
+
         await Authenticate();
 
         
@@ -91,6 +92,7 @@ public class NetworkSceneManager : NetworkBehaviour
 // #endif
 //         var options = new InitializationOptions();
 //         options.SetProfile("DefaultProfile");
+        if (AuthenticationService.Instance.IsSignedIn)return;
         AuthenticationService.Instance.SwitchProfile(UnityEngine.Random.Range(0, 1000000).ToString());
 
         await AuthenticationService.Instance.SignInAnonymouslyAsync();

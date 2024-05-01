@@ -23,11 +23,13 @@ public class Stage_TakeAmmo : MonoBehaviour, IStage
         PlayerComponentsHandler.IsCurrentDeviceMouse = true;
         F_In_F_Out_Obj.OnInfoTextDisplayed?.Invoke(TutorialManager.instance.tutorialTextData.text);
         
+        TutorialManager.instance.playerRef.canMove = false;
     }
 
     public void OnDialogFinished()
     {
         
+        TutorialManager.instance.playerRef.canMove = true;
     }
 
     public void OnUIInstruction()

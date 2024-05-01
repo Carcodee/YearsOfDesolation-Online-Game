@@ -52,6 +52,13 @@ namespace NetworkingHandling
             hostCode= await RelayService.Instance.GetJoinCodeAsync(_allocation.AllocationId);
             SetRelayTransport(transport);
         }
+
+        public async Task DisconnectHost()
+        {
+            NetworkManager.Singleton.Shutdown();
+            if (NetworkManager.Singleton.ShutdownInProgress) await Task.Yield();
+            
+        }
         public async Task StartHost()
         {
             

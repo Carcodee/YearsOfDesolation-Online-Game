@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Menu.StatsPanel;
 using Michsky.UI.Heat;
 using TMPro;
 using Unity.Mathematics;
@@ -52,12 +54,47 @@ public class PauseController : MonoBehaviour
     [Header("Ref")]
     public PlayerController playerAssigned;
     public CrosshairCreator playerCrosshair;
+    
+    public GameObject SkillPanel;
 
+    // Update is called once per frame
+    void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Escape) && !pauseMenu.activeSelf)
+        {
+            PlayerComponentsHandler.IsCurrentDeviceMouse = true;
+            PauseGame();
+        }
+        else if(Input.GetKeyDown(KeyCode.Escape) && pauseMenu.activeSelf)
+        {
 
+            PlayerComponentsHandler.IsCurrentDeviceMouse = false;
+            ResumeGame();
+            if (!GameManager.Instance.isOnTutorial)return;
+            if (!TutorialStagesHandler.instance.currentStage.hasDialogFinished)PlayerComponentsHandler.IsCurrentDeviceMouse = true;
+
+        }
+
+        if (Input.GetKeyDown(KeyCode.B)&& !SkillPanel.activeSelf)
+        {
+            
+            if (GameManager.Instance.isOnTutorial && !TutorialStagesHandler.instance.stagesDone.Any(x=> x.stage==TutorialStage.PlayerZone))
+            { 
+                return;
+            }
+            SkillPanel.SetActive(true);
+            StatsPanelController.OnPanelOpen.Invoke();
+        }
+
+    }
     public void ConfirmChanges()
     {
         playerCrosshair.crossHair.CopyCrosshair(crosshairCreator.crossHair);
     }
+
+    
+
+
     public void TogleStatic()
     {
         crosshairCreator.crossHair.isStatic = !staticToggle.isOn;
@@ -92,24 +129,7 @@ public class PauseController : MonoBehaviour
     
 
     
-    // Update is called once per frame
-    void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.Escape) && !pauseMenu.activeSelf)
-        {
-            PlayerComponentsHandler.IsCurrentDeviceMouse = true;
-            PauseGame();
-        }
-        else if(Input.GetKeyDown(KeyCode.Escape) && pauseMenu.activeSelf)
-        {
-
-            PlayerComponentsHandler.IsCurrentDeviceMouse = false;
-            ResumeGame();
-            if (!GameManager.Instance.isOnTutorial)return;
-            if (!TutorialStagesHandler.instance.currentStage.hasDialogFinished)PlayerComponentsHandler.IsCurrentDeviceMouse = true;
-
-        }    
-    }
+    
     public void ExitGame()
     {
         Application.Quit();

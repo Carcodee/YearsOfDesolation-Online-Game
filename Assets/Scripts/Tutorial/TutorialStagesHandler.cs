@@ -8,6 +8,7 @@ public class TutorialStagesHandler : MonoBehaviour
     public static TutorialStagesHandler instance;
     public GameObject []tutorialStages;
     public List<IStage> stages= new List<IStage>();
+    public HashSet<IStage> stagesDone= new HashSet<IStage>();
     public IStage currentStage;
     private void Start()
     {
@@ -25,6 +26,11 @@ public class TutorialStagesHandler : MonoBehaviour
         if (currentStage.hasDialogFinished && currentStage.hasUIIndicationsFinished)
         {
            currentStage.OnStageGoing(); 
+        }
+
+        foreach (var stage in stagesDone)
+        {
+            Debug.Log(stage.stage);
         }
     }
 
@@ -51,6 +57,7 @@ public class TutorialStagesHandler : MonoBehaviour
         {
             currentStage.OnStageEnded();
             currentStage.wasStageCompleted = true;
+            stagesDone.Add(currentStage);
             currentStage = newStage;
             currentStage.OnDialogDisplayed();
         }

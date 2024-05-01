@@ -22,12 +22,14 @@ public class StartZone : MonoBehaviour, IStage
         TutorialManager.instance.DisplayTutorialData(dialogCounter);
         PlayerComponentsHandler.IsCurrentDeviceMouse = true;
         F_In_F_Out_Obj.OnInfoTextDisplayed?.Invoke(TutorialManager.instance.tutorialTextData.text);
+        TutorialManager.instance.playerRef.canMove = false;
     }
 
     public void OnDialogFinished()
     {
         TaskList.instance.gameObject.SetActive(true);
         TaskList.instance.StartTaskList();   
+        TutorialManager.instance.playerRef.canMove = true;
         
     }
 

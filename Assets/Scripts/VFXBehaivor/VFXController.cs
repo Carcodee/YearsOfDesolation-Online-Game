@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 public class VFXController : MonoBehaviour
 {
@@ -24,6 +25,7 @@ public class VFXController : MonoBehaviour
     {
         if  (concatenateVFX)
         {
+            
             handleVFX.CreateVFX(transform.position, transform.rotation, false);
         }
     }

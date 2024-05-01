@@ -61,7 +61,7 @@ public class BuildController : MonoBehaviour
 
     public void Buy()
     {
-        if (playerStatsController.GetAvaliblePoints() < playerStatsController.playerBuildSelected.totalPrice)
+        if (playerStatsController.GetAvaliblePoints() < playerStatsController.playerBuildSelected.totalPrice ||playerStatsController.playerBuildSelected.totalPrice <= 0 )
         {
             Cancel();
             Debug.Log("Not enough money");

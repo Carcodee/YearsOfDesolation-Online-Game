@@ -5,6 +5,7 @@ using UnityEngine;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Unity.Mathematics;
 using UnityEngine.TextCore.Text;
 using TextAsset = UnityEngine.TextAsset;
@@ -99,6 +100,7 @@ public class TutorialManager : MonoBehaviour
         wasTutorialStepDone = true;
 
     }
+
     public IEnumerator SetPlayerInPos()
     {
         
@@ -111,6 +113,8 @@ public class TutorialManager : MonoBehaviour
         GameManager.Instance.localPlayerRef.transform.rotation= Quaternion.Euler(0,-180,0);
 
         playerRef = GameManager.Instance.localPlayerRef;
+
+        yield return new WaitForSeconds(1.0f);
         tutorialStagesHandler.Init();
     }
     public void NextHUB()

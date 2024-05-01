@@ -48,6 +48,11 @@ namespace NetworkingHandling
             }
         }
 
+        public async Task DisconnectClient(ulong clientId)
+        {
+            NetworkManager.Singleton.DisconnectClient(clientId);
+        }
+
     }
 
 

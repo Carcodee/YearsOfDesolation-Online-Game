@@ -1,4 +1,6 @@
 using System;
+using System.Threading.Tasks;
+using NetworkingHandling;
 using Players.PlayerStates;
 using Unity.Mathematics;
 using Unity.Netcode;
@@ -204,7 +206,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
         startGameHealth = statsTemplates[statsTemplateSelected.Value].health;
 
         SetLevelServerRpc(1);
-        SetAvaliblePointsServerRpc(3);
+        SetAvaliblePointsServerRpc(0);
         health.OnValueChanged += SetPlayerOnPos;
         ak47 = new WeaponItem(weaponsData[(int)WeaponType.Ak99]);
         doublePistols = new WeaponItem(weaponsData[(int)WeaponType.Pistol]);
@@ -337,13 +339,26 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
             Destroy(gameObject);
         }
     }
+   
     public void TakeDamage(float damage)
     {
         if (IsOwner)
         {
             if (stateMachineController.currentState.stateName == "Dead" && GameController.instance.mapLogic.Value.isBattleRoyale)
             {
-                // Application.Quit();
+                
+                GameManager.Instance.LoadMenuScene();
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+                if (IsServer)
+                {
+                    NetworkingHandling.HostManager.instance.DisconnectHost();
+                }
+                else
+                {   
+                   ClientManager.instance.DisconnectClient(NetworkObject.OwnerClientId);
+                }
+                Destroy(gameObject);
                 return;
             }
             if (stateMachineController.currentState.stateName == "Dead" || health.Value<=0)

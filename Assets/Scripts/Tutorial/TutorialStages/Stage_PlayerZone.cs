@@ -21,12 +21,14 @@ public class Stage_PlayerZone : MonoBehaviour, IStage
      public void OnDialogDisplayed()
      {
          TutorialManager.instance.DisplayTutorialData(dialogCounter);
+        TutorialManager.instance.playerRef.canMove = false;
          PlayerComponentsHandler.IsCurrentDeviceMouse = true;
          F_In_F_Out_Obj.OnInfoTextDisplayed?.Invoke(TutorialManager.instance.tutorialTextData.text);
      }
  
      public void OnDialogFinished()
      {
+         TutorialManager.instance.playerRef.canMove = true;
          TutorialStagesHandler.instance.SetTutorialStage(TutorialStage.PickBuild);
      }
  

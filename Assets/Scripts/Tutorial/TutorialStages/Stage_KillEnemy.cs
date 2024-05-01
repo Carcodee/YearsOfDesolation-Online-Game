@@ -23,6 +23,8 @@ public class Stage_KillEnemy : MonoBehaviour, IStage
 
     public void OnDialogDisplayed()
     {
+        
+        TutorialManager.instance.playerRef.canMove = false;
         TutorialManager.instance.DisplayTutorialData(dialogCounter);
         PlayerComponentsHandler.IsCurrentDeviceMouse = true;
         F_In_F_Out_Obj.OnInfoTextDisplayed?.Invoke(TutorialManager.instance.tutorialTextData.text);
@@ -33,6 +35,7 @@ public class Stage_KillEnemy : MonoBehaviour, IStage
 
     public void OnDialogFinished()
     {
+        TutorialManager.instance.playerRef.canMove = true;
     }
 
     public void OnUIInstruction()
