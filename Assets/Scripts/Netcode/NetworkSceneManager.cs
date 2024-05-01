@@ -63,7 +63,12 @@ public class NetworkSceneManager : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        
+        LoadSceneAsync();
+    }
+
+    public async void LoadSceneAsync()
+    {
+        if (!GameManager.Instance.gameControllerReady) await Task.Yield();
         if (IsServer && !string.IsNullOrEmpty(m_SceneName))
         {
             menu.SetActive(false);
@@ -76,7 +81,6 @@ public class NetworkSceneManager : NetworkBehaviour
             }
         }
     }
-
     private static async Task Authenticate()
     {
         await UnityServices.InitializeAsync();
@@ -108,6 +112,7 @@ public class NetworkSceneManager : NetworkBehaviour
         NetworkingHandling.HostManager.instance.lobbyName = lobbyName.inputText.text;
         await NetworkingHandling.HostManager.instance.SetAllocation(_transport);
         await NetworkingHandling.HostManager.instance.StartHost();
+        GameManager.Instance.CreateController();
 
     }
 
@@ -117,6 +122,7 @@ public class NetworkSceneManager : NetworkBehaviour
         await NetworkingHandling.HostManager.instance.SetAllocation(_transport);
          
         NetworkingHandling.HostManager.instance.StartHostNoLobby();
+        GameManager.Instance.CreateController();
     }
     
 

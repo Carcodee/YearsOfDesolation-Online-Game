@@ -113,6 +113,7 @@ using System.Collections.Generic;
                 networkSceneManager.canvas.SetActive(false);
                 await NetworkingHandling.ClientManager.instance.StartClient(joinCode,
                     networkSceneManager.GetTransport());
+                
 
             }
             catch(LobbyServiceException e)

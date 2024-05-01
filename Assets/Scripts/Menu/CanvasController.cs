@@ -475,6 +475,7 @@ public class CanvasController : MonoBehaviour
     private void SetTimer()
     {
         //waiting time
+        if (GameController.instance==null)return;
         if (!GameController.instance.started.Value)
         {
             timeLeft.text = "Time to start: " + (GameController.instance.waitingTime - GameController.instance.netTimeToStart.Value).ToString("0.0");

@@ -21,5 +21,6 @@ public class LobbyItem : MonoBehaviour
     public void Join()
     {
         menuController.JoinAsync(lobby);
+        
     }
 }

@@ -42,8 +42,22 @@ public class GameController : NetworkBehaviour
     zoneColors[] zoneColors;
     
     
+    
     private void Awake()
     {
+        // if (instance == null)
+        // {
+        //     instance = this;
+        //     DontDestroyOnLoad(this);
+        // }
+        // else
+        // {
+        //     Destroy(this);
+        // }
+    }
+    private void OnEnable()
+    {
+        // CoinBehaivor.OnCoinCollected += MoveCoin;
         if (instance == null)
         {
             instance = this;
@@ -53,10 +67,6 @@ public class GameController : NetworkBehaviour
         {
             Destroy(this);
         }
-    }
-    private void OnEnable()
-    {
-        // CoinBehaivor.OnCoinCollected += MoveCoin;
     }
     private void OnDisable()
     {
@@ -68,9 +78,6 @@ public class GameController : NetworkBehaviour
     {
        
         LoadGameOptions(); 
-
-
-
     }
 
     public void LoadTutorialOptions()
