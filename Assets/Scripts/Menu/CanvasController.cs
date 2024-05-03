@@ -113,7 +113,15 @@ public class CanvasController : MonoBehaviour
     public Material coinImageMaterial;
     public CanvasGroup coinImageGroup;
     public TextMeshProUGUI distanceToCoinText;
+    
+    [Header("Indicator")]
+    public GameObject indicatorUI;
 
+    public static Transform currentObjToFollow;
+    public Material indicatorMat;
+    public CanvasGroup indicatorCanvasGroup;
+    public TextMeshProUGUI indicatorText;
+        
     public GameObject [] ObjectsToDeactivateOnTutorial;
     void Start()
     {
@@ -215,7 +223,6 @@ public class CanvasController : MonoBehaviour
             coinUI.SetActive(true);
         }
 
-        Vector3 coinPos = playerAssigned.transform.position;
         Vector3 coinInScreen=playerController.cam.WorldToScreenPoint(playerAssigned.coinPosition.transform.position);
         Vector3 magYPos=playerController.cam.WorldToScreenPoint(playerAssigned.coinPosition.magPosition.transform.position);
         // Debug.Log("Coin in screen: " + coinInScreen);
@@ -228,7 +235,38 @@ public class CanvasController : MonoBehaviour
         distanceToCoinText.text = Vector3.Distance(playerAssigned.transform.position, playerAssigned.coinPosition.transform.position).ToString("0.0")+ "m";
         // set it
 
+    }
+    public void TrackObj()
+    {
+        
+        if (currentObjToFollow==null)
+        {
+            return;
+        }
 
+        Vector3 playerToCoin = currentObjToFollow.position - playerAssigned.transform.position;
+        Vector3 playerForward = playerController.cam.transform.forward;
+        float dot = Vector3.Dot(playerToCoin.normalized, playerForward.normalized);
+        if (dot< 0)
+        {
+            indicatorCanvasGroup.alpha = 0;
+            return;
+        }
+        else
+        {
+            indicatorUI.SetActive(true);
+        }
+
+        Vector3 objectInScreen=playerController.cam.WorldToScreenPoint(currentObjToFollow.position);
+        // Debug.Log("Coin in screen: " + coinInScreen);
+
+        objectInScreen.x = objectInScreen.x - canvasRect.sizeDelta.x/2;
+        objectInScreen.y = objectInScreen.y - canvasRect.sizeDelta.y/2;
+
+        
+        indicatorUI.transform.localPosition = new Vector3(objectInScreen.x ,objectInScreen.y ,0);
+        indicatorText.text = Vector3.Distance(playerAssigned.transform.position, currentObjToFollow.transform.position).ToString("0.0")+ "m";
+        // set it
 
     }
 
@@ -240,11 +278,42 @@ public class CanvasController : MonoBehaviour
             return;
         };
         
+        Vector3 playerToCoin = playerAssigned.coinPosition.transform.position - playerAssigned.transform.position;
+        Vector3 playerForward = playerController.cam.transform.forward;
+        if (Vector3.Dot(playerToCoin, playerForward) < 0)
+        {
+            coinImageGroup.alpha = 0;
+            return;
+        }
         float distanceToCoin = Vector3.Distance(playerAssigned.transform.position, playerAssigned.coinPosition.transform.position);
         float alpha = Mathf.InverseLerp(closeDistance,largeDistance, distanceToCoin);
         coinImageGroup.alpha = alpha;
         coinImageMaterial.SetFloat("_Alpha",alpha);
     }
+    
+    public void CheckIndicatorAlpha()
+    {
+
+        if (!indicatorUI.activeSelf || currentObjToFollow== null)
+        {
+            indicatorCanvasGroup.alpha = 0;
+            return;
+        };
+        Vector3 playerToCoin = currentObjToFollow.position - playerAssigned.transform.position;
+        Vector3 playerForward = playerController.cam.transform.forward;
+        float dot = Vector3.Dot(playerToCoin.normalized, playerForward.normalized);
+        if (dot < 0)
+        {
+            indicatorCanvasGroup.alpha = 0;
+            return;
+        }
+        
+        float distance = Vector3.Distance(playerAssigned.transform.position, currentObjToFollow.transform.position);
+        float alpha = Mathf.InverseLerp(closeDistance,largeDistance, distance);
+        indicatorCanvasGroup.alpha = alpha;
+        indicatorMat.SetFloat("_Alpha",alpha);
+    }
+        
     void Update()
     {
         stageObjectPlaying = stagesObject.activeSelf;
@@ -266,7 +335,8 @@ public class CanvasController : MonoBehaviour
         }
         TrackCoin();
         CheckAlpha();
-    
+        TrackObj();
+        CheckIndicatorAlpha();
     }
     
     public void SetStats(float oldValue, float newValue)

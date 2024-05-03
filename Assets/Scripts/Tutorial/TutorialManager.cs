@@ -52,6 +52,7 @@ public class TutorialManager : MonoBehaviour
 
     private void Update()
     {
+        if (GameManager.Instance.localPlayerRef==null)return;
         if (GameManager.Instance.localPlayerRef.playerStats.hasPlayerSelectedBuild && currentHUDStage==ZoneToGo.PickBuildZone)
         {
             //the player selected a build then it continue with the next step

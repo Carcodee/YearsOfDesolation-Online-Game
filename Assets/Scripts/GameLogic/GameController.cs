@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using JetBrains.Annotations;
 using TMPro;
 using Unity.Netcode;
@@ -84,6 +85,13 @@ public class GameController : NetworkBehaviour
     {
         SetMapLogicClientServerRpc(numberOfPlayers.Value, numberOfPlayersAlive.Value, reduceZoneSpeed, timeToFarm, 3, zoneRadius);
     }
+
+    public async void GetPlayerRef()
+    {
+        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.Count<=0) await Task.Yield();
+        GameManager.Instance.localPlayerRef = NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject()
+            .GetComponent<PlayerController>();
+    }
     public void LoadGameOptions()
     {
          //Check if a player connected to the server
@@ -96,9 +104,7 @@ public class GameController : NetworkBehaviour
              if (IsClient && IsOwner)
              {
                  OnPlayerEnterServerRpc();
-                 SetMapLogicClientServerRpc(numberOfPlayers.Value, numberOfPlayersAlive.Value, reduceZoneSpeed, timeToFarm, 3, zoneRadius);
                  SetNumberOfPlayerListServerRpc(clientId);
-                 GameManager.Instance.localPlayerRef = players[0].GetComponent<PlayerController>();
              }
  
          };
@@ -121,7 +127,15 @@ public class GameController : NetworkBehaviour
              }
  
          };
-       
+         if (GameManager.Instance.localPlayerRef==null)
+         {
+            GetPlayerRef();
+         }
+
+         if (IsServer)
+         {
+            SetMapLogicClientServerRpc(numberOfPlayers.Value, numberOfPlayersAlive.Value, reduceZoneSpeed, timeToFarm, 3, zoneRadius);
+         }
     }
 
     void Update()

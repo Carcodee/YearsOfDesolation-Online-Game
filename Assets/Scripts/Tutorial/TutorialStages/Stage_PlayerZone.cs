@@ -20,6 +20,7 @@ public class Stage_PlayerZone : MonoBehaviour, IStage
 
      public void OnDialogDisplayed()
      {
+         
          TutorialManager.instance.DisplayTutorialData(dialogCounter);
         TutorialManager.instance.playerRef.canMove = false;
          PlayerComponentsHandler.IsCurrentDeviceMouse = true;

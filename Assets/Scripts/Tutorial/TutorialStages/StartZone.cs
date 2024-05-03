@@ -9,8 +9,10 @@ public class StartZone : MonoBehaviour, IStage
     public bool hasUIIndicationsFinished { get; set; }
     public bool wasStageCompleted { get; set; }
     public int dialogCounter = 1;
-     public TutorialStage stageToSet;
+    public TutorialStage stageToSet;
     public TutorialStage nextStage ;
+    
+    public Transform objectToFollow;
 
      private void Start()
      {
@@ -30,7 +32,7 @@ public class StartZone : MonoBehaviour, IStage
         TaskList.instance.gameObject.SetActive(true);
         TaskList.instance.StartTaskList();   
         TutorialManager.instance.playerRef.canMove = true;
-        
+        CanvasController.currentObjToFollow = objectToFollow;
     }
 
     public void OnUIInstruction()
