@@ -25,7 +25,7 @@ RenderSettings:
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
-  m_AmbientMode: 4
+  m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 0}
   m_HaloStrength: 0.5
@@ -39,7 +39,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.12810625, g: 0.15872969, b: 0.21008971, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3360,6 +3360,8 @@ MonoBehaviour:
   gameControllerReady: 0
   gameControllerToSpawn: {fileID: 1461873973419644481, guid: 3b0ef138d1e4b60419246c0720b236fb,
     type: 3}
+  singletonRef: {fileID: 1853595225}
+  transport: {fileID: 1853595227}
 --- !u!1001 &96116231
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -92505,6 +92507,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 609586003cd614c41bec48067a0e4855, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _transport: {fileID: 0}
   menu: {fileID: 1414863785}
   canvas: {fileID: 1414863785}
   lobbyName: {fileID: 1922423631}
@@ -94523,6 +94526,7 @@ GameObject:
   - component: {fileID: 1853595226}
   - component: {fileID: 1853595225}
   - component: {fileID: 1853595227}
+  - component: {fileID: 1853595228}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -94610,6 +94614,18 @@ MonoBehaviour:
     PacketDelayMS: 0
     PacketJitterMS: 0
     PacketDropRate: 0
+--- !u!114 &1853595228
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1853595224}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 520ddb7735247184ba412a1c7efee226, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1855907350
 GameObject:
   m_ObjectHideFlags: 0
@@ -107675,6 +107691,7 @@ MonoBehaviour:
   hostCode: 
   maxNumberOfPlayers: 8
   region: europe-west2
+  currentTransport: {fileID: 0}
 --- !u!4 &2030688196
 Transform:
   m_ObjectHideFlags: 0

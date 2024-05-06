@@ -378,7 +378,6 @@ public class CanvasController : MonoBehaviour
             targetVal = playerAssigned.GetHealth() / playerAssigned.startGameHealth;
             SetBarDefaultValues(hpUIMat);
         }
-        Debug.Log("Hp after change: "+ targetVal);
 
         StartCoroutine(MyUtilities.LerpToValueMaterialAnimationCurve(valBeforeChange, targetVal, .6f, hpUIMat, "_HP", healthcCurve));
         // hpUIMat.SetFloat("_HP",targetVal);

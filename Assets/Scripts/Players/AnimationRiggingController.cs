@@ -39,7 +39,6 @@ public class AnimationRiggingController : MonoBehaviour
 
     void Update()
     {
-        
 
         if ((playerStatsController.stateMachineController.networkAnimator.Animator.GetFloat("Aiming")>0.1) || playerStatsController.isShooting)
         {

@@ -9,7 +9,7 @@ public class Stage_PickBuild : MonoBehaviour,IStage
     public bool hasUIIndicationsFinished { get; set; }
     public bool wasStageCompleted { get; set; }
     public int dialogCounter = 2;
-     public TutorialStage stageToSet;
+    public TutorialStage stageToSet;
     public TutorialStage nextStage ;
 
      private void Start()
@@ -29,6 +29,7 @@ public class Stage_PickBuild : MonoBehaviour,IStage
     {
         
         TutorialManager.instance.playerRef.canMove = true;
+        CanvasController.currentObjToFollow = null;
     }
 
     public void OnUIInstruction()

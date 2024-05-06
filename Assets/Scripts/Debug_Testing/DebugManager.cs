@@ -28,6 +28,20 @@ public class DebugManager : MonoBehaviour
         playerStatsController.LevelUp();
     }
     
+    public void FastBattleRoyale()
+    {
+        GameController.instance.SetMapLogicClientServerRpc(GameController.instance.mapLogic.Value.numberOfPlayers,
+                GameController.instance.mapLogic.Value.numberOfPlayersAlive,
+                100,
+                1,
+                GameController.instance.mapLogic.Value.enemiesSpawnRate,
+                GameController.instance.zoneRadius);
+        GameController.instance.mapLogic.Value.damagePerTick = 5;
+        GameController.instance.currentFarmStageTimer = GameController.instance.timeToFarm;
+        GameController.instance.started.Value = true;
+        GameController.instance.mapLogic.Value.isBattleRoyale = true;
+        GameController.instance.waitingTime = 0;
+    }
     
     public void FreezeTime()
     {

@@ -24,6 +24,7 @@ namespace NetworkingHandling
 
         private Allocation _allocation;
         public string region = "europe-west2";
+        public UnityTransport currentTransport;
         private void Awake()
         {
             if (instance != null && instance != this)
@@ -34,9 +35,11 @@ namespace NetworkingHandling
             instance = this;
 
         }
+
         public void SetRelayTransport(UnityTransport transport)
         {
-            transport.SetHostRelayData(myAllocation.ipAddress, myAllocation.port, myAllocation.allocationId, myAllocation.key, myAllocation.connectionData);
+            currentTransport.SetHostRelayData(myAllocation.ipAddress, myAllocation.port, myAllocation.allocationId, myAllocation.key, myAllocation.connectionData);
+            
         }
         public async Task SetAllocation(UnityTransport transport)
         {
@@ -50,18 +53,25 @@ namespace NetworkingHandling
                 connectionData = _allocation.ConnectionData
             };
             hostCode= await RelayService.Instance.GetJoinCodeAsync(_allocation.AllocationId);
+            currentTransport = transport;
             SetRelayTransport(transport);
         }
 
         public async Task DisconnectHost()
         {
+            
             NetworkManager.Singleton.Shutdown();
-            if (NetworkManager.Singleton.ShutdownInProgress) await Task.Yield();
+            currentTransport.Shutdown();
+            var deleteLobbyAsync = Lobbies.Instance.DeleteLobbyAsync(lobbyId);
+            StopAllCoroutines();
+            
+            if (NetworkManager.Singleton.ShutdownInProgress && !deleteLobbyAsync.IsCompleted) await Task.Yield();
+            
+            GameManager.Instance.LoadMenuScene();
             
         }
         public async Task StartHost()
         {
-            
             try
             {
                 var createLobbyOptions = new CreateLobbyOptions();
@@ -78,16 +88,14 @@ namespace NetworkingHandling
                 Lobby lobby = await Lobbies.Instance.CreateLobbyAsync(lobbyName, 8, createLobbyOptions);
                 lobbyId= lobby.Id;
                 StartCoroutine(Heartbeat(15));
-
-
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
                 throw;
             }
-        
             NetworkManager.Singleton.StartHost();
+            GameManager.Instance.CreateController();
         }
 
         public void StartHostNoLobby()

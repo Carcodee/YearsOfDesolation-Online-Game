@@ -50,6 +50,7 @@ namespace NetworkingHandling
 
         public async Task DisconnectClient(ulong clientId)
         {
+            GameManager.Instance.LoadMenuScene();
             NetworkManager.Singleton.DisconnectClient(clientId);
         }
 

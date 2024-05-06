@@ -52,6 +52,10 @@ public class DebugManagerEditor : EditorWindow
             {
                 debugManager.FreezeTime();
             }
+            if (GUILayout.Button("FastRoyale time")&&debugManager.playerStatsController != null)
+            {
+                debugManager.FastBattleRoyale();
+            }
             if (GUILayout.Button("Level UP")&&debugManager.playerStatsController != null)
             {
                 debugManager.LevelUp();

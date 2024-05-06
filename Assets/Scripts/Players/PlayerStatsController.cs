@@ -344,10 +344,10 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
     {
         if (IsOwner)
         {
-            if (stateMachineController.currentState.stateName == "Dead" && GameController.instance.mapLogic.Value.isBattleRoyale)
+            Debug.Log("destroyed");
+            if ((stateMachineController.currentState.stateName == "Dead" && GameController.instance.mapLogic.Value.isBattleRoyale) || (health.Value-damage<=0 && GameController.instance.mapLogic.Value.isBattleRoyale))
             {
                 
-                GameManager.Instance.LoadMenuScene();
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
                 if (IsServer)
@@ -358,6 +358,8 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
                 {   
                    ClientManager.instance.DisconnectClient(NetworkObject.OwnerClientId);
                 }
+
+                Debug.Log("Dead");
                 Destroy(gameObject);
                 return;
             }
@@ -365,12 +367,6 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
             {
                 return;
             }
-            // if (health.Value<=0 && GameController.instance.zoneControllers.Count > 0 && stateMachineController.currentState.stateName!="Dead"){
-            //
-            //     CallServerOnDeadServerRpc((int)zoneAsigned.Value);
-            //     OnPlayerDead?.Invoke();
-            // }
-            
             else
             {
                 if (IsServer)
@@ -407,8 +403,8 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
                 Destroy(gameObject); 
                 return;
             }
-            playerVFXController.bloodEffectHandle.CreateVFX(takeDamagePosition.position,  Quaternion.identity,IsServer);
-            playerVFXController.bloodEffectHandle.CreateVFX(takeDamagePosition.position,  Quaternion.identity,IsServer);
+            playerVFXController.bloodEffectHandle.CreateVFX(takeDamagePosition.position, Quaternion.identity,IsServer);
+            playerVFXController.bloodEffectHandle.CreateVFX(takeDamagePosition.position, Quaternion.identity,IsServer);
             playerVFXController.BodyDamageVFX();
             // OnStatsChanged?.Invoke();
     }
@@ -429,7 +425,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
     public void SetPlayerOnPos(float oldVal, float newVal)
     {
         // Debug.Log("Health: " + newVal);
-        if (health.Value<=0 && GameController.instance.zoneControllers.Count > 0 && stateMachineController.currentState.stateName!="Dead"){
+        if (health.Value<=0 && GameController.instance.zoneControllers.Count > 0 && stateMachineController.currentState.stateName!="Dead" && !GameController.instance.mapLogic.Value.isBattleRoyale){
             
             CallServerOnDeadServerRpc((int)zoneAsigned.Value);
             OnPlayerDead?.Invoke();

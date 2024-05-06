@@ -24,7 +24,7 @@ public class NetworkSceneManager : NetworkBehaviour
     /// </summary>
 
     // public static NetworkSceneManager instance;
-    private UnityTransport _transport;
+    public UnityTransport _transport;
     public GameObject menu;
     public GameObject canvas;
     
@@ -34,13 +34,8 @@ public class NetworkSceneManager : NetworkBehaviour
     
     private async void Awake()
     {
-        // if (instance!=null)
-        // {
-           // Destroy(this); 
-        // }
-
-        // instance = this;
-        _transport= FindObjectOfType<UnityTransport>();
+       
+        _transport= GameManager.Instance.transport;
 
 
         await Authenticate();
@@ -112,7 +107,7 @@ public class NetworkSceneManager : NetworkBehaviour
         NetworkingHandling.HostManager.instance.lobbyName = lobbyName.inputText.text;
         await NetworkingHandling.HostManager.instance.SetAllocation(_transport);
         await NetworkingHandling.HostManager.instance.StartHost();
-        GameManager.Instance.CreateController();
+            
 
     }
 

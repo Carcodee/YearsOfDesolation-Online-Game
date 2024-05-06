@@ -92,50 +92,50 @@ public class GameController : NetworkBehaviour
         GameManager.Instance.localPlayerRef = NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject()
             .GetComponent<PlayerController>();
     }
+
+    public override void OnNetworkSpawn()
+    {
+        LoadGameOptions();
+    }
+
     public void LoadGameOptions()
     {
-         //Check if a player connected to the server
-         NetworkManager.Singleton.OnClientConnectedCallback += (clientId) =>
-         {
-             if (IsServer) {
-                 AddPlayerToListClientRpc();
-             }
- 
-             if (IsClient && IsOwner)
-             {
-                 OnPlayerEnterServerRpc();
-                 SetNumberOfPlayerListServerRpc(clientId);
-             }
- 
-         };
- 
-         NetworkManager.Singleton.OnClientDisconnectCallback += (clientId) =>
-         {
- 
-             if (IsServer)
-             {
-                 AddPlayerToListClientRpc();
-             }
- 
-             if (IsClient && IsOwner)
-             {
- 
-                 OnPlayerOutServerRpc();
-                 SetMapLogicClientServerRpc(numberOfPlayers.Value, numberOfPlayersAlive.Value, reduceZoneSpeed, timeToFarm, 3, zoneRadius);
-                 SetNumberOfPlayerListServerRpc(clientId);
- 
-             }
- 
-         };
-         if (GameManager.Instance.localPlayerRef==null)
-         {
-            GetPlayerRef();
-         }
 
-         if (IsServer)
-         {
+        
+        NetworkManager.Singleton.OnClientConnectedCallback += (clientId) =>
+        {
+            if (IsServer) {
+                AddPlayerToListClientRpc();
+            }
+            if (IsClient && IsOwner)
+            {
+                OnPlayerEnterServerRpc();
+                SetNumberOfPlayerListServerRpc(clientId);
+            }
+        };
+        NetworkManager.Singleton.OnClientDisconnectCallback += (clientId) =>
+        {
+            if (IsServer)
+            {
+              //AddPlayerToListClientRpc();
+              //TODO: disconnect all clients
+          
+            }else
+            if (!IsServer&&IsClient && IsOwner)
+            {
+              OnPlayerOutServerRpc();
+              SetMapLogicClientServerRpc(numberOfPlayers.Value, numberOfPlayersAlive.Value, reduceZoneSpeed, timeToFarm, 3, zoneRadius);
+              SetNumberOfPlayerListServerRpc(clientId);
+            }
+        };
+        if (GameManager.Instance.localPlayerRef==null)
+        {
+            GetPlayerRef();
+        }
+        if (IsServer)
+        {
             SetMapLogicClientServerRpc(numberOfPlayers.Value, numberOfPlayersAlive.Value, reduceZoneSpeed, timeToFarm, 3, zoneRadius);
-         }
+        }
     }
 
     void Update()
@@ -144,7 +144,6 @@ public class GameController : NetworkBehaviour
         if (!GameManager.Instance.isOnTutorial)
         {
             UpdateTime();
-            Debug.Log(mapLogic.Value.isBattleRoyale);
         }
 
         

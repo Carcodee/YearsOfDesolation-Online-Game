@@ -31,6 +31,7 @@ public class Stage_KillEnemy : MonoBehaviour, IStage
 
         enemy = Instantiate(playerPrefab, enemyPos.position, quaternion.identity);
         Debug.Log("Dialog displayed");
+        CanvasController.currentObjToFollow = enemy.transform;
     }
 
     public void OnDialogFinished()
@@ -50,5 +51,6 @@ public class Stage_KillEnemy : MonoBehaviour, IStage
     {
         TaskList.instance.realTask.GetValueOrDefault("Kill the enemy").Done();
         TaskList.instance.tasksToCreate.RemoveAt(0);
+        CanvasController.currentObjToFollow = null;
     }
 }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Unity.Netcode;
+using Unity.Netcode.Transports.UTP;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -13,32 +14,32 @@ public class GameManager : MonoBehaviour
 
     public bool gameControllerReady = false;
     public GameController gameControllerToSpawn;
-    
+    public NetworkManager singletonRef;
+    public UnityTransport transport;
     
     private void Awake()
     {
 
-        if (Instance != null)
+        if (Instance == null)
         {
-            Destroy(Instance);
+            Instance = this;
         }
-
-        Instance = this;
-    }
-
-    public void OnDestroy()
-    {
+        else
+        {
+            
+            Destroy(gameObject);
+        }
         DontDestroyOnLoad(gameObject);
     }
+
     public async void LoadMenuScene()
     {
-        
+        List<AsyncOperation> operations= new List<AsyncOperation>();
         for (int i = 0; i < SceneManager.sceneCount; i++)
         {
             Scene currentScene = SceneManager.GetSceneAt(i);
-            var unloadSceneAsync = SceneManager.UnloadSceneAsync(currentScene);
+            operations.Add(SceneManager.UnloadSceneAsync(currentScene));
         }
-        
         SceneManager.LoadScene("Menu", LoadSceneMode.Single);
         gameControllerReady = false;
         
@@ -49,9 +50,10 @@ public class GameManager : MonoBehaviour
     public void CreateController()
     {
         GameController gameController = Instantiate(gameControllerToSpawn);
-        gameController.LoadGameOptions();
-        gameControllerReady = true;
         gameController.GetComponent<NetworkObject>().Spawn();
+        //game controller is trying to do things before the server is valid
+        //gameController.LoadGameOptions();
+        gameControllerReady = true;
 
 
     }
