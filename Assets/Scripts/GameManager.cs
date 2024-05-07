@@ -51,8 +51,6 @@ public class GameManager : MonoBehaviour
     {
         GameController gameController = Instantiate(gameControllerToSpawn);
         gameController.GetComponent<NetworkObject>().Spawn();
-        //game controller is trying to do things before the server is valid
-        //gameController.LoadGameOptions();
         gameControllerReady = true;
 
 

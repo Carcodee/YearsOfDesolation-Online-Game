@@ -344,7 +344,6 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
     {
         if (IsOwner)
         {
-            Debug.Log("destroyed");
             if ((stateMachineController.currentState.stateName == "Dead" && GameController.instance.mapLogic.Value.isBattleRoyale) || (health.Value-damage<=0 && GameController.instance.mapLogic.Value.isBattleRoyale))
             {
                 

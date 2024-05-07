@@ -157,13 +157,15 @@ public class CanvasController : MonoBehaviour
         }
     }
 
-    private void OnDisable()
+
+    private void OnDestroy()
     {
        OnReloadFinished-= ReloadAnimation;
        playerAssigned.health.OnValueChanged -= SetStats;
        OnUpdateUI -= SetUIElements;
        OnBulletsAddedUI -= TotalBulletsAnimation;
        playerAssigned.avaliblePoints.OnValueChanged-=AddMoneyAnimation;
+        OnReloadStarted-= StartReloadAnimation;
     }
 
     public void ShowTimeToShoot()

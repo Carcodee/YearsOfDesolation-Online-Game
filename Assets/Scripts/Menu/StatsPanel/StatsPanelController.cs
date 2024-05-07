@@ -97,7 +97,15 @@ namespace Menu.StatsPanel
             moneyAnimator.Play("MoneyAddedOnPanel");
 
         }
-        
+
+
+        private void OnDestroy()
+        {
+            
+            OnPanelClosed -= Deactivate;
+            OnPanelOpen -= ActivatePanel;
+        }
+
         void Update()
         {
             if (Input.GetKeyDown(KeyCode.B))

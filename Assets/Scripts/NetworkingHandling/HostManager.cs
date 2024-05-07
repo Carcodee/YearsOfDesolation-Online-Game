@@ -64,11 +64,19 @@ namespace NetworkingHandling
             currentTransport.Shutdown();
             var deleteLobbyAsync = Lobbies.Instance.DeleteLobbyAsync(lobbyId);
             StopAllCoroutines();
-            
+            foreach (var clients in NetworkManager.Singleton.SpawnManager.SpawnedObjectsList)
+            {
+                if (clients.IsPlayerObject&& !clients.IsOwner)
+                {
+                    NetworkManager.Singleton.DisconnectClient(clients.OwnerClientId, "Host lost connection"); 
+                    continue;
+                }
+                clients.Despawn();
+            }
+            Destroy(GameController.instance);
             if (NetworkManager.Singleton.ShutdownInProgress && !deleteLobbyAsync.IsCompleted) await Task.Yield();
             
             GameManager.Instance.LoadMenuScene();
-            
         }
         public async Task StartHost()
         {
@@ -94,6 +102,7 @@ namespace NetworkingHandling
                 Console.WriteLine(e);
                 throw;
             }
+
             NetworkManager.Singleton.StartHost();
             GameManager.Instance.CreateController();
         }

@@ -89,6 +89,11 @@ public class PlayerComponentsHandler : NetworkBehaviour
         
     }
 
+    public override void OnNetworkDespawn()
+    {
+        playerInput.onActionTriggered -= HandleAction;
+    }
+
     void Update()
     {
         if (IsOwner)

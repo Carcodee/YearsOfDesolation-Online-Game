@@ -69,16 +69,13 @@ public class GameController : NetworkBehaviour
             Destroy(this);
         }
     }
-    private void OnDisable()
-    {
-        // CoinBehaivor.OnCoinCollected -= MoveCoin;
 
-    }
 
+    
     void Start()
     {
-       
-        LoadGameOptions(); 
+        NetworkManager.Singleton.OnClientConnectedCallback += HandleConnection;
+        NetworkManager.Singleton.OnClientDisconnectCallback += HandleDisconnection;
     }
 
     public void LoadTutorialOptions()
@@ -86,48 +83,31 @@ public class GameController : NetworkBehaviour
         SetMapLogicClientServerRpc(numberOfPlayers.Value, numberOfPlayersAlive.Value, reduceZoneSpeed, timeToFarm, 3, zoneRadius);
     }
 
+    public void Initialize()
+    {
+        if (IsServer)
+        {
+            numberOfPlayers.Value = 1;
+            numberOfPlayersAlive.Value = 1;
+        }
+    }
     public async void GetPlayerRef()
     {
-        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.Count<=0) await Task.Yield();
+        if (NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject()==null) await Task.Yield();
         GameManager.Instance.localPlayerRef = NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject()
             .GetComponent<PlayerController>();
     }
 
     public override void OnNetworkSpawn()
     {
+        Initialize();
         LoadGameOptions();
     }
 
     public void LoadGameOptions()
     {
 
-        
-        NetworkManager.Singleton.OnClientConnectedCallback += (clientId) =>
-        {
-            if (IsServer) {
-                AddPlayerToListClientRpc();
-            }
-            if (IsClient && IsOwner)
-            {
-                OnPlayerEnterServerRpc();
-                SetNumberOfPlayerListServerRpc(clientId);
-            }
-        };
-        NetworkManager.Singleton.OnClientDisconnectCallback += (clientId) =>
-        {
-            if (IsServer)
-            {
-              //AddPlayerToListClientRpc();
-              //TODO: disconnect all clients
-          
-            }else
-            if (!IsServer&&IsClient && IsOwner)
-            {
-              OnPlayerOutServerRpc();
-              SetMapLogicClientServerRpc(numberOfPlayers.Value, numberOfPlayersAlive.Value, reduceZoneSpeed, timeToFarm, 3, zoneRadius);
-              SetNumberOfPlayerListServerRpc(clientId);
-            }
-        };
+
         if (GameManager.Instance.localPlayerRef==null)
         {
             GetPlayerRef();
@@ -138,6 +118,41 @@ public class GameController : NetworkBehaviour
         }
     }
 
+    public override void OnDestroy()
+    {
+        if (gameObject==null)return;
+        NetworkManager.Singleton.OnClientConnectedCallback -= HandleConnection;
+        NetworkManager.Singleton.OnClientDisconnectCallback -= HandleDisconnection;
+    }
+
+    public void HandleConnection(ulong clientId)
+    {
+        if (IsServer) {
+            AddPlayerToListClientRpc();
+        }
+        if (IsClient && IsOwner)
+        {
+            OnPlayerEnterServerRpc();
+            SetNumberOfPlayerListServerRpc(clientId);
+        }
+    }
+
+
+    public void HandleDisconnection(ulong clientId)
+    {
+         if (IsServer)
+         {
+           //AddPlayerToListClientRpc();
+           //TODO: disconnect all clients
+       
+         }else
+         if (IsClient && IsOwner)
+         {
+           OnPlayerOutServerRpc();
+           SetMapLogicClientServerRpc(numberOfPlayers.Value, numberOfPlayersAlive.Value, reduceZoneSpeed, timeToFarm, 3, zoneRadius);
+           SetNumberOfPlayerListServerRpc(clientId);
+         }       
+    }
     void Update()
     {
 
@@ -187,21 +202,6 @@ public class GameController : NetworkBehaviour
         started.Value = true;
     }
 
-
-    
-    /// <summary>
-    /// Set Each player a zone
-    /// </summary>
-    public void CreatePlayerZones()
-    {
-        zoneColors = new zoneColors[numberOfPlayers.Value];
-        for (int i = 0; i < zoneColors.Length; i++)
-        {
-            zoneColors[i] = (zoneColors)i;
-        }
-       
-    }
-
     public void CreateZonesOnNet(int index)
     {
         if (IsServer)
@@ -220,54 +220,6 @@ public class GameController : NetworkBehaviour
             SpawnZonesInNetworkServerRpc(index);
         }
     }
-
-
-    public void SpawnCoins()
-    {
-            int coinSpawned = 0;
-            int coinIndex = 0;
-            while (coinSpawned <  numberOfPlayers.Value)
-            {
-                if(coinIndex > numberOfPlayers.Value-1 || coinSpawned>numberOfPlayers.Value-1)break;
-                if (coinSpawned != (int)zoneControllers[coinIndex].zoneAsigned.Value && zoneControllers[coinIndex].currentCoin==null)
-                {
-                    CoinBehaivor myCoin = Instantiate(coinPrefab, zoneControllers[coinSpawned].spawnCoinPoint.position, Quaternion.identity);
-
-                    // myCoin.GetComponent<NetworkObject>().Spawn();
-                    //this represent who owns the coin
-                    myCoin.networkPlayerID.Value = players[coinSpawned].GetComponent<PlayerStatsController>().OwnerClientId;
-                    //this represent the zone where the coin is
-                    //myCoin.transform.position = zoneControllers[coinIndex].spawnCoinPoint.position;
-                    myCoin.zoneAssigned.Value =coinSpawned;
-                    myCoin.playerStatsController = players[coinSpawned].GetComponent<PlayerStatsController>();
-                    SetCoinsOnClientRpc(coinSpawned, coinIndex, myCoin.GetComponent<NetworkObject>().NetworkObjectId);
-
-                    coinSpawned++;
-
-                    coinIndex = 0;
-                    continue;
-                }
-
-                coinIndex++;
-            }
-
-    }
-    public void MoveCoin(CoinBehaivor coin)
-    {
-        for (int i = 0; i < zoneControllers.Count(); i++)
-        {
-            if ((int)zoneControllers[i].zoneAsigned.Value!= coin.zoneAssigned.Value)
-            {
-                if (IsServer)
-                {
-                    randomPoint.Value = GetRandomPointFromCollider(zoneControllers[i].GetComponentInChildren<Collider>());
-                }
-                ulong netId=  coin.GetComponent<NetworkObject>().NetworkObjectId;
-                SetCoinRandomPointClientRpc(randomPoint.Value, netId);
-            }
-        }
-    }
-
 
     private void UpdateTime()
     {
@@ -337,16 +289,7 @@ public class GameController : NetworkBehaviour
     {
         netTimeToStart.Value += time;
     }
-    [ServerRpc]
-    public void ReduceTotalTimeServerRpc(float val)
-    {
-        mapLogic.Value.totalTime -= val;
-    }
-    [ServerRpc]
-    public void SetBattleRoyaleServerRpc(bool val)
-    {
-        if (IsOwner) mapLogic.Value.isBattleRoyale = val;
-    }
+
     [ServerRpc]
     public void SetMapLogicClientServerRpc(int numberOfPlayers,int numberOfPlayersAlive,float zoneRadiusExpandSpeed,int totalTime,float enemiesSpawnRate,float zoneRadius)
     {
@@ -461,7 +404,6 @@ public class GameController : NetworkBehaviour
     public void AddPlayerToListClientRpc()
     {
         players.Clear();
-
         GameObject[] playersInScene = GameObject.FindGameObjectsWithTag("Player");
         foreach (GameObject index in playersInScene)
         {

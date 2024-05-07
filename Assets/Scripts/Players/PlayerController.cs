@@ -170,7 +170,20 @@ public class PlayerController : NetworkBehaviour
 
     }
 
-    
+    public override void OnNetworkDespawn()
+    {
+        playerStats.OnPlayerDead -= PlayerDeadCallback;
+        PlayerComponentsHandler.OnStationaryStepAttempted -= AttempRotation; 
+        playerStats.OnWeaponChanged-= SetSpawnPoint;
+    }
+
+    public override void OnDestroy()
+    {
+        playerStats.OnPlayerDead -= PlayerDeadCallback;
+        PlayerComponentsHandler.OnStationaryStepAttempted -= AttempRotation; 
+        playerStats.OnWeaponChanged-= SetSpawnPoint;
+    }
+
     void Update()
     {
 
