@@ -151,8 +151,10 @@ public class GameController : NetworkBehaviour
            OnPlayerOutServerRpc();
            SetMapLogicClientServerRpc(numberOfPlayers.Value, numberOfPlayersAlive.Value, reduceZoneSpeed, timeToFarm, 3, zoneRadius);
            SetNumberOfPlayerListServerRpc(clientId);
+           GameManager.Instance.LoadMenuScene();
          }       
     }
+    
     void Update()
     {
 

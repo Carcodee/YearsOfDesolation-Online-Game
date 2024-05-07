@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using NetworkingHandling;
 using Players.PlayerStates;
@@ -10,7 +11,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using Random = Unity.Mathematics.Random;
 
-public class PlayerStatsController : NetworkBehaviour, IDamageable
+public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectToClean
 {
     public UnityAction OnSpawnPlayer;
     public UnityAction OnStatsChanged;
@@ -38,9 +39,8 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
 
     [SerializeField] private NetworkVariable<int> playerLevel = new NetworkVariable<int>();
     [SerializeField] public NetworkVariable<int> avaliblePoints = new NetworkVariable<int>();
-   [SerializeField] public  NetworkVariable<bool> enemyKilled = new NetworkVariable<bool>();
+    [SerializeField] public  NetworkVariable<bool> enemyKilled = new NetworkVariable<bool>();
     public NetworkVariable<bool> isInvulnerable = new NetworkVariable<bool>();
-
     [FormerlySerializedAs("StartGameHealth")] public float startGameHealth;
     public string[] statHolderNames;
     public int[] statHolder;
@@ -63,6 +63,8 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
     [Header("Interfaces")]
     private IDamageable iDamageable;
 
+    public bool shutingDown { get; set; }
+    
     [Header("NetCode")]
     public NetworkObject playerObj;
     [Header("PlayerBuild")]
@@ -88,7 +90,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
     {
         base.OnNetworkSpawn();
         stateMachineController=GetComponent<StateMachineController>();
-
+        
         if (IsOwner)
         {
             Debug.Log("OnNetworkSpawn called. IsOwner: " + IsOwner);
@@ -100,10 +102,22 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
             isPlayerInsideTheZone = true;
             OnSpawnPlayer?.Invoke();
             _isInNetwork = true;
+            INetObjectToClean[] objectToCleans = GetComponents<INetObjectToClean>();
+
+            foreach (INetObjectToClean objectToClean in objectToCleans)
+            {
+                CleanerController.instance.AddObjectToList(objectToClean);
+            }
         }
         PostProccesingManager.instance.DeactivateMenuBlur();
+        
+        
     }
 
+    public override void OnNetworkDespawn()
+    {
+        CleanerController.instance.Clean();
+    }
 
     private void Start()
     {
@@ -151,12 +165,6 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
         //TODO: find some way to check if the player is dead with ownership
 
     }
-    public override void OnNetworkDespawn()
-    {
-        OnSpawnPlayer -= InitializateStats;
-
-    }
-
 
     public void SelectBuild(PlayerBuild build)
     {
@@ -407,6 +415,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
             playerVFXController.BodyDamageVFX();
             // OnStatsChanged?.Invoke();
     }
+
 
     [ServerRpc(RequireOwnership = false)]
     public void TakeDamageServerRpc(int myDamage, ulong clientId)
@@ -730,6 +739,21 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable
 
     }
 #endif
+
+    public void CleanData()
+    {
+        OnSpawnPlayer -= InitializateStats;
+        if (IsClient && !IsServer )
+        {
+            GameManager.Instance.LoadMenuScene();
+            playerComponentsHandler.SetCursorState(CursorLockMode.None, visible: true);
+        }
+    }
+
+    public void OnSpawn()
+    {
+        
+    }
 
 }
 

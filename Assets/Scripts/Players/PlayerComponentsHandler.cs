@@ -13,7 +13,7 @@ using Unity.VisualScripting;
 using UnityEditor.VersionControl;
 using Task = System.Threading.Tasks.Task;
 
-public class PlayerComponentsHandler : NetworkBehaviour
+public class PlayerComponentsHandler : NetworkBehaviour, INetObjectToClean
 {
     public static Action<string> OnStationaryStepAttempted;
     public PlayerInput playerInput;
@@ -56,6 +56,7 @@ public class PlayerComponentsHandler : NetworkBehaviour
     public float rotationDetector;
     public float maxForRotation=10.5f;
     
+    public bool shutingDown { get; set; }
     [Tooltip("How far in degrees can you move the camera up")]
     public float TopClamp = 70.0f;
     [Tooltip("How far in degrees can you move the camera down")]
@@ -89,11 +90,6 @@ public class PlayerComponentsHandler : NetworkBehaviour
         
     }
 
-    public override void OnNetworkDespawn()
-    {
-        playerInput.onActionTriggered -= HandleAction;
-    }
-
     void Update()
     {
         if (IsOwner)
@@ -114,6 +110,12 @@ public class PlayerComponentsHandler : NetworkBehaviour
             }
 
         }
+    }
+
+    public void SetCursorState(CursorLockMode mode, bool visible)
+    {
+        Cursor.lockState = mode;
+        Cursor.visible = visible;
     }
 
     private void LateUpdate()
@@ -312,6 +314,16 @@ public class PlayerComponentsHandler : NetworkBehaviour
         MyUtilities.StopCameraShake(cinmachineSprintCameraIntance);
         
     }
+
+    public void CleanData()
+    {
+        playerInput.onActionTriggered -= HandleAction;
+    }
+
+    public void OnSpawn()
+    {
+    }
+
 }
 
 public enum CameraType 

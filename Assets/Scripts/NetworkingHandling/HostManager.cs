@@ -60,19 +60,22 @@ namespace NetworkingHandling
         public async Task DisconnectHost()
         {
             
+            StopAllCoroutines();
+            CleanerController.instance.Clean();
+            foreach (Transform player in GameController.instance.players)
+            {
+                NetworkObject playerRef= player.GetComponent<NetworkObject>();
+                if (playerRef.OwnerClientId==0)
+                {
+                    continue;
+                }
+                NetworkManager.Singleton.DisconnectClient(playerRef.OwnerClientId);
+                Debug.Log("ID: "+ playerRef.OwnerClientId);
+            }
+            
             NetworkManager.Singleton.Shutdown();
             currentTransport.Shutdown();
             var deleteLobbyAsync = Lobbies.Instance.DeleteLobbyAsync(lobbyId);
-            StopAllCoroutines();
-            foreach (var clients in NetworkManager.Singleton.SpawnManager.SpawnedObjectsList)
-            {
-                if (clients.IsPlayerObject&& !clients.IsOwner)
-                {
-                    NetworkManager.Singleton.DisconnectClient(clients.OwnerClientId, "Host lost connection"); 
-                    continue;
-                }
-                clients.Despawn();
-            }
             Destroy(GameController.instance);
             if (NetworkManager.Singleton.ShutdownInProgress && !deleteLobbyAsync.IsCompleted) await Task.Yield();
             

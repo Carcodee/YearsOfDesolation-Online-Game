@@ -19,14 +19,12 @@ public class GameManager : MonoBehaviour
     
     private void Awake()
     {
-
         if (Instance == null)
         {
             Instance = this;
         }
         else
         {
-            
             Destroy(gameObject);
         }
         DontDestroyOnLoad(gameObject);
@@ -55,10 +53,7 @@ public class GameManager : MonoBehaviour
 
 
     }
-    public void LoadTutorialConfigs()
-    {
-        
-    }
+
 
     public void LoadDeafaults()
     {
