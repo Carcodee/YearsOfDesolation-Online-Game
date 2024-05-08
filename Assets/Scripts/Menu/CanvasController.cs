@@ -15,9 +15,10 @@ using UnityEngine.Serialization;
 using ProgressBar = Michsky.UI.ModernUIPack.ProgressBar;
 using Random = UnityEngine.Random;
 
-public class CanvasController : MonoBehaviour
+public class CanvasController : MonoBehaviour, INetObjectToClean
 {
     Canvas canvas;
+    public bool shutingDown { get; set; }
     public RectTransform canvasRect;
     [Header("Game")]
     public TextMeshProUGUI timeLeft;
@@ -155,21 +156,13 @@ public class CanvasController : MonoBehaviour
                ObjectsToDeactivateOnTutorial[i].SetActive(false); 
             }
         }
+        CleanerController.instance.AddObjectToList(GetComponent<INetObjectToClean>());
     }
 
-
-    private void OnDestroy()
-    {
-       OnReloadFinished-= ReloadAnimation;
-       playerAssigned.health.OnValueChanged -= SetStats;
-       OnUpdateUI -= SetUIElements;
-       OnBulletsAddedUI -= TotalBulletsAnimation;
-       playerAssigned.avaliblePoints.OnValueChanged-=AddMoneyAnimation;
-        OnReloadStarted-= StartReloadAnimation;
-    }
 
     public void ShowTimeToShoot()
     {
+        if (shutingDown)return;
         if (playerAssigned.currentWeaponSelected.weapon.shootRate.statValue>=1.0f)
         {
             weaponCooldown.SetActive(true);
@@ -639,7 +632,21 @@ public class CanvasController : MonoBehaviour
 
         public Texture2D texture;
     }
-   
+
+    public void CleanData()
+    {
+        OnReloadFinished-= ReloadAnimation;
+        playerAssigned.health.OnValueChanged -= SetStats;
+        OnUpdateUI -= SetUIElements;
+        OnBulletsAddedUI -= TotalBulletsAnimation;
+        playerAssigned.avaliblePoints.OnValueChanged-=AddMoneyAnimation;
+        OnReloadStarted-= StartReloadAnimation;       
+    }
+
+    public void OnSpawn()
+    {
+    }
+
 }
 
 public static class DoOnce

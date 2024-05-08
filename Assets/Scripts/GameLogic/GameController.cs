@@ -7,9 +7,10 @@ using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 
-public class GameController : NetworkBehaviour
+public class GameController : NetworkBehaviour,INetObjectToClean
 {
 
+    public bool shutingDown { get; set; }
     public static GameController instance;
 
     [Header("Lobby")]
@@ -44,30 +45,20 @@ public class GameController : NetworkBehaviour
     
     
     
-    private void Awake()
-    {
-        // if (instance == null)
-        // {
-        //     instance = this;
-        //     DontDestroyOnLoad(this);
-        // }
-        // else
-        // {
-        //     Destroy(this);
-        // }
-    }
     private void OnEnable()
     {
         // CoinBehaivor.OnCoinCollected += MoveCoin;
         if (instance == null)
         {
             instance = this;
+            
             DontDestroyOnLoad(this);
         }
         else
         {
             Destroy(this);
         }
+        
     }
 
 
@@ -76,6 +67,7 @@ public class GameController : NetworkBehaviour
     {
         NetworkManager.Singleton.OnClientConnectedCallback += HandleConnection;
         NetworkManager.Singleton.OnClientDisconnectCallback += HandleDisconnection;
+        CleanerController.instance.AddObjectToList(GetComponent<INetObjectToClean>());
     }
 
     public void LoadTutorialOptions()
@@ -118,13 +110,6 @@ public class GameController : NetworkBehaviour
         }
     }
 
-    public override void OnDestroy()
-    {
-        if (gameObject==null)return;
-        NetworkManager.Singleton.OnClientConnectedCallback -= HandleConnection;
-        NetworkManager.Singleton.OnClientDisconnectCallback -= HandleDisconnection;
-    }
-
     public void HandleConnection(ulong clientId)
     {
         if (IsServer) {
@@ -142,11 +127,11 @@ public class GameController : NetworkBehaviour
     {
          if (IsServer)
          {
-           //AddPlayerToListClientRpc();
+           AddPlayerToListClientRpc();
            //TODO: disconnect all clients
        
-         }else
-         if (IsClient && IsOwner)
+         }
+         if (IsClient && IsOwner&& !IsServer)
          {
            OnPlayerOutServerRpc();
            SetMapLogicClientServerRpc(numberOfPlayers.Value, numberOfPlayersAlive.Value, reduceZoneSpeed, timeToFarm, 3, zoneRadius);
@@ -158,6 +143,7 @@ public class GameController : NetworkBehaviour
     void Update()
     {
 
+        if (shutingDown)return;
         if (!GameManager.Instance.isOnTutorial)
         {
             UpdateTime();
@@ -441,6 +427,17 @@ public class GameController : NetworkBehaviour
         players[index].GetComponent<PlayerStatsController>().playerZoneController = zoneControllers[index];
     }
     #endregion
+
+    public void CleanData()
+    {
+        NetworkManager.Singleton.OnClientConnectedCallback -= HandleConnection;
+        NetworkManager.Singleton.OnClientDisconnectCallback -= HandleDisconnection;
+    }
+
+    public void OnSpawn()
+    {
+    }
+
 }
 
 public enum zoneColors

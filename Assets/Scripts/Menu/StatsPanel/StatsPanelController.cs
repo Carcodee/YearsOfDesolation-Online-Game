@@ -9,8 +9,9 @@ using HorizontalSelector = Michsky.UI.Heat.HorizontalSelector;
 
 namespace Menu.StatsPanel
 {
-    public class StatsPanelController : MonoBehaviour
+    public class StatsPanelController : MonoBehaviour, INetObjectToClean
     {
+        public bool shutingDown { get; set; }
         public static Action OnPanelClosed;
         public static Action OnPanelOpen;
         [Header("References")] [SerializeField]
@@ -88,7 +89,11 @@ namespace Menu.StatsPanel
             OnPanelClosed += Deactivate;
             OnPanelOpen += ActivatePanel;
             WaitForSetup();
-            
+            INetObjectToClean[] objectToCleans = GetComponents<INetObjectToClean>();
+            foreach (INetObjectToClean objectToClean in objectToCleans)
+            {
+                CleanerController.instance.AddObjectToList(objectToClean);
+            }
         }
         public void AddMoneyAnimationOnPanel(int oldVal, int newVal)
         {
@@ -98,16 +103,9 @@ namespace Menu.StatsPanel
 
         }
 
-
-        private void OnDestroy()
-        {
-            
-            OnPanelClosed -= Deactivate;
-            OnPanelOpen -= ActivatePanel;
-        }
-
         void Update()
         {
+            if (shutingDown)return;
             if (Input.GetKeyDown(KeyCode.B))
             {
                 isPanelOpen = !isPanelOpen;
@@ -416,5 +414,16 @@ namespace Menu.StatsPanel
             stamina = 4
 
         }
+        
+        public void CleanData()
+        {
+            OnPanelClosed -= Deactivate;
+            OnPanelOpen -= ActivatePanel;
+        }
+
+        public void OnSpawn()
+        {
+        }
+
     }
 }

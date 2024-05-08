@@ -44,6 +44,10 @@ public class PostProccesingManager : MonoBehaviour
     {
         fullScreenPassMaterial.SetFloat("_ActivateBlur", intensity);
     }
+    public void ActivateMenuBlur(float intensity)
+    {
+        fullScreenPassMaterialMenu.SetFloat("_ActivateBlur", intensity);
+    }
     public void LerpDeactivateNormalBlur()
     {
         StartCoroutine(MyUtilities.LerpToValueMaterial(1.0f, 0.0f, 0.5f, fullScreenPassMaterial, "_ActivateBlur"));

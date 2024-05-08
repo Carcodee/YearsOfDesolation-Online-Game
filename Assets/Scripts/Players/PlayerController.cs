@@ -10,8 +10,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
-public class PlayerController : NetworkBehaviour
+public class PlayerController : NetworkBehaviour, INetObjectToClean
 {
+    public bool shutingDown { get; set; }
     [Header("Player Stats")]
     public PlayerStatsController playerStats;
     
@@ -45,15 +46,6 @@ public class PlayerController : NetworkBehaviour
     public Transform headAim;
     public Transform spawnBulletPoint;
     
-    
-    // [Header("Shoot")]
-    // public float shootRate = 0.1f;
-    // public float shootTimer = 0f;
-    // public float shootRefraction = 0.1f;
-    // public float currentShootRefraction = 0.1f;
-    // public float minShootRefraction = 0.01f;
-    
-
     [Header("Hit data")]
     public LayerMask playerHitLayer;
     public LayerMask enemyLayer;
@@ -127,28 +119,8 @@ public class PlayerController : NetworkBehaviour
 
     void Start()
     {
-        if (!IsOwner)
-        {
-        }
         cam= GetComponentInChildren<Camera>();
         cam.enabled = IsOwner;
-        // UICam.enabled = IsOwner;
-        // topViewCamera.enabled = IsOwner;
-        // gameplayCam.enabled = IsOwner;
-        //
-        // cam.gameObject.SetActive(IsOwner);
-        // topViewCamera.gameObject.SetActive(IsOwner);
-        // gameplayCam.gameObject.SetActive(IsOwner);
-        // UICam.gameObject.SetActive(IsOwner);
-
-
-        // if (!cam)
-        // {
-        //     Destroy(cam);
-        //     Destroy(topViewCamera);
-        //     
-        // }
-        
         if (IsOwner)
         {
             // ak_99 = new Weapon(new AmmoBehaviour(100, 30, 30, 3),"Ak", 0.1f,
@@ -159,10 +131,10 @@ public class PlayerController : NetworkBehaviour
             stateMachineController.Initializate();
             playerStats = GetComponent<PlayerStatsController>();
             playerComponentsHandler = GetComponent<PlayerComponentsHandler>();
-            playerStats.OnPlayerDead += PlayerDeadCallback;
-            PlayerComponentsHandler.OnStationaryStepAttempted += AttempRotation; 
             // DoRagdoll(false);
             playerStats.currentWeaponSelected.weapon.shootRefraction = 0.1f;
+            PlayerComponentsHandler.OnStationaryStepAttempted += AttempRotation; 
+            playerStats.OnPlayerDead += PlayerDeadCallback;
             playerStats.OnWeaponChanged+= SetSpawnPoint;
             playerComponentsHandler.CreateCanvas(cam);
             airTimeToPlane = 1;
@@ -170,27 +142,13 @@ public class PlayerController : NetworkBehaviour
 
     }
 
-    public override void OnNetworkDespawn()
-    {
-        playerStats.OnPlayerDead -= PlayerDeadCallback;
-        PlayerComponentsHandler.OnStationaryStepAttempted -= AttempRotation; 
-        playerStats.OnWeaponChanged-= SetSpawnPoint;
-    }
-
-    public override void OnDestroy()
-    {
-        playerStats.OnPlayerDead -= PlayerDeadCallback;
-        PlayerComponentsHandler.OnStationaryStepAttempted -= AttempRotation; 
-        playerStats.OnWeaponChanged-= SetSpawnPoint;
-    }
-
+    
     void Update()
     {
 
+        if (shutingDown)return;
         if (IsOwner)
         {
-
-            
             isGroundedCheck();
             //be care
             Reloading();
@@ -199,21 +157,18 @@ public class PlayerController : NetworkBehaviour
             {
                 playerStats.currentWeaponSelected.weapon.shootTimer = playerStats.currentWeaponSelected.weapon.shootRate.statValue+0.1f;
             }
-
             if (!canMove&& isGrounded)
             {
                 move=Vector3.zero;
                 return;
             }
             stateMachineController.StateUpdate();
-
             if (playerComponentsHandler.IsPlayerLocked())
             {
                 isAiming = false;
                 return;
             }
 //NO SHOOT
-
             Shoot();
             if (Input.GetKeyDown(KeyCode.Mouse1)&& !isSprinting)
             {
@@ -233,7 +188,7 @@ public class PlayerController : NetworkBehaviour
 
             StartCurrentWeaponReload();
         }
-}
+    }
     private void FixedUpdate()
     {
         if (IsOwner)
@@ -246,6 +201,7 @@ public class PlayerController : NetworkBehaviour
         }
 
     }
+    
     private void LateUpdate()
     {
         if (IsOwner)
@@ -734,6 +690,18 @@ public class PlayerController : NetworkBehaviour
         }
     }
     #endregion
+
+    public void CleanData()
+    {
+        playerStats.OnPlayerDead -= PlayerDeadCallback;
+        PlayerComponentsHandler.OnStationaryStepAttempted -= AttempRotation; 
+        playerStats.OnWeaponChanged-= SetSpawnPoint;
+    }
+
+    public void OnSpawn()
+    {
+    }
+
 }
 
 [System.Serializable]

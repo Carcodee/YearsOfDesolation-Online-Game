@@ -105,17 +105,17 @@ public class NetworkSceneManager : NetworkBehaviour
             lobbyName.inputText.text = "My Default lobby";
         }
         NetworkingHandling.HostManager.instance.lobbyName = lobbyName.inputText.text;
+        GameManager.Instance.ActivateLoadingScreen(true);
         await NetworkingHandling.HostManager.instance.SetAllocation(_transport);
         await NetworkingHandling.HostManager.instance.StartHost();
-            
 
     }
 
     public async void StartTutorialHost()
     {
         m_SceneName = "Tutorial";
+        GameManager.Instance.ActivateLoadingScreen(true);
         await NetworkingHandling.HostManager.instance.SetAllocation(_transport);
-         
         NetworkingHandling.HostManager.instance.StartHostNoLobby();
         GameManager.Instance.CreateController();
     }

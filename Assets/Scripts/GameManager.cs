@@ -13,10 +13,19 @@ public class GameManager : MonoBehaviour
     public bool isOnTutorial=false;
 
     public bool gameControllerReady = false;
+    public bool gameEnded = false;
     public GameController gameControllerToSpawn;
     public NetworkManager singletonRef;
     public UnityTransport transport;
+    public bool ReadyToStart = false;
     
+    public GameObject loadingScene;
+    public GameObject menuGameObject;
+    public GameObject canvasObj;
+    
+
+
+    public string DisconnectNotificationText = "";
     private void Awake()
     {
         if (Instance == null)
@@ -50,24 +59,22 @@ public class GameManager : MonoBehaviour
         GameController gameController = Instantiate(gameControllerToSpawn);
         gameController.GetComponent<NetworkObject>().Spawn();
         gameControllerReady = true;
+        gameEnded = false;
 
 
     }
 
-
-    public void LoadDeafaults()
+    public void ActivateLoadingScreen(bool val)
     {
-        
-    }
-    void Start()
-    {
-        
-        
-
+        loadingScene.gameObject.SetActive(val);
     }
 
-    void Update()
+    public void ActivateMenu(bool val)
     {
-        
+        canvasObj.SetActive(val);
+        menuGameObject.SetActive(val);
     }
+
+
+    
 }

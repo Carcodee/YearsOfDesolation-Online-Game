@@ -4,8 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 
-public class AnimationRiggingController : MonoBehaviour
+public class AnimationRiggingController : MonoBehaviour, INetObjectToClean
 {
+    public bool shutingDown { get; set; }
     public static Action<float> OnAimOffsetChanged;
     public Rig animationRigging;
     public PlayerController playerStatsController;
@@ -40,6 +41,7 @@ public class AnimationRiggingController : MonoBehaviour
     void Update()
     {
 
+        if (shutingDown)return;
         if ((playerStatsController.stateMachineController.networkAnimator.Animator.GetFloat("Aiming")>0.1) || playerStatsController.isShooting)
         {
             // Debug.Log("aiming");
@@ -106,4 +108,14 @@ public class AnimationRiggingController : MonoBehaviour
             Debug.LogError("Weapon Object Controller is null");
         }
     }
+
+    public void CleanData()
+    {
+        playerStatsController.playerStats.OnWeaponChanged -= OnWeaponChanged;
+    }
+
+    public void OnSpawn()
+    {
+    }
+
 }

@@ -6,11 +6,8 @@ using Menu.StatsPanel;
 using Unity.Netcode;
 using UnityEngine;
 using TMPro;
-using UnityEngine.UI;
 using StarterAssets;
 using UnityEngine.InputSystem;
-using Unity.VisualScripting;
-using UnityEditor.VersionControl;
 using Task = System.Threading.Tasks.Task;
 
 public class PlayerComponentsHandler : NetworkBehaviour, INetObjectToClean
@@ -92,6 +89,7 @@ public class PlayerComponentsHandler : NetworkBehaviour, INetObjectToClean
 
     void Update()
     {
+        if (shutingDown)return;
         if (IsOwner)
         {
             // IsCurrentDeviceMouse = !statsPanelController.isPanelOpen && !pauseController.pauseMenu.activeSelf ;
@@ -141,31 +139,6 @@ public class PlayerComponentsHandler : NetworkBehaviour, INetObjectToClean
         return IsCurrentDeviceMouse;
     }
 
-    // public void SerCameraType(CameraType cameraType)
-    // {
-    //     if (cameraType==playerCameraType)return;
-    //     switch (cameraType)
-    //     {
-    //         case CameraType.NormalCamera:
-    //             cinemachineVirtualCameraInstance.Priority = 10;
-    //             cinmachineCloseLookCameraIntance.Priority = 5;
-    //             cinmachineSprintCameraIntance.Priority = 5;
-    //             break;
-    //         case CameraType.CloseLook:
-    //             cinmachineCloseLookCameraIntance.Priority =10;
-    //             cinmachineSprintCameraIntance.Priority = 5;
-    //             cinemachineVirtualCameraInstance.Priority = 5;
-    //             break;
-    //         case CameraType.Sprint:
-    //             cinmachineSprintCameraIntance.Priority = 10;
-    //             cinmachineCloseLookCameraIntance.Priority = 5;
-    //             cinemachineVirtualCameraInstance.Priority = 5;
-    //             break;
-    //         default:
-    //             throw new ArgumentOutOfRangeException(nameof(cameraType), cameraType, null);
-    //     }
-    // }
-
     void InstanciateComponents()
     {
         playerInput = GetComponent<PlayerInput>();
@@ -197,16 +170,6 @@ public class PlayerComponentsHandler : NetworkBehaviour, INetObjectToClean
         objectsToDisable.Add(cameraZoom);
         objectsToDisable.Add(sprintCamera);
         //Canvas
-        // canvasObject = Instantiate(canvasPrefab,transform);
-        // canvasObject.GetComponentInChildren<Button>().onClick.AddListener(transform.GetComponent<PlayerStatsController>().OnSpawnPlayer);
-        // playerNameText = canvasObject.GetComponentInChildren<TextMeshProUGUI>();
-        // statsPanelController = GetComponentInChildren<StatsPanelController>();
-        // pauseController = GetComponentInChildren<PauseController>();
-
-
-
-        //rb = GetComponent<Rigidbody>();
-        //rb.isKinematic = true;
     }
 
 

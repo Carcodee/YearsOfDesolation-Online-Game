@@ -9,9 +9,10 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.VFX;
 
-public class PlayerVFXController : NetworkBehaviour
+public class PlayerVFXController : NetworkBehaviour, INetObjectToClean
 {
 
+    public bool shutingDown { get; set; }
     public StateMachineController stateMachineController;
     public PlayerStatsController playerStatsController;
     [Header("MeshTrail")]
@@ -138,13 +139,6 @@ public class PlayerVFXController : NetworkBehaviour
 
         }
     }
-    public override void OnNetworkDespawn() {
-
-        if (IsOwner) {
-            // playerStatsController.GetComponent<PlayerController>().OnPlyerShoot -= ShootEffect;
-            playerStatsController.OnLevelUp -= LevelUpEffect;
-        } 
-    }
 
     private void OnDisable()
     {
@@ -161,6 +155,7 @@ public class PlayerVFXController : NetworkBehaviour
     }
     void Update()
     {
+        if (shutingDown)return;
         if (IsOwner)
         {
             FollowHPBar();
@@ -362,19 +357,27 @@ public class PlayerVFXController : NetworkBehaviour
     }
 
 
-    
+    public void CleanData()
+    {
+        playerStatsController.OnLevelUp -= LevelUpEffect;
+        playerStatsController.health.OnValueChanged -= UpdateHealthEffect;
+    }
+
+    public void OnSpawn()
+    {
+    }
+
 }
 [System.Serializable]
-public class HandleVFX 
+public class HandleVFX: INetObjectToClean 
 {
+    public bool shutingDown { get; set; }
     private Action <Vector3, Quaternion> _serverRpcActions;
     private Action <Vector3, Quaternion> _clientRpcActions;
     private EmbededNetwork embededNetwork;
     private int id;
     VfxType _vfxType;
     
-
-    //create a constructor that takes an action with a Vector3 parameter
     public HandleVFX(Action<Vector3, Quaternion> actions, GameObject vfx,VfxType vfxType, int id)
     {
         this.id = id;
@@ -396,7 +399,6 @@ public class HandleVFX
     }
     public void CreateLocalVFX(Vector3 value, Quaternion rotation)
     {
-     
         _clientRpcActions.Invoke(value, rotation);
     }
     
@@ -452,7 +454,16 @@ public class HandleVFX
         LocalOnly=1 << 1,
         Net=1 << 2,
     }
-    
+
+
+    public void CleanData()
+    {
+    }
+
+    public void OnSpawn()
+    {
+        throw new NotImplementedException();
+    }
 
 }
 public enum MyVfxType

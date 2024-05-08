@@ -61,6 +61,7 @@ namespace NetworkingHandling
         {
             
             StopAllCoroutines();
+            CleanerController.instance.StopLogic(true);
             CleanerController.instance.Clean();
             foreach (Transform player in GameController.instance.players)
             {
@@ -78,7 +79,6 @@ namespace NetworkingHandling
             var deleteLobbyAsync = Lobbies.Instance.DeleteLobbyAsync(lobbyId);
             Destroy(GameController.instance);
             if (NetworkManager.Singleton.ShutdownInProgress && !deleteLobbyAsync.IsCompleted) await Task.Yield();
-            
             GameManager.Instance.LoadMenuScene();
         }
         public async Task StartHost()

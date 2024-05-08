@@ -132,7 +132,10 @@ public class PauseController : MonoBehaviour
     
     public void ExitGame()
     {
-        Application.Quit();
+        GameManager.Instance.gameEnded = true;
+        PostProccesingManager.instance.ActivateBlur(0.0f);
+        PostProccesingManager.instance.ActivateMenuBlur(1.0f);
+        GameManager.Instance.LoadMenuScene();
     }
     public void PauseGame()
     {

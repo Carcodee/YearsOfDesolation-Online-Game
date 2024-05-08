@@ -116,6 +116,10 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
 
     public override void OnNetworkDespawn()
     {
+        if (!GameManager.Instance.gameEnded)
+        {
+            GameManager.Instance.DisconnectNotificationText = "Host lost connection";
+        }
         CleanerController.instance.Clean();
     }
 
@@ -146,6 +150,14 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
 
     private void Update()
     {
+        if (shutingDown)return;
+        
+        AllResourcesReady(b =>
+        {
+            GameManager.Instance.ActivateLoadingScreen(!b);
+            GameManager.Instance.ActivateMenu(!b);
+        });
+
         if (IsOwner) {
             if (!_IsInitizalized && health.Value<=0) {
                 OnSpawnPlayer?.Invoke();
@@ -166,6 +178,13 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
 
     }
 
+    public async void AllResourcesReady(Action<bool> callback)
+    {
+        if (GameManager.Instance.ReadyToStart)return;
+        await Task.Delay(500);
+        GameManager.Instance.ReadyToStart = true;
+        callback.Invoke(true);
+    }
     public void SelectBuild(PlayerBuild build)
     {
         playerBuildSelected = build;
@@ -362,7 +381,8 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
                     NetworkingHandling.HostManager.instance.DisconnectHost();
                 }
                 else
-                {   
+                { 
+                    GameManager.Instance.gameEnded = true;
                    ClientManager.instance.DisconnectClient(NetworkObject.OwnerClientId);
                 }
 
@@ -571,9 +591,20 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
     {
         avaliblePoints.Value--;
     }
-    
-    
-    
+
+    private void OnApplicationQuit()
+    {
+        if (IsServer)
+        {
+            NetworkingHandling.HostManager.instance.DisconnectHost();
+        }
+        else
+        {
+            NetworkingHandling.ClientManager.instance.DisconnectClient(OwnerClientId);
+        }
+    }
+
+
     #region ServerRpc
 
     //template selected

@@ -22,8 +22,9 @@ using System.Collections.Generic;
         public LobbyItem lobbyPrefab;
         bool isRefreshing = false;
         bool isJoining = false;
-
+        public GameObject loadingScene;
         public bool isLobbyWindowOpen = false;
+        public NotificationManager notification;
         public void OpenModalWindow()
         {
             modalWindowTabs.OpenWindow();
@@ -38,10 +39,30 @@ using System.Collections.Generic;
             //
         }
 
+        private void Start()
+        {
+            GameManager.Instance.loadingScene = loadingScene;
+            GameManager.Instance.canvasObj = networkSceneManager.canvas;
+            GameManager.Instance.menuGameObject = networkSceneManager.menu;
+            GameManager.Instance.ReadyToStart = false;
+            DisplayNotification();
+        }
+
         public void LoadTutorial()
         {
             networkSceneManager.StartTutorialHost();
             GameManager.Instance.isOnTutorial = true;
+        }
+
+        public void DisplayNotification()
+        {
+            if (GameManager.Instance.DisconnectNotificationText!="")
+            {
+                notification.title = "Something happen";
+                notification.description = GameManager.Instance.DisconnectNotificationText;
+                notification.OpenNotification();
+                GameManager.Instance.DisconnectNotificationText = "";
+            }
         }
 
         public async Task HearthBeat()
@@ -109,8 +130,7 @@ using System.Collections.Generic;
             {
                 var joinLobby = await Lobbies.Instance.JoinLobbyByIdAsync(lobby.Id);
                 string joinCode = joinLobby.Data["JoinCode"].Value;
-                networkSceneManager.menu.SetActive(false);
-                networkSceneManager.canvas.SetActive(false);
+                GameManager.Instance.ActivateLoadingScreen(true);
                 await NetworkingHandling.ClientManager.instance.StartClient(joinCode,
                     networkSceneManager.GetTransport());
                 
@@ -119,11 +139,14 @@ using System.Collections.Generic;
             catch(LobbyServiceException e)
             {
                 Debug.Log(e);
+                GameManager.Instance.ActivateLoadingScreen(false);
+                GameManager.Instance.ActivateMenu(true);
                 isJoining = false;
                 throw;
             }
             isJoining = false;
         }
+        
 
         public async Task DeleteTask()
         {

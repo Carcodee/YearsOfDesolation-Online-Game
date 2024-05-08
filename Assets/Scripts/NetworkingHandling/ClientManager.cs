@@ -24,6 +24,11 @@ namespace NetworkingHandling
             instance = this;
         }
 
+        private void Update()
+        {
+        }
+
+        
         public async Task SetUpAllocation(string joinCode, UnityTransport transport)
         {
             JoinAllocation a = await RelayService.Instance.JoinAllocationAsync(joinCode);
@@ -52,6 +57,8 @@ namespace NetworkingHandling
         {
             GameManager.Instance.LoadMenuScene();
             NetworkManager.Singleton.DisconnectClient(clientId);
+            CleanerController.instance.StopLogic(true);
+            CleanerController.instance.Clean();
         }
 
     }
