@@ -55,10 +55,11 @@ namespace NetworkingHandling
 
         public async Task DisconnectClient(ulong clientId)
         {
-            GameManager.Instance.LoadMenuScene();
-            NetworkManager.Singleton.DisconnectClient(clientId);
+            GameManager.Instance.localPlayerRef = null;
             CleanerController.instance.StopLogic(true);
             CleanerController.instance.Clean();
+            GameManager.Instance.LoadMenuScene();
+            NetworkManager.Singleton.Shutdown();
         }
 
     }

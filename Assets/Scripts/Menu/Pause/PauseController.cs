@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Menu.StatsPanel;
 using Michsky.UI.Heat;
+using NetworkingHandling;
 using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
@@ -135,7 +136,15 @@ public class PauseController : MonoBehaviour
         GameManager.Instance.gameEnded = true;
         PostProccesingManager.instance.ActivateBlur(0.0f);
         PostProccesingManager.instance.ActivateMenuBlur(1.0f);
-        GameManager.Instance.LoadMenuScene();
+        if (GameManager.Instance.localPlayerRef.IsServer)
+        {
+            NetworkingHandling.HostManager.instance.DisconnectHost();
+
+        }
+        else
+        {
+            ClientManager.instance.DisconnectClient(GameManager.Instance.localPlayerRef.OwnerClientId);
+        }
     }
     public void PauseGame()
     {

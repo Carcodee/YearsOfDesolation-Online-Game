@@ -156,6 +156,8 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
         {
             GameManager.Instance.ActivateLoadingScreen(!b);
             GameManager.Instance.ActivateMenu(!b);
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = false;
         });
 
         if (IsOwner) {

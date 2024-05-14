@@ -65,6 +65,7 @@ public class GameController : NetworkBehaviour,INetObjectToClean
     
     void Start()
     {
+        
         NetworkManager.Singleton.OnClientConnectedCallback += HandleConnection;
         NetworkManager.Singleton.OnClientDisconnectCallback += HandleDisconnection;
         CleanerController.instance.AddObjectToList(GetComponent<INetObjectToClean>());
@@ -85,6 +86,7 @@ public class GameController : NetworkBehaviour,INetObjectToClean
     }
     public async void GetPlayerRef()
     {
+        
         if (NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject()==null) await Task.Yield();
         GameManager.Instance.localPlayerRef = NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject()
             .GetComponent<PlayerController>();
@@ -112,12 +114,13 @@ public class GameController : NetworkBehaviour,INetObjectToClean
 
     public void HandleConnection(ulong clientId)
     {
+        Debug.Log("Connected");
         if (IsServer) {
             AddPlayerToListClientRpc();
+            OnPlayerEnterServerRpc();
         }
         if (IsClient && IsOwner)
         {
-            OnPlayerEnterServerRpc();
             SetNumberOfPlayerListServerRpc(clientId);
         }
     }
@@ -125,16 +128,16 @@ public class GameController : NetworkBehaviour,INetObjectToClean
 
     public void HandleDisconnection(ulong clientId)
     {
+        Debug.Log("Disconnected");
          if (IsServer)
          {
            AddPlayerToListClientRpc();
+           OnPlayerOutServerRpc();
            //TODO: disconnect all clients
-       
          }
          if (IsClient && IsOwner&& !IsServer)
          {
-           OnPlayerOutServerRpc();
-           SetMapLogicClientServerRpc(numberOfPlayers.Value, numberOfPlayersAlive.Value, reduceZoneSpeed, timeToFarm, 3, zoneRadius);
+           SetMapLogicClientServerRpc(numberOfPlayers.Value, numberOfPlayersAlive.Value, reduceZoneSpeed, timeToFarm, 2, zoneRadius);
            SetNumberOfPlayerListServerRpc(clientId);
            GameManager.Instance.LoadMenuScene();
          }       
@@ -171,6 +174,8 @@ public class GameController : NetworkBehaviour,INetObjectToClean
     /// </summary>
     public void StartGame()
     {
+        NetworkingHandling.HostManager.instance.CloseLobby();
+        started.Value = true;
         for (int i = 0; i < numberOfPlayers.Value; i++)
         {
 
@@ -187,7 +192,6 @@ public class GameController : NetworkBehaviour,INetObjectToClean
             }
         }
         // if (IsServer) SpawnCoins();
-        started.Value = true;
     }
 
     public void CreateZonesOnNet(int index)
@@ -211,6 +215,7 @@ public class GameController : NetworkBehaviour,INetObjectToClean
 
     private void UpdateTime()
     {
+        // if (numberOfPlayers.Value<2)return;
         if (IsServer && !started.Value)
         {
             netTimeToStart.Value += Time.deltaTime;
@@ -281,7 +286,6 @@ public class GameController : NetworkBehaviour,INetObjectToClean
     [ServerRpc]
     public void SetMapLogicClientServerRpc(int numberOfPlayers,int numberOfPlayersAlive,float zoneRadiusExpandSpeed,int totalTime,float enemiesSpawnRate,float zoneRadius)
     {
-        Debug.Log("Called on client");
         mapLogic.Value.SetMap(numberOfPlayers, numberOfPlayersAlive, zoneRadiusExpandSpeed, totalTime, enemiesSpawnRate, zoneRadius);
     }
 
@@ -386,7 +390,8 @@ public class GameController : NetworkBehaviour,INetObjectToClean
 
 
 
-        
+
+
     
     [ClientRpc]
     public void AddPlayerToListClientRpc()
@@ -395,10 +400,14 @@ public class GameController : NetworkBehaviour,INetObjectToClean
         GameObject[] playersInScene = GameObject.FindGameObjectsWithTag("Player");
         foreach (GameObject index in playersInScene)
         {
-            players.Add(index.transform);
+            if (index.GetComponent<NetworkObject>().IsSpawned)
+            {
+                players.Add(index.transform);
+            }
             Debug.Log("Connected Client");
         }
     }
+    
     [ClientRpc]
     public void SetCoinRandomPointClientRpc(Vector3 pos, ulong networkID)
     {
@@ -430,8 +439,11 @@ public class GameController : NetworkBehaviour,INetObjectToClean
 
     public void CleanData()
     {
-        NetworkManager.Singleton.OnClientConnectedCallback -= HandleConnection;
-        NetworkManager.Singleton.OnClientDisconnectCallback -= HandleDisconnection;
+        if (IsOwner)
+        {
+            NetworkManager.Singleton.OnClientConnectedCallback -= HandleConnection;
+            NetworkManager.Singleton.OnClientDisconnectCallback -= HandleDisconnection;
+        }
     }
 
     public void OnSpawn()

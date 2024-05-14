@@ -102,6 +102,7 @@ using System.Collections.Generic;
                     for (int i = 0; i < lobbies.Results.Count; i++)
                     {
                         var item = Instantiate(lobbyPrefab,lobbyList);
+                        item.Joinable = !lobbies.Results[i].IsLocked;
                         item.Initialise(this, lobbies.Results[i]);
                         item.lobbyName.text = lobbies.Results[i].Name;
                         item.playerCount.text = lobbies.Results[i].Players.Count.ToString()+"/8 players";

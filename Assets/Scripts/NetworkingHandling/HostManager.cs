@@ -73,7 +73,8 @@ namespace NetworkingHandling
                 NetworkManager.Singleton.DisconnectClient(playerRef.OwnerClientId);
                 Debug.Log("ID: "+ playerRef.OwnerClientId);
             }
-            
+
+            GameManager.Instance.localPlayerRef = null;
             NetworkManager.Singleton.Shutdown();
             currentTransport.Shutdown();
             var deleteLobbyAsync = Lobbies.Instance.DeleteLobbyAsync(lobbyId);
@@ -108,6 +109,17 @@ namespace NetworkingHandling
 
             NetworkManager.Singleton.StartHost();
             GameManager.Instance.CreateController();
+        }
+
+        public async void CloseLobby()
+        {
+            UpdateLobbyOptions lobbyOptions = new UpdateLobbyOptions();
+            lobbyOptions.IsLocked = true;
+            
+            var lobby = await Lobbies.Instance.GetLobbyAsync(lobbyId);
+ 
+            lobbyOptions.Name =lobby.Name;
+            Lobbies.Instance.UpdateLobbyAsync(lobbyId, lobbyOptions);
         }
 
         public void StartHostNoLobby()
