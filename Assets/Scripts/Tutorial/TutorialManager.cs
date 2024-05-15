@@ -27,14 +27,13 @@ public class TutorialManager : MonoBehaviour
     public DialogData tutorialTextData;
     public TableData tableData;
     public bool isLastText;
-
     public bool wasTutorialStepDone;
-
 
     [Header("Map")] 
     public Transform spawnPoint;
     public Transform spawnAmmoPoint;
     private TutorialStagesHandler tutorialStagesHandler => TutorialStagesHandler.instance; 
+    
     private void Awake()
     {
         fileName = Application.dataPath + "/TextFiles/Tutorial/TutorialDialog.csv";
@@ -45,9 +44,7 @@ public class TutorialManager : MonoBehaviour
             Destroy(this);
             return;
         }
-
         instance = this;
-        
     }
 
     private void Update()
@@ -73,34 +70,6 @@ public class TutorialManager : MonoBehaviour
     { 
         playerRef.playerStats.SpawnCoin(playerRef.playerStats.coin, spawnAmmoPoint.position);
     }
-    public void CheckCurrentZoneToGo()
-    {
-        if (wasTutorialStepDone) return;
-        PlayerComponentsHandler.IsCurrentDeviceMouse = true;
-        switch (currentHUDStage)
-        {
-            case ZoneToGo.PlayerZone:
-                DisplayTutorialData(1);
-                break;
-            case ZoneToGo.PickBuildZone:
-                DisplayTutorialData(2);
-                break;
-            case ZoneToGo.TakeCoinZone:
-                DisplayTutorialData(3);
-                playerRef.playerStats.SpawnCoin(playerRef.playerStats.coin, spawnAmmoPoint.position);
-                break;
-            case ZoneToGo.UpgradeZone:
-                DisplayTutorialData(4);
-                break;
-            case ZoneToGo.EEnemyZone:
-                DisplayTutorialData(5);
-                break;
-        }
-
-        F_In_F_Out_Obj.OnInfoTextDisplayed?.Invoke(tutorialTextData.text);
-        wasTutorialStepDone = true;
-
-    }
 
     public IEnumerator SetPlayerInPos()
     {
@@ -112,9 +81,8 @@ public class TutorialManager : MonoBehaviour
 
         GameManager.Instance.localPlayerRef.transform.position = spawnPoint.position;
         GameManager.Instance.localPlayerRef.transform.rotation= Quaternion.Euler(0,-180,0);
-
         playerRef = GameManager.Instance.localPlayerRef;
-
+        
         yield return new WaitForSeconds(1.0f);
         tutorialStagesHandler.Init();
     }
@@ -159,7 +127,6 @@ public class TutorialManager : MonoBehaviour
         // Debug.Log(tutorialTextData.specification);
         tutorialTextData.text =GetValueFromIndex(dialogCounter, 2+HUBCounter); 
         tutorialTextData.text = AnaliseText(tutorialTextData.text, "red", true);
-        
         // Debug.Log(tutorialTextData.text);
         if (CheckNextHUB=="none")
         {
@@ -233,16 +200,13 @@ public class TutorialManager : MonoBehaviour
                 }
 
                 slicedStrings[i] = prefix + slicedStrings[i] + final;   
-
             }
         }
-
         string formatedString = "";
         foreach (var slicedString in slicedStrings)
         {
             formatedString += slicedString;
         }
-
         return formatedString;
     }
     public struct DialogData
@@ -251,7 +215,6 @@ public class TutorialManager : MonoBehaviour
         public string title;
         public string specification;
         public string text;
-
     }
     [System.Serializable]
     public struct TableData
@@ -259,8 +222,6 @@ public class TutorialManager : MonoBehaviour
         public int tableSize;
         public string[] data;
     }
-
-    
 }
 
 public enum TutorialStage

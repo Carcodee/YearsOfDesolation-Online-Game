@@ -24,12 +24,14 @@ public class Stage_TakeAmmo : MonoBehaviour, IStage
         F_In_F_Out_Obj.OnInfoTextDisplayed?.Invoke(TutorialManager.instance.tutorialTextData.text);
         
         TutorialManager.instance.playerRef.canMove = false;
+        TutorialManager.instance.playerRef.stateMachineController.SetState("Idle");
     }
 
     public void OnDialogFinished()
     {
         
         TutorialManager.instance.playerRef.canMove = true;
+        TutorialManager.instance.playerRef.stateMachineController.SetState("Movement");
     }
 
     public void OnUIInstruction()

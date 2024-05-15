@@ -56,7 +56,7 @@ namespace Players.PlayerStates.States
             {
                 stateMachineController.SetState("Falling");
             }
-            if (Input.GetKeyDown(KeyCode.LeftAlt))
+            if (Input.GetKeyDown(KeyCode.Mouse1))
             {
                 stateMachineController.SetState("Jetpack");
             }

@@ -93,7 +93,7 @@ public class F_In_F_Out_Obj : MonoBehaviour
             }
             if (uiElement[i]==UIElement.SkillPanel)
             {
-                  OnFadeInSkillElements+=FadeIn;
+                  OnFadeInSkillElements-=FadeIn;
             }
             if (uiElement[i]==UIElement.StatsPanel) 
             {
@@ -152,7 +152,6 @@ public class F_In_F_Out_Obj : MonoBehaviour
     
     public void FadeIn()
     {
-        
         animator.Play("FadeIn");
     }
     

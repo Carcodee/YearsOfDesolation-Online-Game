@@ -21,7 +21,7 @@ public class Stage_PickUpgrade : MonoBehaviour,IStage
     public void OnDialogDisplayed()
     {
         TutorialManager.instance.playerRef.canMove = false;
-        
+        TutorialManager.instance.playerRef.stateMachineController.SetState("Idle");
         TutorialManager.instance.DisplayTutorialData(dialogCounter);
         PlayerComponentsHandler.IsCurrentDeviceMouse = true;
         F_In_F_Out_Obj.OnInfoTextDisplayed?.Invoke(TutorialManager.instance.tutorialTextData.text);
@@ -32,6 +32,7 @@ public class Stage_PickUpgrade : MonoBehaviour,IStage
     public void OnDialogFinished()
     {
         TutorialManager.instance.playerRef.canMove = true;
+        TutorialManager.instance.playerRef.stateMachineController.SetState("Movement");
         
     }
 

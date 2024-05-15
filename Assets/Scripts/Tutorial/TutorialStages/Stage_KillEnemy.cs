@@ -24,19 +24,19 @@ public class Stage_KillEnemy : MonoBehaviour, IStage
     public void OnDialogDisplayed()
     {
         
-        TutorialManager.instance.playerRef.canMove = false;
         TutorialManager.instance.DisplayTutorialData(dialogCounter);
         PlayerComponentsHandler.IsCurrentDeviceMouse = true;
         F_In_F_Out_Obj.OnInfoTextDisplayed?.Invoke(TutorialManager.instance.tutorialTextData.text);
-
+        TutorialManager.instance.playerRef.canMove = false;
+        TutorialManager.instance.playerRef.stateMachineController.SetState("Idle");
         enemy = Instantiate(playerPrefab, enemyPos.position, quaternion.identity);
-        Debug.Log("Dialog displayed");
         CanvasController.currentObjToFollow = enemy.transform;
     }
 
     public void OnDialogFinished()
     {
         TutorialManager.instance.playerRef.canMove = true;
+        TutorialManager.instance.playerRef.stateMachineController.SetState("Movement");
     }
 
     public void OnUIInstruction()

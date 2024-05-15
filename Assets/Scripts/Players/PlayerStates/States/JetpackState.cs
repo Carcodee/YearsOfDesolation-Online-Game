@@ -12,11 +12,11 @@ namespace Players.PlayerStates.States
         }
         Vector3 moveDir;
         private float aimAnimation;
-
+        private float currentJetpackTime = 0;
         public override void StateEnter()
         {
+            currentJetpackTime = 0.0f;
             networkAnimator.Animator.SetBool("Fall", true);
-            
             networkAnimator.Animator.SetBool("Land", false);
             playerRef._bodyVelocity.y = 0;
             moveDir = playerRef.move;
@@ -41,25 +41,36 @@ namespace Players.PlayerStates.States
         {
             this.playerRef.AimAinimation(ref aimAnimation, networkAnimator);
             this.playerRef.Shoot();
+            currentJetpackTime += Time.deltaTime;
             this.playerRef.Reloading();
         
-            if (Input.GetKeyUp(KeyCode.Space))
+            if (Input.GetKeyUp(KeyCode.Mouse1))
             {
                 stateMachineController.SetState("Falling");
+                playerRef._bodyVelocity= Vector3.zero;
             }
         }
         public override void StatePhysicsUpdate()
         {
             playerRef.ApplyGravity();
-            if (playerRef.isGrounded)
+            if (IsAlmostAtGround() || currentJetpackTime>playerRef.jetpackTime)
             {
-                networkAnimator.Animator.SetBool("Land", true);
-                stateMachineController.SetState("Movement");
+                playerRef._bodyVelocity.y = 0;
+                stateMachineController.SetState("Falling");
             }
         }
         public override void StateLateUpdate()
         {
         }
-    
+ 
+        public bool IsAlmostAtGround()
+        {
+            if (Physics.Raycast(playerRef.transform.position + playerRef.sphereOffset,-playerRef.transform.up,out RaycastHit hit, playerRef.maxDistanceToJumpAgain, playerRef.GroundLayer))
+            {
+                Debug.Log("Ground detected");
+                return true;
+            }
+            return false;
+        }   
     }
 }

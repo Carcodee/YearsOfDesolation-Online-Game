@@ -52,12 +52,10 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
     public string [] hitTags;
     public int HeadShotDamage => (int) playerStats.GetDamageDone() * 2;
     public int legsShotDamage =>(int) playerStats.GetDamageDone() / 2;
-    
     public float currentAimShootPercentage =>playerStats.currentWeaponSelected.weapon.currentShootRefraction / playerStats.currentWeaponSelected.weapon.minShootRefraction.statValue;
 
     [Header("Player Movement")]
     public Vector3 move;
-
     public float rotationFactor;
     public float rotationSmoothTime = 0.1f;
     public float rotationVelocity;
@@ -83,7 +81,6 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
     [Header("Player Actions")]
     float xRotation = 0f;
     float yRotation = 0f;
-
     public bool lockShoot=false;
     public bool canMove = true;
     
@@ -95,6 +92,7 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
     public Vector3 _bodyVelocity;
     public bool hasPlaned = false;
     public float maxDistanceToJumpAgain = 3;
+    public float jetpackTime = 2.0f;
 
     [Header("AnimConfigs")]
     public float moveAnimationSpeed;
@@ -123,15 +121,12 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
         cam.enabled = IsOwner;
         if (IsOwner)
         {
-            // ak_99 = new Weapon(new AmmoBehaviour(100, 30, 30, 3),"Ak", 0.1f,
-            //     0, 0.1f, 0.1f, 0.01f);
             WeaponItem currentWeapon= playerStats.currentWeaponSelected;
             SetSpeedStateServerRpc(5);
             stateMachineController= GetComponent<StateMachineController>();
             stateMachineController.Initializate();
             playerStats = GetComponent<PlayerStatsController>();
             playerComponentsHandler = GetComponent<PlayerComponentsHandler>();
-            // DoRagdoll(false);
             playerStats.currentWeaponSelected.weapon.shootRefraction = 0.1f;
             PlayerComponentsHandler.OnStationaryStepAttempted += AttempRotation; 
             playerStats.OnPlayerDead += PlayerDeadCallback;
@@ -175,18 +170,30 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
                 isAiming=true;
                 this.stateMachineController.networkAnimator.Animator.SetFloat("X", this.move.x);
                 this.stateMachineController.networkAnimator.Animator.SetFloat("Y", this.move.z);
-                stateMachineController.networkAnimator.Animator.SetFloat("Aiming", 1);
-                playerStats.currentWeaponSelected.weapon.shootRefraction = 0.01f;
+                ActivateAim(1);
             }
             if (Input.GetKeyUp(KeyCode.Mouse1)|| isSprinting)
             {
                 isAiming = false;
-                stateMachineController.networkAnimator.Animator.SetFloat("Aiming", 0);
-                playerStats.currentWeaponSelected.weapon.shootRefraction = 0.1f; 
+                ActivateAim(0);
             }
 
 
             StartCurrentWeaponReload();
+        }
+    }
+
+    public void ActivateAim(int val)
+    {
+        stateMachineController.networkAnimator.Animator.SetFloat("Aiming", val);
+        playerStats.currentWeaponSelected.weapon.shootRefraction = 0.01f;
+        if (val<=0)
+        {
+            playerStats.currentWeaponSelected.weapon.shootRefraction = 0.1f; 
+        }
+        else
+        {
+            playerStats.currentWeaponSelected.weapon.shootRefraction = 0.01f; 
         }
     }
     private void FixedUpdate()
@@ -194,7 +201,6 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
         if (IsOwner)
         {
             CreateAimTargetPos();
-
             isGroundedCheck();
             stateMachineController.StatePhysicsUpdate();
 

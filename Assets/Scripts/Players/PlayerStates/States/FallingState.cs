@@ -13,7 +13,8 @@ namespace Players.PlayerStates.States
         Vector3 moveDir;
         float airTime;
         bool hasJumpAlmostAtTheGroud = false;
-        
+        private float xJumpDrag = 0.3f;
+        private float yJumpDrag = 0.3f;
         public override void StateEnter()
         {
             
@@ -39,8 +40,8 @@ namespace Players.PlayerStates.States
 
         public override void StateInput()
         {
-            float x= Input.GetAxis("Horizontal")*0.3f;
-            float y= Input.GetAxis("Vertical")*0.3f;
+            float x= Input.GetAxis("Horizontal")*xJumpDrag;
+            float y= Input.GetAxis("Vertical")*yJumpDrag;
             this.playerRef.Move(moveDir.x +x,moveDir.z+ y);
         }
 
@@ -49,10 +50,11 @@ namespace Players.PlayerStates.States
             StateInput();
             airTime += Time.deltaTime;
 
-            if ((Input.GetKeyDown(KeyCode.LeftAlt)&&!playerRef.hasPlaned && airTime>playerRef.airTimeToPlane) || 
-                (Input.GetKeyDown(KeyCode.LeftAlt)&&stateMachineController.lastStateName== "Jump"&&!playerRef.hasPlaned))
+            if ((Input.GetKeyDown(KeyCode.Mouse1)&&!playerRef.hasPlaned && airTime>playerRef.airTimeToPlane) || 
+                (Input.GetKeyDown(KeyCode.Mouse1)&&stateMachineController.lastStateName== "Jump"&&!playerRef.hasPlaned))
             {
                 stateMachineController.SetState("Jetpack");
+                return;
             }
             if (Input.GetKeyDown(KeyCode.Mouse1))
             {

@@ -238,7 +238,6 @@ public class PlayerComponentsHandler : NetworkBehaviour, INetObjectToClean
         if (Input.GetKeyDown(KeyCode.Mouse1)&& !playerController.isSprinting)
         {
             cinmachineCloseLookCameraIntance.Priority = 25;
-            
             cinmachineCloseLookCameraIntance.gameObject.SetActive(true);
             // return;
         }
@@ -258,7 +257,12 @@ public class PlayerComponentsHandler : NetworkBehaviour, INetObjectToClean
             cinmachineSprintCameraIntance.gameObject.SetActive(false);
         }
     }
-    
+
+    public void ActivateCamera(CinemachineVirtualCamera cam, bool value, int priority)
+    {
+        cam.gameObject.SetActive(value);
+        cam.Priority = priority;
+    }
     public IEnumerator ShakeCamera(float duration, float magnitude, float frecuency)
     {
         float elapsed = 0.0f;

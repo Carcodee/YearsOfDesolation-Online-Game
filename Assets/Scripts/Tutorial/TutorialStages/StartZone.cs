@@ -25,6 +25,7 @@ public class StartZone : MonoBehaviour, IStage
         PlayerComponentsHandler.IsCurrentDeviceMouse = true;
         F_In_F_Out_Obj.OnInfoTextDisplayed?.Invoke(TutorialManager.instance.tutorialTextData.text);
         TutorialManager.instance.playerRef.canMove = false;
+        TutorialManager.instance.playerRef.stateMachineController.SetState("Idle");
     }
 
     public void OnDialogFinished()
@@ -33,6 +34,7 @@ public class StartZone : MonoBehaviour, IStage
         TaskList.instance.StartTaskList();   
         TutorialManager.instance.playerRef.canMove = true;
         CanvasController.currentObjToFollow = objectToFollow;
+        TutorialManager.instance.playerRef.stateMachineController.SetState("Movement");
     }
 
     public void OnUIInstruction()
