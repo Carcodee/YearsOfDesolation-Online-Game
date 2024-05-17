@@ -165,7 +165,7 @@ public class PlayerComponentsHandler : NetworkBehaviour, INetObjectToClean
         cinmachineSprintCameraIntance.Follow = cinemachineCameraTarget;
         
         //Minimap
-        playerMinimapCamera.transform.SetParent(null); 
+        // playerMinimapCamera.transform.SetParent(null); 
         objectsToDisable.Add(camera);
         objectsToDisable.Add(cameraZoom);
         objectsToDisable.Add(sprintCamera);
