@@ -7,6 +7,7 @@ using Unity.Netcode;
 using Unity.Netcode.Components;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Profiling;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
@@ -101,9 +102,13 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
     [Header("GroundCheck")]
     [Range(0.1f, 50f)] public float sphereCastRadius;
     [Range(0.1f, 100f)] public float range;
+    
     public LayerMask GroundLayer;
     public bool isGrounded;
     public Vector3 sphereOffset;
+    public Vector3 [] jumpRaycastOffset;
+    public bool fallingGrounded;
+    public float closeToGroundOffset=0.01f;
     
     [Header("Reload")]
     bool hasStartedReloading=false;
@@ -113,6 +118,11 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
     {
         Gizmos.color = Color.red;
         Gizmos.DrawRay(transform.position+ sphereOffset, Vector3.down*maxDistanceToJumpAgain);
+        Gizmos.color = Color.blue;
+        for (int i = 0; i < jumpRaycastOffset.Length; i++)
+        {
+            Gizmos.DrawRay(transform.position+ jumpRaycastOffset[i], Vector3.down*range);
+        }
     }
 
     void Start()
@@ -180,6 +190,7 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
 
 
             StartCurrentWeaponReload();
+            
         }
     }
 
@@ -240,17 +251,39 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
     {
         spawnBulletPoint.localPosition = transform.localPosition;
     }
+    public bool isFallingGrounded()
+    {
+        if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, closeToGroundOffset, GroundLayer))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }           
+    }
     public void isGroundedCheck()
     {
 
-        if (Physics.SphereCast(transform.position + sphereOffset, sphereCastRadius, Vector3.down, out RaycastHit hit, range, GroundLayer))
+        int isGoingToFallCount = 0;
+        for (int i = 0; i < jumpRaycastOffset.Length; i++)
         {
-            isGrounded = true;
-        }else
+            if (Physics.Raycast(transform.position+ jumpRaycastOffset[i], Vector3.down, out RaycastHit hit, range, GroundLayer))
+            {
+            }
+            else
+            {
+                isGoingToFallCount++;
+            }           
+        }           
+        if (isGoingToFallCount==jumpRaycastOffset.Length)
         {
             isGrounded = false;
         }
-
+        else
+        {
+            isGrounded = true;
+        }
     }
     public void StartCurrentWeaponReload()
     {
@@ -352,14 +385,22 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
     }
 
 
+    public void GroundGravity()
+    {
+        characterController.Move(Vector3.down* Time.fixedDeltaTime);
+    }
     public void ApplyGravity()
     {
-        
+
         _bodyVelocity.y -= (gravityForce *gravityMultiplier) * Time.fixedDeltaTime;
         characterController.Move(_bodyVelocity* Time.fixedDeltaTime);
         
     }
 
+    public void ApplyGroundGravity()
+    {
+        
+    }
     public void RotatePlayer()
     {
         Vector3 playerMovement = new Vector3(move.x, 0, move.z).normalized;
@@ -487,8 +528,6 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
                 
                 // OnPlayerVfxAction?.Invoke(MyVfxType.hit ,hit.point);
                 PlayerVFXController.hitEffectHandle.CreateVFX(hit.point, transform.rotation ,IsServer);
-                
-                
                 BulletController bullet = Instantiate(bulletPrefab, spawnBulletPoint.position,
                     cinemachineCameraTarget.rotation);
                 bullet.Direction =  (spawnBulletPoint.transform.position - hit.point).normalized;
@@ -545,12 +584,12 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
             }
             else
             {
-                PlayerVFXController.hitEffectHandle.CreateVFX(hit.point, transform.rotation,IsServer);
                 
                 BulletController bullet = Instantiate(bulletPrefab, spawnBulletPoint.position,
                     cinemachineCameraTarget.rotation);
 
-                bullet.Direction =  (spawnBulletPoint.transform.position - hit.point).normalized;
+                
+                bullet.Direction =  -((cameraRef.transform.forward*1000) - spawnBulletPoint.position);
                 bullet.damage.Value = playerStats.GetDamageDone();
                 // OnPlayerVfxAction?.Invoke(MyVfxType.hit ,hit.point);
                 
@@ -607,12 +646,6 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
     //     }
     //     stateMachineController.networkAnimator.Animator.enabled = !value;
     // }
-
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.green;
-        Gizmos.DrawSphere(transform.position + sphereOffset, sphereCastRadius);
-    }
 
     private void OnTriggerEnter(Collider other)
     {

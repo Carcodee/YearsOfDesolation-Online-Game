@@ -72,7 +72,7 @@ namespace Players.PlayerStates.States
             {
                 hasJumpAlmostAtTheGroud = true;
             }
-            if (playerRef.isGrounded)
+            if (playerRef.isFallingGrounded())
             {
                 if (hasJumpAlmostAtTheGroud)
                 {

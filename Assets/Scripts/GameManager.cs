@@ -49,7 +49,9 @@ public class GameManager : MonoBehaviour
         }
         SceneManager.LoadScene("Menu", LoadSceneMode.Single);
         gameControllerReady = false;
-        
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
         // if (!sceneAsync.isDone)await Task.Yield();
         // sceneAsync.allowSceneActivation = true;
     }
@@ -60,7 +62,8 @@ public class GameManager : MonoBehaviour
         gameController.GetComponent<NetworkObject>().Spawn();
         gameControllerReady = true;
         gameEnded = false;
-
+        Cursor.lockState = CursorLockMode.Confined;
+        Cursor.visible = false;
 
     }
 

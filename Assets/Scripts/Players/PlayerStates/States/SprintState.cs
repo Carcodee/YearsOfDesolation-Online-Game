@@ -84,7 +84,7 @@ namespace Players.PlayerStates.States
         }
         public override void StatePhysicsUpdate()
         {
-
+            playerRef.GroundGravity();
         }
         public override void StateLateUpdate()
         {

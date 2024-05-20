@@ -117,10 +117,10 @@ public class GameController : NetworkBehaviour,INetObjectToClean
         Debug.Log("Connected");
         if (IsServer) {
             AddPlayerToListClientRpc();
-            OnPlayerEnterServerRpc();
         }
         if (IsClient && IsOwner)
         {
+            OnPlayerEnterServerRpc();
             SetNumberOfPlayerListServerRpc(clientId);
         }
     }
@@ -387,10 +387,6 @@ public class GameController : NetworkBehaviour,INetObjectToClean
     {
         mapLogic.Value.isBattleRoyale = val;
     }
-
-
-
-
 
     
     [ClientRpc]

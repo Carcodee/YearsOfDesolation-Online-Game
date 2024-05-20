@@ -139,7 +139,6 @@ public class PauseController : MonoBehaviour
         if (GameManager.Instance.localPlayerRef.IsServer)
         {
             NetworkingHandling.HostManager.instance.DisconnectHost();
-
         }
         else
         {
