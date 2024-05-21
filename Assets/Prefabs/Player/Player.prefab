@@ -909,15 +909,19 @@ MonoBehaviour:
   playerHitLayer:
     serializedVersion: 2
     m_Bits: 30465
-  enemyLayer:
+  ownerLayer:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 4
   hitTags:
   - Head
   - Chest
   - BodyR
   - BodyL
   - Legs
+  hitColliders:
+  - {fileID: 2955163910921326301}
+  - {fileID: 296912914967067718}
+  - {fileID: 5241548621914448706}
   move: {x: 0, y: 0, z: 0}
   rotationFactor: 25
   rotationSmoothTime: 0.1
@@ -1003,12 +1007,49 @@ MonoBehaviour:
     m_InternalValue: 0
   enemyKilled:
     m_InternalValue: 0
+  userName:
+    m_InternalValue:
+      utf8LengthInBytes: 0
+      bytes:
+        offset0000:
+          byte0000: 0
+          byte0001: 0
+          byte0002: 0
+          byte0003: 0
+          byte0004: 0
+          byte0005: 0
+          byte0006: 0
+          byte0007: 0
+          byte0008: 0
+          byte0009: 0
+          byte0010: 0
+          byte0011: 0
+          byte0012: 0
+          byte0013: 0
+          byte0014: 0
+          byte0015: 0
+        byte0016: 0
+        byte0017: 0
+        byte0018: 0
+        byte0019: 0
+        byte0020: 0
+        byte0021: 0
+        byte0022: 0
+        byte0023: 0
+        byte0024: 0
+        byte0025: 0
+        byte0026: 0
+        byte0027: 0
+        byte0028: 0
+        byte0029: 0
   isInvulnerable:
     m_InternalValue: 0
   startGameHealth: 0
   statHolderNames: []
   statHolder: 
   isPlayerInsideTheZone: 0
+  lastEnemyKilledName: 
+  instigatorName: 
   weaponSpawnPoint:
   - {fileID: 260182596175904321}
   - {fileID: 1910927308960375832}
@@ -2165,7 +2206,7 @@ GameObject:
   - component: {fileID: 8883191962765653625}
   - component: {fileID: 8893223512233543356}
   m_Layer: 0
-  m_Name: AimTrackingFinal (1)
+  m_Name: HandRightAim
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

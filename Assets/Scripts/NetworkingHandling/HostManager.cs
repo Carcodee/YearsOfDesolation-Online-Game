@@ -59,19 +59,25 @@ namespace NetworkingHandling
 
         public async Task DisconnectHost()
         {
-            
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
             StopAllCoroutines();
             CleanerController.instance.StopLogic(true);
             CleanerController.instance.Clean();
             foreach (Transform player in GameController.instance.players)
             {
-                NetworkObject playerRef= player.GetComponent<NetworkObject>();
-                if (playerRef.OwnerClientId==0)
+                if (player==null)
                 {
                     continue;
                 }
-                NetworkManager.Singleton.DisconnectClient(playerRef.OwnerClientId);
-                Debug.Log("ID: "+ playerRef.OwnerClientId);
+                player.TryGetComponent<NetworkObject>(out NetworkObject playerNetObj);
+           
+                if (playerNetObj.OwnerClientId==0)
+                {
+                    continue;
+                }
+                NetworkManager.Singleton.DisconnectClient(playerNetObj.OwnerClientId);
+                Debug.Log("ID: "+ playerNetObj.OwnerClientId);
             }
 
             GameManager.Instance.localPlayerRef = null;
@@ -79,7 +85,7 @@ namespace NetworkingHandling
             currentTransport.Shutdown();
             var deleteLobbyAsync = Lobbies.Instance.DeleteLobbyAsync(lobbyId);
             Destroy(GameController.instance);
-            if (NetworkManager.Singleton.ShutdownInProgress && !deleteLobbyAsync.IsCompleted) await Task.Yield();
+            if (NetworkManager.Singleton.ShutdownInProgress) await Task.Yield();
             GameManager.Instance.LoadMenuScene();
         }
         public async Task StartHost()

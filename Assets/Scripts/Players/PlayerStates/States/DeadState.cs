@@ -29,6 +29,11 @@ namespace Players.PlayerStates.States
             playerRef.move = Vector3.zero;
             playerRef.playerStats.SetHealth(playerRef.playerStats.GetMaxHealth());
             PlayerVFXController.OnDeadEffectHandle.CreateVFX(playerRef.playerStats.deadPosition, playerRef.transform.rotation, playerRef.IsServer);
+            if (playerRef.playerStats.instigatorName!=string.Empty)
+            {
+                playerRef.playerComponentsHandler.canvasController.DeadNotification();
+                playerRef.playerStats.instigatorName = "";
+            }
             if (GameManager.Instance.isOnTutorial)
             {
                TutorialStagesHandler.instance.SetTutorialStage(TutorialStage.ZoneComing);

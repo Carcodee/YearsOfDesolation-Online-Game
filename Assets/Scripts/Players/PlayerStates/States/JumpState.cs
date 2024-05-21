@@ -65,11 +65,11 @@ namespace Players.PlayerStates.States
         }
         public override void StatePhysicsUpdate()
         {
-            playerRef.ApplyGravity();
         }
         public override void StateLateUpdate()
         {
 
+            playerRef.ApplyGravity();
             playerRef.RotatePlayer();
 
         }

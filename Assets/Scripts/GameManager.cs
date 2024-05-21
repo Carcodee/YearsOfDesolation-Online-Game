@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
     public GameObject loadingScene;
     public GameObject menuGameObject;
     public GameObject canvasObj;
-    
+    public string localPlayerName="";
 
 
     public string DisconnectNotificationText = "";
@@ -38,19 +38,24 @@ public class GameManager : MonoBehaviour
         }
         DontDestroyOnLoad(gameObject);
     }
+    
 
     public async void LoadMenuScene()
     {
-        List<AsyncOperation> operations= new List<AsyncOperation>();
-        for (int i = 0; i < SceneManager.sceneCount; i++)
+        AsyncOperation operation=SceneManager.UnloadSceneAsync(SceneManager.GetSceneAt(1));
+        
+        var loadSceneAsync = SceneManager.LoadSceneAsync("Menu", LoadSceneMode.Single);
+        if (!loadSceneAsync.isDone)
         {
-            Scene currentScene = SceneManager.GetSceneAt(i);
-            operations.Add(SceneManager.UnloadSceneAsync(currentScene));
+            ActivateLoadingScreen(true);
+            ActivateMenu(true);
+            await Task.Yield();
         }
-        SceneManager.LoadScene("Menu", LoadSceneMode.Single);
+
+        loadSceneAsync.allowSceneActivation = true;
         gameControllerReady = false;
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+        isOnTutorial = false;
+
 
         // if (!sceneAsync.isDone)await Task.Yield();
         // sceneAsync.allowSceneActivation = true;
@@ -62,8 +67,6 @@ public class GameManager : MonoBehaviour
         gameController.GetComponent<NetworkObject>().Spawn();
         gameControllerReady = true;
         gameEnded = false;
-        Cursor.lockState = CursorLockMode.Confined;
-        Cursor.visible = false;
 
     }
 

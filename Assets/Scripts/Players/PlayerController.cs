@@ -49,8 +49,10 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
     
     [Header("Hit data")]
     public LayerMask playerHitLayer;
-    public LayerMask enemyLayer;
+    
+    public LayerMask ownerLayer;
     public string [] hitTags;
+    public Collider[] hitColliders;
     public int HeadShotDamage => (int) playerStats.GetDamageDone() * 2;
     public int legsShotDamage =>(int) playerStats.GetDamageDone() / 2;
     public float currentAimShootPercentage =>playerStats.currentWeaponSelected.weapon.currentShootRefraction / playerStats.currentWeaponSelected.weapon.minShootRefraction.statValue;
@@ -122,6 +124,18 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
         for (int i = 0; i < jumpRaycastOffset.Length; i++)
         {
             Gizmos.DrawRay(transform.position+ jumpRaycastOffset[i], Vector3.down*range);
+        }
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        if (IsOwner)
+        {
+            foreach (var collider in hitColliders)
+            {
+                collider.gameObject.layer = ownerLayer.value;
+            }
+            
         }
     }
 
@@ -368,7 +382,6 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
         characterController.Move(motionSpeed );
 
     }
-    
 
 
     public void Move(float x, float y)
@@ -387,13 +400,13 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
 
     public void GroundGravity()
     {
-        characterController.Move(Vector3.down* Time.fixedDeltaTime);
+        characterController.Move(Vector3.down* Time.deltaTime);
     }
     public void ApplyGravity()
     {
 
-        _bodyVelocity.y -= (gravityForce *gravityMultiplier) * Time.fixedDeltaTime;
-        characterController.Move(_bodyVelocity* Time.fixedDeltaTime);
+        _bodyVelocity.y -= (gravityForce *gravityMultiplier) * Time.deltaTime;
+        characterController.Move(_bodyVelocity* Time.deltaTime);
         
     }
 
@@ -541,13 +554,10 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
                  
                         if (objectRef)
                         {
+                            playerStats.lastEnemyKilledName = objectRef.userName.Value.ToString();
                             HitData hitData =  DamageReceiverManager.instance.CheckHitType(hit.collider.gameObject.layer);
                             // playerHitLayer
                             float damageToDo=Mathf.Floor((float)playerStats.GetDamageDone() * hitData.damageAmplifier); ;
-                            Debug.Log("Damage to do: " + damageToDo);
-                            Debug.Log("Layer Tag: " + hit.collider.includeLayers);
-                            Debug.Log("Gameobject Name: " + hit.collider.gameObject.name);
-                            
                             ClientRpcParams clientRpcParams = new ClientRpcParams
                             {
                                 Send = new ClientRpcSendParams
@@ -560,12 +570,12 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
                                 objectRef.playerVFXController.BodyDamageVFX();
                                 objectRef.SpawnDamageTakenVFXClientRpc(objectRef.takeDamagePosition.position, Quaternion.identity, OwnerClientId, clientRpcParams);
                                 {
-                                    objectRef.TakeDamageClientRpc((int)damageToDo, OwnerClientId);
+                                    objectRef.TakeDamageClientRpc((int)damageToDo, OwnerClientId, playerStats.userName.Value.ToString());
                                     CrosshairCreator.OnHitDetected?.Invoke(hitData.hitType);
                                 }
                                 if (IsClient)
                                 {
-                                    objectRef.TakeDamageServerRpc((int)damageToDo, OwnerClientId);
+                                    objectRef.TakeDamageServerRpc((int)damageToDo, OwnerClientId, playerStats.userName.Value.ToString());
                                     CrosshairCreator.OnHitDetected?.Invoke(hitData.hitType);
                                 }
                             }

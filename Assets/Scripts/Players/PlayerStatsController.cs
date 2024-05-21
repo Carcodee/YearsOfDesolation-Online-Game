@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using NetworkingHandling;
 using Players.PlayerStates;
+using Unity.Collections;
 using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;
@@ -40,12 +41,15 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
     [SerializeField] private NetworkVariable<int> playerLevel = new NetworkVariable<int>();
     [SerializeField] public NetworkVariable<int> avaliblePoints = new NetworkVariable<int>();
     [SerializeField] public  NetworkVariable<bool> enemyKilled = new NetworkVariable<bool>();
+    [SerializeField] public  NetworkVariable<FixedString32Bytes> userName = new NetworkVariable<FixedString32Bytes>();
     public NetworkVariable<bool> isInvulnerable = new NetworkVariable<bool>();
     [FormerlySerializedAs("StartGameHealth")] public float startGameHealth;
     public string[] statHolderNames;
     public int[] statHolder;
     public bool isPlayerInsideTheZone;
 
+    public string lastEnemyKilledName = "";
+    public string instigatorName = "";
     [Header("WeaponSpawnPoints")]
     public Transform [] weaponSpawnPoint;
     
@@ -59,7 +63,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
     private bool _isInNetwork=false;
     public CoinBehaivor coin;
     
-
+    
     [Header("Interfaces")]
     private IDamageable iDamageable;
 
@@ -86,11 +90,11 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
     
     [Header("Netcode")]
     public NetworkVariable<ulong> clientIdInstigator;
+
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
         stateMachineController=GetComponent<StateMachineController>();
-        
         if (IsOwner)
         {
             Debug.Log("OnNetworkSpawn called. IsOwner: " + IsOwner);
@@ -104,6 +108,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
             _isInNetwork = true;
             INetObjectToClean[] objectToCleans = GetComponents<INetObjectToClean>();
 
+        
             foreach (INetObjectToClean objectToClean in objectToCleans)
             {
                 CleanerController.instance.AddObjectToList(objectToClean);
@@ -156,8 +161,6 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
         {
             GameManager.Instance.ActivateLoadingScreen(!b);
             GameManager.Instance.ActivateMenu(!b);
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = false;
         });
 
         if (IsOwner) {
@@ -227,7 +230,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
         SetHasteServerRpc(statsTemplates[statsTemplateSelected.Value].haste);
         SetHealth(10);
         Debug.Log("Health called. hpValue: " + statsTemplates[statsTemplateSelected.Value].health);
-
+        SetNameServerRpc(GameManager.Instance.localPlayerName);
         SetStaminaServerRpc(statsTemplates[statsTemplateSelected.Value].stamina);
         SetArmorServerRpc(statsTemplates[statsTemplateSelected.Value].armor);
         SetSpeedServerRpc(statsTemplates[statsTemplateSelected.Value].speed);
@@ -440,10 +443,10 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
 
 
     [ServerRpc(RequireOwnership = false)]
-    public void TakeDamageServerRpc(int myDamage, ulong clientId)
+    public void TakeDamageServerRpc(int myDamage, ulong clientId, string userName)
     {
         //TODO> money is being added to the player that is dead
-        TakeDamageClientRpc(myDamage, clientId);
+        TakeDamageClientRpc(myDamage, clientId, userName);
     }
     
     [ServerRpc]
@@ -463,11 +466,12 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
     }
 
     [ClientRpc]
-    public void TakeDamageClientRpc(int myDamage, ulong playerClientID)
+    public void TakeDamageClientRpc(int myDamage, ulong playerClientID, string name)
     {
 
         if (IsOwner)
         {
+            instigatorName = name;
             if (!GameController.instance.started.Value)
             {
                 return;
@@ -626,6 +630,11 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
     public void SetHasteServerRpc(int hastePoint)
     {
         haste.Value = hastePoint;
+    }
+    [ServerRpc]
+    public void SetNameServerRpc(FixedString32Bytes name)
+    {
+        userName.Value = name;
     }
     [ServerRpc]
     public void SetIsInvulnerableServerRpc(bool isDead)

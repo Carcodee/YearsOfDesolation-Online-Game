@@ -91,8 +91,8 @@ namespace Players.PlayerStates.States
         }
         public override void StateLateUpdate()
         {
-            playerRef.RotatePlayer();
             playerRef.ApplyGravity();
+            playerRef.RotatePlayer();
 
         }
 

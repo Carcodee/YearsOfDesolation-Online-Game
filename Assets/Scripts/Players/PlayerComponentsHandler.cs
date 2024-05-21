@@ -71,6 +71,7 @@ public class PlayerComponentsHandler : NetworkBehaviour, INetObjectToClean
     public List<GameObject> objectsToDisable= new List<GameObject>();
 
     public CameraType playerCameraType;
+    
     public override void OnNetworkSpawn()
     {
 
@@ -83,6 +84,7 @@ public class PlayerComponentsHandler : NetworkBehaviour, INetObjectToClean
 
             // Attach input events
             playerInput.onActionTriggered += HandleAction;
+            IsCurrentDeviceMouse = false;
         }
         
     }

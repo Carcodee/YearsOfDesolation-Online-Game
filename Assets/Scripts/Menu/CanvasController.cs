@@ -188,14 +188,21 @@ public class CanvasController : MonoBehaviour, INetObjectToClean
         {
             killNotification.SetActive(true);
             killNotificationText.gameObject.SetActive(true);
-            killNotificationText.text = "You killed "+"<color=red>Player</color>";
+            killNotificationText.text = "You killed "+"<color=red>"+ playerAssigned.lastEnemyKilledName +"</color>";
+            playerAssigned.lastEnemyKilledName = "";
         }
         playerAssigned.NotifyKillServerRpc(false);
     }
+    public void DeadNotification()
+    {
+        killNotification.SetActive(true);
+        killNotificationText.gameObject.SetActive(true);
+        killNotificationText.text = "<color=red>"+ playerAssigned.instigatorName +"</color> killed you";
+    }
     public void DeactivateKillNotification()
     {
-        playerAssigned.NotifyKillServerRpc(false);
-        killNotification.SetActive(false);
+        // playerAssigned.NotifyKillServerRpc(false);
+        // killNotification.SetActive(false);
     }
     public void TrackCoin()
     {
@@ -641,6 +648,10 @@ public class CanvasController : MonoBehaviour, INetObjectToClean
         OnBulletsAddedUI -= TotalBulletsAnimation;
         playerAssigned.avaliblePoints.OnValueChanged-=AddMoneyAnimation;
         OnReloadStarted-= StartReloadAnimation;       
+        SetDefaultVaues(hpUIMat);
+        weaponShootRateMat.SetFloat("_BarValue",0);
+        coinImageMaterial.SetFloat("_Alpha",1.0f);
+        coinImageMaterial.SetFloat("Emission",1.33f);
     }
 
     public void OnSpawn()

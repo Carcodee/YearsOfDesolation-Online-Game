@@ -14,6 +14,7 @@ using Unity.Services.Relay;
 using Unity.Services.Relay.Models;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Random = System.Random;
 
 public class NetworkSceneManager : NetworkBehaviour
 {
@@ -29,6 +30,7 @@ public class NetworkSceneManager : NetworkBehaviour
     public GameObject canvas;
     
     public CustomInputField lobbyName;
+    public CustomInputField usernameInputField;
     [SerializeField]
     private string m_SceneName;
     
@@ -104,6 +106,13 @@ public class NetworkSceneManager : NetworkBehaviour
         {
             lobbyName.inputText.text = "My Default lobby";
         }
+        if (usernameInputField.inputText.text=="")
+        {
+            Random newRandomVal = new Random();
+            usernameInputField.inputText.text = "RandomNPC" + newRandomVal.Next(0, 10000) ;
+        }
+
+        GameManager.Instance.localPlayerName = usernameInputField.inputText.text;
         NetworkingHandling.HostManager.instance.lobbyName = lobbyName.inputText.text;
         GameManager.Instance.ActivateLoadingScreen(true);
         await NetworkingHandling.HostManager.instance.SetAllocation(_transport);

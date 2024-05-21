@@ -11,6 +11,7 @@ using System.Collections.Generic;
     using UnityEngine;
     using UnityEngine.SceneManagement;
     using UnityEngine.UI;
+    using Random = System.Random;
 
     public class MainMenuController : MonoBehaviour
     {
@@ -25,6 +26,9 @@ using System.Collections.Generic;
         public GameObject loadingScene;
         public bool isLobbyWindowOpen = false;
         public NotificationManager notification;
+
+        public CustomInputField usernameInputField;
+        
         public void OpenModalWindow()
         {
             modalWindowTabs.OpenWindow();
@@ -106,6 +110,7 @@ using System.Collections.Generic;
                         item.Initialise(this, lobbies.Results[i]);
                         item.lobbyName.text = lobbies.Results[i].Name;
                         item.playerCount.text = lobbies.Results[i].Players.Count.ToString()+"/8 players";
+                        
                         Debug.Log("Lobby: " + lobbies.Results[i].Name);
                     }
                     
@@ -127,6 +132,7 @@ using System.Collections.Generic;
             if (isJoining)return;
             isJoining = true;
             
+            
             try
             {
                 var joinLobby = await Lobbies.Instance.JoinLobbyByIdAsync(lobby.Id);
@@ -134,7 +140,13 @@ using System.Collections.Generic;
                 GameManager.Instance.ActivateLoadingScreen(true);
                 await NetworkingHandling.ClientManager.instance.StartClient(joinCode,
                     networkSceneManager.GetTransport());
-                
+                if (usernameInputField.inputText.text=="")
+                {
+                    Random newRandomVal = new Random();
+                    usernameInputField.inputText.text = "RandomNPC" + newRandomVal.Next(0, 10000) ;
+                }
+
+                GameManager.Instance.localPlayerName = usernameInputField.inputText.text;
 
             }
             catch(LobbyServiceException e)
@@ -158,9 +170,5 @@ using System.Collections.Generic;
             }
                
         }
-        public async Task BeginConnection(Lobby lobby)
-        { 
 
-           
-        }
     }

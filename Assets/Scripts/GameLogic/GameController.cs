@@ -257,8 +257,8 @@ public class GameController : NetworkBehaviour,INetObjectToClean
     [ServerRpc(RequireOwnership = false)]
     public void NotifyKillServerRpc(ulong instigatorClientId,ServerRpcParams serverRpcParams = default)
     {
-        
-        NetworkManager.Singleton.ConnectedClients[instigatorClientId].PlayerObject.GetComponent<PlayerStatsController>().NotifyKillServerRpc(true); 
+        PlayerStatsController playerStatsController = NetworkManager.Singleton.ConnectedClients[instigatorClientId].PlayerObject.GetComponent<PlayerStatsController>(); 
+        playerStatsController.NotifyKillServerRpc(true); 
         
     }
      
@@ -361,18 +361,21 @@ public class GameController : NetworkBehaviour,INetObjectToClean
     [ClientRpc]
     public void SetPlayerPosOnDeadClientRpc(Vector3 pos, int playerIndex)
     {
-        players[playerIndex].GetComponent<PlayerController>().characterController.enabled = false;
+        PlayerController playerController = players[playerIndex].GetComponent<PlayerController>();
+        playerController.characterController.enabled = false;
         players[playerIndex].position = pos;
-        players[playerIndex].GetComponent<PlayerController>().characterController.enabled = true;
-        players[playerIndex].GetComponent<PlayerStatsController>().OnStatsChanged?.Invoke();
+        playerController.characterController.enabled = true;
+        playerController.playerStats.OnStatsChanged?.Invoke();
 
-            Debug.Log("Called on client number" + playerIndex);
-            Debug.Log("Killer: " + players[playerIndex].GetComponent<PlayerStatsController>().clientIdInstigator.Value);
+        Debug.Log("Called on client number" + playerIndex);
+        Debug.Log("Killer: " + playerController.playerStats.clientIdInstigator.Value);
 
-            var rpcParams = new ServerRpcParams { };
-            rpcParams.Receive.SenderClientId=players[playerIndex].GetComponent<PlayerStatsController>().clientIdInstigator.Value;
-            AddPointsOnKillerServerRpc(1, players[playerIndex].GetComponent<PlayerStatsController>().clientIdInstigator.Value,rpcParams);            
-            NotifyKillServerRpc(players[playerIndex].GetComponent<PlayerStatsController>().clientIdInstigator.Value,rpcParams);     
+        
+        //this is advicing the killed that the user is dead
+        var rpcParams = new ServerRpcParams { };
+        rpcParams.Receive.SenderClientId=playerController.playerStats.clientIdInstigator.Value;
+        AddPointsOnKillerServerRpc(1, playerController.playerStats.clientIdInstigator.Value,rpcParams);            
+        NotifyKillServerRpc(playerController.playerStats.clientIdInstigator.Value,rpcParams);     
       
             
         if (PlayerVFXController.respawningEffectHandle!=null)
