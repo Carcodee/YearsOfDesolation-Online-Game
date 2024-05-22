@@ -26,6 +26,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
     public PlayerComponentsHandler playerComponentsHandler;
     public StateMachineController stateMachineController;
     public PlayerVFXController playerVFXController;
+    public PlayerSoundController playerSoundController;
     public Transform takeDamagePosition;
     public Vector3 deadPosition;
     [Header("Stats")]
@@ -216,12 +217,17 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
         onBagWeapon.weaponObjectController.gameObject.SetActive(false);
         OnWeaponChanged.Invoke(currentWeaponSelected.weapon.weaponObjectController.weaponBulletSpawnPoints);
         
+        
     }
 
     void InitializateStats()
     {
         SetTemplate(0);
         playerObj = GetComponent<NetworkObject>();
+        if (playerSoundController==null)
+        {
+            playerSoundController = GetComponent<PlayerSoundController>();
+        }
         if (statsTemplates[statsTemplateSelected.Value] == null)
         {
             Debug.LogError("StatsTemplate is null");

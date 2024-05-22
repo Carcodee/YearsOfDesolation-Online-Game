@@ -56,7 +56,6 @@ public class GameManager : MonoBehaviour
         gameControllerReady = false;
         isOnTutorial = false;
 
-
         // if (!sceneAsync.isDone)await Task.Yield();
         // sceneAsync.allowSceneActivation = true;
     }
@@ -67,6 +66,7 @@ public class GameManager : MonoBehaviour
         gameController.GetComponent<NetworkObject>().Spawn();
         gameControllerReady = true;
         gameEnded = false;
+        AudioManager.instance.ActivateListener(false);
 
     }
 

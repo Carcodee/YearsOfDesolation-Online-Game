@@ -59,6 +59,9 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
 
     [Header("Player Movement")]
     public Vector3 move;
+
+    public AnimationCurve currentAnimationCurve;
+    public float currentSpeed;
     public float rotationFactor;
     public float rotationSmoothTime = 0.1f;
     public float rotationVelocity;
@@ -195,11 +198,13 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
                 this.stateMachineController.networkAnimator.Animator.SetFloat("X", this.move.x);
                 this.stateMachineController.networkAnimator.Animator.SetFloat("Y", this.move.z);
                 ActivateAim(1);
+                rotationSmoothTime = 0.025f;
             }
             if (Input.GetKeyUp(KeyCode.Mouse1)|| isSprinting)
             {
                 isAiming = false;
                 ActivateAim(0);
+                rotationSmoothTime = 0.1f;
             }
 
 
@@ -386,6 +391,7 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
 
     public void Move(float x, float y)
     {
+        // x= currentAnimationCurve.Evaluate(x); 
         move = new Vector3(x, 0, y).normalized;
     }
 

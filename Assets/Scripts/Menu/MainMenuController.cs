@@ -28,6 +28,7 @@ using System.Collections.Generic;
         public NotificationManager notification;
 
         public CustomInputField usernameInputField;
+        public GameObject mainMap;
         
         public void OpenModalWindow()
         {
@@ -56,6 +57,7 @@ using System.Collections.Generic;
         {
             networkSceneManager.StartTutorialHost();
             GameManager.Instance.isOnTutorial = true;
+            mainMap.SetActive(false);
         }
 
         public void DisplayNotification()

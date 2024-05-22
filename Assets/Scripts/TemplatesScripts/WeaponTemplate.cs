@@ -10,6 +10,9 @@ public class WeaponTemplate : ScriptableObject
     public WeaponAnimations weaponAnimationState;
     public AmmoTypeTemplate ammoType;
     public WeaponObjectController weaponObjectController;
+    public AudioClip shootSound;
+    public AudioClip reloadStartSound;
+    public AudioClip reloadEndSound;
     public float weaponDamage;
     public string weaponName;
     public float shootRate;
