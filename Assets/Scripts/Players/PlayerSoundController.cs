@@ -49,6 +49,7 @@ public class PlayerSoundController : NetworkBehaviour
         {
             footSteps[i].Insert(ref footStepsList);
         }
+        Init();
         
     }
 
@@ -68,9 +69,10 @@ public class PlayerSoundController : NetworkBehaviour
             }
 
         }
-        
-        
+
+        currentStepSound = footStepsList.GetValueOrDefault(GroundType.dirt);
     }
+
 
     
 }

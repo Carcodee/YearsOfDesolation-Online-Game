@@ -42,6 +42,11 @@ public static class MyUtilities
         bool result = stateInfo.IsName(stateName);
         return result;
     }
+
+    public static void PlaySoundAtFrame(Animator animator, AudioClip audioClip)
+    {
+        
+    }
     public static void SetDefaultUpperLayer(Animator animator, string newLayerName, string oldLayerName)
     {
         animator.SetLayerWeight(animator.GetLayerIndex(oldLayerName), 0);
