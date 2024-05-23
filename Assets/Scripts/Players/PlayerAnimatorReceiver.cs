@@ -9,8 +9,9 @@ public class PlayerAnimatorReceiver : MonoBehaviour
 
     public void PlayFootStep(float volume)
     {
-        playerSoundController.footSteepAudioSource.Stop();
-        playerSoundController.footSteepAudioSource.volume = volume;
+
+        playerSoundController.footSteepAudioSource.pitch = UnityEngine.Random.Range(0.8f, 1.2f);
+        playerSoundController.footSteepAudioSource.volume = UnityEngine.Random.Range( volume/2, volume);
         playerSoundController.footSteepAudioSource.PlayOneShot(playerSoundController.currentStepSound);
         
     }

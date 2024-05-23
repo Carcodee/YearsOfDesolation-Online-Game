@@ -70,7 +70,7 @@ public class PlayerSoundController : NetworkBehaviour
 
         }
 
-        currentStepSound = footStepsList.GetValueOrDefault(GroundType.dirt);
+        currentStepSound = footStepsList.GetValueOrDefault(GroundType.metal);
     }
 
 

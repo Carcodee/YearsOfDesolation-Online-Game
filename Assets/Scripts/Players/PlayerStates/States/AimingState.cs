@@ -38,8 +38,8 @@ namespace Players.PlayerStates.States
 
             }
             StateInput();
-            this.networkAnimator.Animator.SetFloat("X", this.playerRef.move.x);
-            this.networkAnimator.Animator.SetFloat("Y", this.playerRef.move.z);
+            this.networkAnimator.Animator.SetFloat("X", this.playerRef.move.x/2);
+            this.networkAnimator.Animator.SetFloat("Y", this.playerRef.move.z/2);
 
             //this.playerRef.AimAinimation(ref aimAnimation,networkAnimator);
             networkAnimator.Animator.SetFloat("Aiming", 1);
