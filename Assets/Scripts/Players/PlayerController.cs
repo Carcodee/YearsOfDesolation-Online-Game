@@ -534,8 +534,10 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
             playerStats.currentWeaponSelected.ammoBehaviour.currentBullets > 0 && !playerStats.currentWeaponSelected.ammoBehaviour.isReloading)
         {
             CrosshairCreator.OnCrosshairChange?.Invoke();
+            playerStats.playerSoundController.PlaySound(playerStats.playerSoundController.weaponAudioSource, playerStats.playerSoundController.currentWeaponShoot);
             stateMachineController.networkAnimator.Animator.Play(playerStats.currentWeaponSelected.weapon.weaponAnimation.weaponShoot);
             StartCoroutine(playerStats.playerComponentsHandler.ShakeCamera(0.1f, .9f, .7f));
+            playerStats.playerSoundController.PlayCurrentShoot();
             playerStats.currentWeaponSelected.ammoBehaviour.currentBullets--;
             //TODO : Spawn vfx on local player 
             PlayerVFXController.shootEffectHandle.CreateVFX(spawnBulletPoint.position, transform.rotation ,IsServer);
@@ -765,10 +767,12 @@ public class WeaponItem
     public Weapon weapon;
     public AmmoBehaviour ammoBehaviour;
     public WeaponObjectController weaponObjectController=null;
+    public WeaponTemplate template;
     public WeaponItem (WeaponTemplate weaponTemplate)
     {
         this.ammoBehaviour = new AmmoBehaviour(weaponTemplate.ammoType);
         this.weapon = new Weapon(ammoBehaviour, weaponTemplate);
+        this.template = weaponTemplate;
     }
     
 }

@@ -73,8 +73,36 @@ public class PlayerSoundController : NetworkBehaviour
         currentStepSound = footStepsList.GetValueOrDefault(GroundType.metal);
     }
 
+    public void PlaySound(AudioSource audioSource, AudioClip audioClip, float volume = 1.0f, float pitch = 1.0f)
+    {
+        audioSource.volume = volume;
+        audioSource.pitch = pitch;
+        audioSource.PlayOneShot(audioClip);
+    }
 
+    public void PlayCurrentShoot(float volume = 1.0f, float pitch = 1.0f)
+    {
+        weaponAudioSource.PlayOneShot(currentWeaponShoot);
+    }
+
+    public void PlayCurrentStartReload(float volume = 1.0f, float pitch = 1.0f)
+    {
+        weaponAudioSource.PlayOneShot(currentStartReload);
+    }
     
+    public void PlayCurrentEndReload(float volume = 1.0f, float pitch = 1.0f)
+    {
+        weaponAudioSource.PlayOneShot(currentEndReload);
+    }
+    public void UpdateWeaponSound(WeaponItem weapon)
+    {
+        currentWeaponShoot = weapon.template.shootSound;
+        currentStartReload = weapon.template.reloadStartSound;
+        currentEndReload = weapon.template.reloadEndSound;
+         
+    }
+
+
 }
 [System.Serializable]
 public struct FootStep

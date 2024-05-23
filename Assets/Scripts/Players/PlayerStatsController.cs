@@ -29,6 +29,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
     public PlayerSoundController playerSoundController;
     public Transform takeDamagePosition;
     public Vector3 deadPosition;
+    public PlayerController playerController;
     [Header("Stats")]
     [SerializeField] private NetworkVariable<int> haste = new NetworkVariable<int>();
     [SerializeField] public NetworkVariable<float> health = new NetworkVariable<float>();
@@ -216,10 +217,13 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
         onBagWeapon = playerBuildSelected.second_weapon;
         onBagWeapon.weaponObjectController.gameObject.SetActive(false);
         OnWeaponChanged.Invoke(currentWeaponSelected.weapon.weaponObjectController.weaponBulletSpawnPoints);
-        
-        
+        playerSoundController.UpdateWeaponSound(currentWeaponSelected);
     }
 
+    public void UpdateWeaponSound()
+    {
+    
+    }
     void InitializateStats()
     {
         SetTemplate(0);
@@ -250,7 +254,9 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
         doublePistols = new WeaponItem(weaponsData[(int)WeaponType.Pistol]);
         SetWeapon(ak47);
         onBagWeapon = doublePistols;
-        transform.GetComponent<PlayerController>().SetSpeedStateServerRpc(statsTemplates[statsTemplateSelected.Value].speed);
+        playerController = transform.GetComponent<PlayerController>();
+        playerController.SetSpeedStateServerRpc(statsTemplates[statsTemplateSelected.Value].speed);
+        playerSoundController.UpdateWeaponSound(currentWeaponSelected);
         OnStatsChanged?.Invoke();
     }
     public void SetWeapon(WeaponItem weapon)
@@ -329,6 +335,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
             onBagWeapon = playerBuildSelected.second_weapon;
             onBagWeapon.weaponObjectController.gameObject.SetActive(false);
             OnWeaponChanged.Invoke(currentWeaponSelected.weapon.weaponObjectController.weaponBulletSpawnPoints);
+            playerSoundController.UpdateWeaponSound(currentWeaponSelected);
             F_In_F_Out_Obj.OnWeapontChangedAnim?.Invoke();
             CanvasController.OnReloadFinished?.Invoke();
         }
@@ -340,6 +347,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
             onBagWeapon = playerBuildSelected.first_weapon;
             onBagWeapon.weaponObjectController.gameObject.SetActive(false);
             OnWeaponChanged.Invoke(currentWeaponSelected.weapon.weaponObjectController.weaponBulletSpawnPoints);
+            playerSoundController.UpdateWeaponSound(currentWeaponSelected);
             F_In_F_Out_Obj.OnWeapontChangedAnim?.Invoke();
             CanvasController.OnReloadFinished?.Invoke();
 
