@@ -23,6 +23,7 @@ namespace Players.PlayerStates.States
             moveDir = playerRef.move;
             this.networkAnimator.Animator.Play("Slide");
 
+            playerRef.playerStats.playerSoundController.PlayMovementSound(playerRef.playerStats.playerSoundController.slideSound,true, 0.14f);
             
         }
 
@@ -75,6 +76,7 @@ namespace Players.PlayerStates.States
         {
             playerRef.ApplyGravity();
             playerRef.RotatePlayer();
+            
         }
         public override void StatePhysicsUpdate()
         {

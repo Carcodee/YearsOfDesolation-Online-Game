@@ -198,7 +198,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 500
+  MaxDistance: 60
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
@@ -381,9 +381,9 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 500
+  MaxDistance: 16
   Pan2D: 0
-  rolloffMode: 0
+  rolloffMode: 2
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
@@ -1269,9 +1269,9 @@ MonoBehaviour:
     m_Bits: 256
   lockShoot: 0
   canMove: 1
-  jumpHeight: 0.79
+  jumpHeight: 1.3
   groundPos: {x: 0, y: 0, z: 0}
-  gravityForce: 17.62
+  gravityForce: 15.71
   gravityMultiplier: 1
   _bodyVelocity: {x: 0, y: 0, z: 0}
   hasPlaned: 0
@@ -1315,6 +1315,7 @@ MonoBehaviour:
   playerSoundController: {fileID: 0}
   takeDamagePosition: {fileID: 451310536933246665}
   deadPosition: {x: 0, y: 0, z: 0}
+  playerController: {fileID: 0}
   haste:
     m_InternalValue: 0
   health:
@@ -1440,6 +1441,7 @@ MonoBehaviour:
           upgradeType: 0
         reloadCurrentTime: 0
       weaponObjectController: {fileID: 0}
+      template: {fileID: 0}
     second_weapon:
       weapon:
         weaponAnimation:
@@ -1490,6 +1492,7 @@ MonoBehaviour:
           upgradeType: 0
         reloadCurrentTime: 0
       weaponObjectController: {fileID: 0}
+      template: {fileID: 0}
     totalPrice: 0
     buildDescription: 
     buildName: 
@@ -1546,6 +1549,7 @@ MonoBehaviour:
         upgradeType: 0
       reloadCurrentTime: 0
     weaponObjectController: {fileID: 0}
+    template: {fileID: 0}
   onBagWeapon:
     weapon:
       weaponAnimation:
@@ -1596,6 +1600,7 @@ MonoBehaviour:
         upgradeType: 0
       reloadCurrentTime: 0
     weaponObjectController: {fileID: 0}
+    template: {fileID: 0}
   ak47:
     weapon:
       weaponAnimation:
@@ -1646,6 +1651,7 @@ MonoBehaviour:
         upgradeType: 0
       reloadCurrentTime: 0
     weaponObjectController: {fileID: 0}
+    template: {fileID: 0}
   doublePistols:
     weapon:
       weaponAnimation:
@@ -1696,6 +1702,7 @@ MonoBehaviour:
         upgradeType: 0
       reloadCurrentTime: 0
     weaponObjectController: {fileID: 0}
+    template: {fileID: 0}
   weaponsData:
   - {fileID: 11400000, guid: 8094bc5eafa57f148986c1b564d9bdff, type: 2}
   - {fileID: 11400000, guid: 09053af27b0f7f14ebdec2652680da5e, type: 2}
@@ -1954,9 +1961,13 @@ MonoBehaviour:
   currentWeaponShoot: {fileID: 0}
   currentStartReload: {fileID: 0}
   currentEndReload: {fileID: 0}
+  weaponChangeStart: {fileID: 8300000, guid: 8dc07d2927146ca408be9878a701a540, type: 3}
+  weaponChangeEnd: {fileID: 8300000, guid: f3ad721be9a2cd740a726e48ddc5be2c, type: 3}
+  defaultShoot: {fileID: 8300000, guid: 1c79838a7474dac479193f9dc5062552, type: 3}
   jumpSound: {fileID: 8300000, guid: e271801484a580c4ab08ee9495ec1ad7, type: 3}
   landSound: {fileID: 8300000, guid: e271801484a580c4ab08ee9495ec1ad7, type: 3}
   slideSound: {fileID: 8300000, guid: b1d4170115b79ce4a93b7bfe7dd58cc7, type: 3}
+  jetPackSound: {fileID: 8300000, guid: 1214168162031484688900c2fa385bc4, type: 3}
   currentStepSound: {fileID: 0}
   footSteps:
   - groundType: 0
@@ -2020,9 +2031,9 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 500
+  MaxDistance: 16
   Pan2D: 0
-  rolloffMode: 0
+  rolloffMode: 2
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
@@ -2657,8 +2668,8 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
+  MinDistance: 4.03
+  MaxDistance: 180
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0

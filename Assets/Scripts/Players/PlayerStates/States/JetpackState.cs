@@ -22,6 +22,7 @@ namespace Players.PlayerStates.States
             moveDir = playerRef.move;
             this.playerRef.gravityMultiplier = 0.05f;
             aimAnimation = 0;
+            playerRef.playerStats.playerSoundController.PlayMovementSound(playerRef.playerStats.playerSoundController.jetPackSound);
 
         }
     

@@ -14,7 +14,8 @@ namespace Players.PlayerStates.States
 
         bool isBattleRoyale;
         float currentRespawnTimer;
-        
+
+        private bool playerSoundPlayed = false;
     
         public override void StateEnter()
         {
@@ -23,11 +24,13 @@ namespace Players.PlayerStates.States
             //    playerRef.playerStats.GoMenuOnDead(); 
             // }
  
+            playerSoundPlayed = false;
             playerRef.lockShoot = true;
             currentRespawnTimer= 0;
             playerRef.sprintFactor = 1f;
             playerRef.move = Vector3.zero;
             playerRef.playerStats.SetHealth(playerRef.playerStats.GetMaxHealth());
+            playerRef.playerStats.playerSoundController.PlayActionSound(playerRef.playerStats.playerSoundController.DeathSound);
             PlayerVFXController.OnDeadEffectHandle.CreateVFX(playerRef.playerStats.deadPosition, playerRef.transform.rotation, playerRef.IsServer);
             if (playerRef.playerStats.instigatorName!=string.Empty)
             {
@@ -48,6 +51,7 @@ namespace Players.PlayerStates.States
             playerRef.playerStats.OnStatsChanged?.Invoke();
             CanvasController.OnUpdateUI?.Invoke();
             playerRef.lockShoot = false;
+            playerRef.playerStats.playerSoundController.PlayActionSound(playerRef.playerStats.playerSoundController.playerRespawnedSound, 1.0f, 1.0f, true);
         }
 
         public override void StateLateUpdate()
@@ -64,6 +68,11 @@ namespace Players.PlayerStates.States
         {
             currentRespawnTimer += Time.deltaTime;
             Debug.Log("Time to respawn: "+GameController.instance.respawnTime);
+            if (currentRespawnTimer>=(GameController.instance.respawnTime-playerRef.playerStats.playerSoundController.respawningSound.length) && !playerSoundPlayed)
+            {
+                playerRef.playerStats.playerSoundController.PlayActionSound(playerRef.playerStats.playerSoundController.respawningSound, 1.0f, 1.0f);
+                playerSoundPlayed = true;
+            }
         
             if (currentRespawnTimer>GameController.instance.respawnTime)
             {

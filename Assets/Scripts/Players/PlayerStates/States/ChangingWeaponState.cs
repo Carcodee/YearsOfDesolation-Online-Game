@@ -33,6 +33,7 @@ public class ChangingWeaponState : PlayerStateBase
             
             networkAnimator.Animator.Play(weaponToChange.weapon.weaponAnimation.weaponChange);
             
+            playerRef.playerStats.playerSoundController.PlayWeaponSound(playerRef.playerStats.playerSoundController.weaponChangeStart, true);
             MyUtilities.SetDefaultUpperLayer(networkAnimator.Animator, weaponToChange.weapon.weaponAnimation.LayerName, 
                 oldWeapon.weapon.weaponAnimation.LayerName);
             
@@ -45,7 +46,7 @@ public class ChangingWeaponState : PlayerStateBase
         {
             // playerRef.playerStats.currentWeaponSelected = weaponToChange;
             playerRef.lockShoot = false;
-           
+            playerRef.playerStats.playerSoundController.PlayWeaponSound(playerRef.playerStats.playerSoundController.weaponChangeEnd, true);
             playerRef.playerStats.currentWeaponSelected.weapon.shootTimer= playerRef.playerStats.currentWeaponSelected.weapon.shootRate.statValue+0.1f;
             if(isAimingInAtLastFrame)
             {

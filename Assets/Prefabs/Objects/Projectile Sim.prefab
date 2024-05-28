@@ -90,6 +90,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3461700712956109476}
     m_Modifications:
+    - target: {fileID: 3741147941165275374, guid: b53d439134e07834d8eab5dd77e9b8fc,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3741147941591325393, guid: b53d439134e07834d8eab5dd77e9b8fc,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -222,23 +227,23 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 5
+  m_Time: 0.08
   m_PreviewTimeScale: 1
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 1
+    widthMultiplier: 0.008
     widthCurve:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
-        time: 0
-        value: 0.013513565
+        time: 0.0024032593
+        value: 0.4999982
         inSlope: 0
         outSlope: 0
         tangentMode: 0
         weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
+        inWeight: 0
+        outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -279,7 +284,7 @@ TrailRenderer:
     textureScale: {x: 1, y: 1}
     shadowBias: 0.5
     generateLightingData: 0
-  m_MinVertexDistance: 0.1
+  m_MinVertexDistance: 0.04
   m_MaskInteraction: 0
   m_Autodestruct: 0
   m_Emitting: 1

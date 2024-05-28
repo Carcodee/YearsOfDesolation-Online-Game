@@ -26,6 +26,7 @@ namespace Players.PlayerStates.States
             this.playerRef.Jump();
             this.playerRef.gravityMultiplier = 1;
             networkAnimator.Animator.Play("Jump");
+            playerRef.playerStats.playerSoundController.PlayMovementSound(playerRef.playerStats.playerSoundController.jumpSound);
         
         }
 

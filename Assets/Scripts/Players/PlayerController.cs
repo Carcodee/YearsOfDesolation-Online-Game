@@ -198,7 +198,12 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
                 this.stateMachineController.networkAnimator.Animator.SetFloat("X", this.move.x);
                 this.stateMachineController.networkAnimator.Animator.SetFloat("Y", this.move.z);
                 ActivateAim(1);
+                playerStats.playerSoundController.PlayActionSound(playerStats.playerSoundController.aimOnSound,0.3f, 1.0f);
                 rotationSmoothTime = 0.025f;
+            }
+            if (Input.GetKeyUp(KeyCode.Mouse1)&& isAiming)
+            {
+                playerStats.playerSoundController.PlayActionSound(playerStats.playerSoundController.aimOffSound,0.3f, 1.0f);
             }
             if (Input.GetKeyUp(KeyCode.Mouse1)|| isSprinting)
             {
@@ -219,7 +224,7 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
         playerStats.currentWeaponSelected.weapon.shootRefraction = 0.01f;
         if (val<=0)
         {
-            playerStats.currentWeaponSelected.weapon.shootRefraction = 0.1f; 
+            playerStats.currentWeaponSelected.weapon.shootRefraction = 0.1f;
         }
         else
         {
@@ -318,6 +323,7 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
             float reloadTimeMul=playerStats.currentWeaponSelected.ammoBehaviour.reloadTime.statValue; 
             playerStats.stateMachineController.networkAnimator.Animator.SetFloat("ReloadSpeed", reloadTimeMul);
             CanvasController.OnReloadStarted?.Invoke();
+            playerStats.playerSoundController.PlayCurrentStartReload(0.15f);
         }
 
         
@@ -329,9 +335,6 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
         if (hasStartedReloading&&playerStats.currentWeaponSelected.ammoBehaviour.isReloading)
         {
             int layerNIndex = playerStats.stateMachineController.networkAnimator.Animator.GetLayerIndex(playerStats.currentWeaponSelected.weapon.weaponAnimation.LayerName);
-             // Debug.Log("Layer Index: " + layerNIndex);
-             // Debug.Log("Start reload");
-             
              if (!MyUtilities.IsThisAnimationPlaying(playerStats.stateMachineController.networkAnimator.Animator,
                      playerStats.currentWeaponSelected.weapon.weaponAnimation.weaponReload, layerNIndex))
              {
@@ -339,7 +342,7 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
                  CanvasController.OnReloadFinished?.Invoke();
                  finishReload = true;
                  playerStats.stateMachineController.networkAnimator.Animator.SetBool("FinishReload", true); 
-                 // Debug.Log("Finish reload");
+                 playerStats.playerSoundController.PlayCurrentEndReload(0.15f);
              }
            
         }
@@ -406,7 +409,7 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
 
     public void GroundGravity()
     {
-        characterController.Move(Vector3.down* Time.deltaTime);
+        characterController.Move(Vector3.down * (Time.deltaTime * 3));
     }
     public void ApplyGravity()
     {
@@ -524,6 +527,7 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
     //     }
     //     stateMachineController.networkAnimator.Animator.SetFloat("Aiming", 1);
     // }
+    
     public void Shoot()
     {
         if (playerStats.currentWeaponSelected.weapon.ammoBehaviour.isReloading || lockShoot) return;
@@ -535,70 +539,68 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
         {
             CrosshairCreator.OnCrosshairChange?.Invoke();
             playerStats.playerSoundController.PlaySound(playerStats.playerSoundController.weaponAudioSource, playerStats.playerSoundController.currentWeaponShoot);
+            playerStats.playerSoundController.RequestSoundEmission(SoundType.Shoot);
             stateMachineController.networkAnimator.Animator.Play(playerStats.currentWeaponSelected.weapon.weaponAnimation.weaponShoot);
+            
             StartCoroutine(playerStats.playerComponentsHandler.ShakeCamera(0.1f, .9f, .7f));
-            playerStats.playerSoundController.PlayCurrentShoot();
+            playerStats.playerSoundController.PlayCurrentShoot(false,0.1f, 1.0f);
             playerStats.currentWeaponSelected.ammoBehaviour.currentBullets--;
             //TODO : Spawn vfx on local player 
             PlayerVFXController.shootEffectHandle.CreateVFX(spawnBulletPoint.position, transform.rotation ,IsServer);
             playerStats.currentWeaponSelected.weapon.shootTimer = 0;
             Vector3 shotDirection = new Vector3(cameraRef.transform.forward.x + randomRefraction, cameraRef.transform.forward.y + randomRefraction, cameraRef.transform.forward.z);
             Vector3 spawnPoint = (cameraRef.transform.forward * 2)+cameraRef.transform.position;
+            
             if (Physics.Raycast(spawnPoint, shotDirection, out RaycastHit hit, distanceFactor, playerHitLayer))
             {
                 
-                // OnPlayerVfxAction?.Invoke(MyVfxType.hit ,hit.point);
                 PlayerVFXController.hitEffectHandle.CreateVFX(hit.point, transform.rotation ,IsServer);
                 BulletController bullet = Instantiate(bulletPrefab, spawnBulletPoint.position,
                     cinemachineCameraTarget.rotation);
                 bullet.Direction =  (spawnBulletPoint.transform.position - hit.point).normalized;
                 bullet.damage.Value = playerStats.GetDamageDone();
-
-                // if (hit.collider.includeLayers==playerHitLayer )
-                // {
-                    PlayerStatsController objectRef= hit.collider.gameObject.GetComponentInParent<PlayerStatsController>();
-                    if (objectRef!=null)
+                PlayerStatsController objectRef= hit.collider.gameObject.GetComponentInParent<PlayerStatsController>();
+                if (objectRef!=null)
+                {
+                    if (objectRef)
                     {
-                 
-                        if (objectRef)
+                        playerStats.lastEnemyKilledName = objectRef.userName.Value.ToString();
+                        HitData hitData =  DamageReceiverManager.instance.CheckHitType(hit.collider.gameObject.layer);
+                        // playerHitLayer
+                        float damageToDo=Mathf.Floor((float)playerStats.GetDamageDone() * hitData.damageAmplifier); ;
+                        ClientRpcParams clientRpcParams = new ClientRpcParams
                         {
-                            playerStats.lastEnemyKilledName = objectRef.userName.Value.ToString();
-                            HitData hitData =  DamageReceiverManager.instance.CheckHitType(hit.collider.gameObject.layer);
-                            // playerHitLayer
-                            float damageToDo=Mathf.Floor((float)playerStats.GetDamageDone() * hitData.damageAmplifier); ;
-                            ClientRpcParams clientRpcParams = new ClientRpcParams
+                            Send = new ClientRpcSendParams
                             {
-                                Send = new ClientRpcSendParams
-                                {
-                                    TargetClientIds = new[] {objectRef.OwnerClientId}            
-                                }
-                            }; 
-                            if (objectRef.IsSpawned)
-                            {
-                                objectRef.playerVFXController.BodyDamageVFX();
-                                objectRef.SpawnDamageTakenVFXClientRpc(objectRef.takeDamagePosition.position, Quaternion.identity, OwnerClientId, clientRpcParams);
-                                {
-                                    objectRef.TakeDamageClientRpc((int)damageToDo, OwnerClientId, playerStats.userName.Value.ToString());
-                                    CrosshairCreator.OnHitDetected?.Invoke(hitData.hitType);
-                                }
-                                if (IsClient)
-                                {
-                                    objectRef.TakeDamageServerRpc((int)damageToDo, OwnerClientId, playerStats.userName.Value.ToString());
-                                    CrosshairCreator.OnHitDetected?.Invoke(hitData.hitType);
-                                }
+                                TargetClientIds = new[] {objectRef.OwnerClientId}            
                             }
-                            else
+                        }; 
+                        if (objectRef.IsSpawned)
+                        {
+                            objectRef.playerVFXController.BodyDamageVFX();
+                            objectRef.SpawnDamageTakenVFXClientRpc(objectRef.takeDamagePosition.position, Quaternion.identity, OwnerClientId, clientRpcParams);
                             {
-                                
-                                objectRef.playerVFXController.BodyDamageVFX();
-                                objectRef.TakeDamageOffline(damageToDo);
+                                objectRef.TakeDamageClientRpc((int)damageToDo, OwnerClientId, playerStats.userName.Value.ToString());
                                 CrosshairCreator.OnHitDetected?.Invoke(hitData.hitType);
                             }
+                            if (IsClient)
+                            {
+                                objectRef.TakeDamageServerRpc((int)damageToDo, OwnerClientId, playerStats.userName.Value.ToString());
+                                CrosshairCreator.OnHitDetected?.Invoke(hitData.hitType);
+                            }
+                            playerStats.playerSoundController.PlayActionSound(playerStats.playerSoundController.hitToEnemySound);
                             
                         }
+                        else
+                        {
+                            objectRef.playerVFXController.BodyDamageVFX();
+                            objectRef.TakeDamageOffline(damageToDo);
+                            CrosshairCreator.OnHitDetected?.Invoke(hitData.hitType);
+                            playerStats.playerSoundController.PlayActionSound(playerStats.playerSoundController.hitToEnemySound);
+                        }
+                        
                     }
-                // }
-
+                }
             }
             else
             {
@@ -852,13 +854,12 @@ public class AmmoBehaviour
             Debug.Log("Out of ammo find coins to fill your bullets");
             return;
         }
-        if (isReloading /*&& reloadCurrentTime< reloadTime.statValue*/)
+        if (isReloading)
         {
              // currentReloadAnimTime+= Time.deltaTime;
-            if (finishReload/* reloadCurrentTime> reloadTime.statValue*/)
+            if (finishReload)
             {
                 finishReload = false;
-                 // currentReloadAnimTime= 0;
                 if (totalAmmo <= totalBullets.statValue)
                 {
                     int tempBulletsToFill = totalBullets.statValue - currentBullets;

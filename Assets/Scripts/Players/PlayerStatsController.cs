@@ -409,10 +409,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
                 Destroy(gameObject);
                 return;
             }
-            if (stateMachineController.currentState.stateName == "Dead" || health.Value<=0)
-            {
-                return;
-            }
+            if (stateMachineController.currentState.stateName == "Dead" || health.Value<=0)return;
             else
             {
                 if (IsServer)
@@ -421,6 +418,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
                     health.Value -= (damage);
                     StartCoroutine(playerComponentsHandler.ShakeCamera(0.3f, 5, 5));
                     playerVFXController.bloodEffectHandle.CreateVFX(takeDamagePosition.position,  Quaternion.identity,IsServer);
+                    
                 }
                 else
                 {
@@ -430,6 +428,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
                 }
                 playerVFXController.BodyDamageVFX();
                 CanvasController.OnUpdateUI?.Invoke();
+                playerSoundController.PlayActionSound(playerSoundController.damageTakeSound);
                 OnStatsChanged?.Invoke();
             }
         }
@@ -451,6 +450,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
             }
             playerVFXController.bloodEffectHandle.CreateVFX(takeDamagePosition.position, Quaternion.identity,IsServer);
             playerVFXController.bloodEffectHandle.CreateVFX(takeDamagePosition.position, Quaternion.identity,IsServer);
+            playerSoundController.PlayActionSound(playerSoundController.killDoneSound);
             playerVFXController.BodyDamageVFX();
             // OnStatsChanged?.Invoke();
     }
@@ -504,6 +504,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
                 health.Value -= (myDamage);
                 StartCoroutine(playerComponentsHandler.ShakeCamera(0.3f, 5, 5));
                 playerVFXController.bloodEffectHandle.CreateVFX(takeDamagePosition.position, Quaternion.identity ,IsServer);
+                playerSoundController.PlayActionSound(playerSoundController.damageTakeSound);
             }
             else
             {
@@ -511,7 +512,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
                 SetHealthServerRpc(health.Value - (myDamage));  
                 StartCoroutine(playerComponentsHandler.ShakeCamera(0.3f, 5, 5));
                 playerVFXController.bloodEffectHandle.CreateVFX(takeDamagePosition.position, Quaternion.identity , IsServer);
-
+                playerSoundController.PlayActionSound(playerSoundController.damageTakeSound);
             }
             OnStatsChanged?.Invoke();
         
@@ -593,6 +594,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
         SetLevelServerRpc(playerLevel.Value + 1);
         SetHealthServerRpc(health.Value+6);
         SetMaxHealthServerRpc(maxHealth.Value+1);
+        
         CanvasController.OnUpdateUI?.Invoke();
     }
 
@@ -759,15 +761,14 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
                     if (GameController.instance.players.Count>1)
                     { 
                         coinPosition.transform.position = GameController.instance.players[randomPlayer].GetComponent<PlayerStatsController>().playerZoneController.spawnCoinPoint.position;
-                        
                     }
                     if (GameManager.Instance.isOnTutorial)
                     {
                         TutorialStagesHandler.instance.SetTutorialStage(TutorialStage.UpgradeBuild);
-                        Debug.Log("Enterrreeed");
                         Destroy(coinPosition.gameObject);
                         coinPosition = null;
                     }
+                    playerSoundController.PlayActionSound(playerSoundController.pickAmmoSound);
                     CanvasController.OnBulletsAddedUI?.Invoke();
                     CanvasController.OnUpdateUI?.Invoke();
 

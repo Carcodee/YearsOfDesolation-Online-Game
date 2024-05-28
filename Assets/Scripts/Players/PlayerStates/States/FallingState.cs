@@ -61,13 +61,6 @@ namespace Players.PlayerStates.States
                 stateMachineController.SetState("Aiming");
             }
 
-            if (playerRef.isGrounded&& Input.GetKey(KeyCode.LeftShift))
-            {
-                stateMachineController.SetState("Sprint");
-                networkAnimator.Animator.Play("Movement");
-                return;
-            }
-
             if (Input.GetKeyDown(KeyCode.Space)&& IsAlmostAtGround())
             {
                 hasJumpAlmostAtTheGroud = true;
@@ -79,6 +72,15 @@ namespace Players.PlayerStates.States
                     stateMachineController.SetState("Jump");
                     return;
                 }
+                if (Input.GetKey(KeyCode.LeftShift))
+                {
+                    stateMachineController.SetState("Sprint");
+                    playerRef.playerStats.playerSoundController.PlayMovementSound(playerRef.playerStats.playerSoundController.landSound);
+                    networkAnimator.Animator.Play("Movement");
+                playerRef._bodyVelocity= Vector3.zero;
+                    return;
+                }
+                playerRef.playerStats.playerSoundController.PlayMovementSound(playerRef.playerStats.playerSoundController.landSound);
                 stateMachineController.SetState("Movement");
                 playerRef._bodyVelocity= Vector3.zero;
                 return;
