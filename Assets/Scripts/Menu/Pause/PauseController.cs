@@ -65,12 +65,14 @@ public class PauseController : MonoBehaviour
         {
             PlayerComponentsHandler.IsCurrentDeviceMouse = true;
             PauseGame();
+            AudioManager.instance.OpenPauseSound();
         }
         else if(Input.GetKeyDown(KeyCode.Escape) && pauseMenu.activeSelf)
         {
 
             PlayerComponentsHandler.IsCurrentDeviceMouse = false;
             ResumeGame();
+            AudioManager.instance.OpenPauseSound();
             if (!GameManager.Instance.isOnTutorial)return;
             if (!TutorialStagesHandler.instance.currentStage.hasDialogFinished)PlayerComponentsHandler.IsCurrentDeviceMouse = true;
 
@@ -83,6 +85,8 @@ public class PauseController : MonoBehaviour
             { 
                 return;
             }
+            
+            AudioManager.instance.OpenShopSound();
             SkillPanel.SetActive(true);
             StatsPanelController.OnPanelOpen.Invoke();
         }

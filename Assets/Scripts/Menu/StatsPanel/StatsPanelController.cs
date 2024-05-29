@@ -110,7 +110,7 @@ namespace Menu.StatsPanel
             {
                 isPanelOpen = !isPanelOpen;
                 UpdateStats();
-
+                AudioManager.instance.OpenShopSound();
                 if (isPanelOpen)
                 {
                     PostProccesingManager.instance.LerpActivateMenuBlur();

@@ -94,6 +94,7 @@ public class NetworkSceneManager : NetworkBehaviour
 //         var options = new InitializationOptions();
 //         options.SetProfile("DefaultProfile");
         if (AuthenticationService.Instance.IsSignedIn)return;
+        
         AuthenticationService.Instance.SwitchProfile(UnityEngine.Random.Range(0, 1000000).ToString());
 
         await AuthenticationService.Instance.SignInAnonymouslyAsync();

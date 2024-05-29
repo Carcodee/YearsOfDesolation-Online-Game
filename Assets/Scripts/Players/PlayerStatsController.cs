@@ -189,6 +189,9 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
     {
         if (GameManager.Instance.ReadyToStart)return;
         await Task.Delay(500);
+        GameManager.Instance.PlayerInGameSettings();
+        if (AudioManager.instance.backGroundAudioSource.clip.loadState != AudioDataLoadState.Loaded) await Task.Yield();
+        
         GameManager.Instance.ReadyToStart = true;
         callback.Invoke(true);
     }

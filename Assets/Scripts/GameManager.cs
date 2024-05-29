@@ -56,6 +56,7 @@ public class GameManager : MonoBehaviour
         gameControllerReady = false;
         isOnTutorial = false;
 
+        PlayerInMenuSettings();
         // if (!sceneAsync.isDone)await Task.Yield();
         // sceneAsync.allowSceneActivation = true;
     }
@@ -66,12 +67,26 @@ public class GameManager : MonoBehaviour
         gameController.GetComponent<NetworkObject>().Spawn();
         gameControllerReady = true;
         gameEnded = false;
-        AudioManager.instance.ActivateListener(false);
 
     }
 
+    public void PlayerInGameSettings()
+    {
+        AudioManager.instance.ActivateListener(false);
+        AudioManager.instance.PlayGameSound();
+    }
+
+    public void PlayerInMenuSettings()
+    {
+        AudioManager.instance.ActivateListener(true);
+        AudioManager.instance.PlayMenuScreenSound();
+    }
     public void ActivateLoadingScreen(bool val)
     {
+        if (val == true)
+        {
+            AudioManager.instance.PlayWaitingScreenSound();
+        }
         loadingScene.gameObject.SetActive(val);
     }
 
