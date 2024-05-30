@@ -19,7 +19,10 @@ public class TaskOject : MonoBehaviour
 
     public void Init()
     {
-        
+        if (!GameManager.Instance.isOnTutorial)
+        {
+            gameObject.SetActive(false);
+        }
         descriptionText.text = description;
         detailsText.text = details;
         numberText.text = number.ToString();

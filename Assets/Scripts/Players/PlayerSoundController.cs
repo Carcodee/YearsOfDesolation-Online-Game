@@ -27,6 +27,7 @@ public class PlayerSoundController : NetworkBehaviour
     public AudioClip hitToEnemySound;
     public AudioClip killDoneSound;
     public AudioClip pickAmmoSound;
+    public AudioClip outsideOffZoneDamage;
 
     [Header("Weapon")]
     public AudioClip currentWeaponShoot;

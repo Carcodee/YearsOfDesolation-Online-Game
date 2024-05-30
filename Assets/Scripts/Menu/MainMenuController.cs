@@ -29,6 +29,12 @@ using System.Collections.Generic;
 
         public CustomInputField usernameInputField;
         public GameObject mainMap;
+        public GameObject optionsPanel;
+        
+        public OptionObjectManager sensitivity;
+        public OptionObjectManager playerVolume;
+        public OptionObjectManager backGroundVolume;
+        public OptionObjectManager masterVolume;
         
         public void OpenModalWindow()
         {
@@ -53,10 +59,17 @@ using System.Collections.Generic;
             DisplayNotification();
         }
 
+        public void ActivateOptions(bool val)
+        {
+            optionsPanel.SetActive(val);
+        }
+        
         public void LoadTutorial()
         {
             networkSceneManager.StartTutorialHost();
             GameManager.Instance.isOnTutorial = true;
+            GameManager.Instance.ActivateLoadingScreen(true);
+            
             mainMap.SetActive(false);
         }
 
@@ -172,5 +185,27 @@ using System.Collections.Generic;
             }
                
         }
-
+        
+    public void SetBackgroundSound()
+    {
+        AudioManager.instance.SetBackgroundSound(backGroundVolume.slider.mainSlider.value);
     }
+    public void SetGameplaySound()
+    {
+        AudioManager.instance.SetGameplaySound(playerVolume.slider.mainSlider.value);
+    }
+    public void SetMasterSound()
+    {
+        AudioManager.instance.SetMasterSound(masterVolume.slider.mainSlider.value);
+    }
+    public void SetSensitivity()
+    {
+        GameManager.Instance.sensBeforeStart = sensitivity.slider.mainSlider.value;
+    }
+
+    public void QuitApp()
+    {
+        Application.Quit();
+    }
+
+}

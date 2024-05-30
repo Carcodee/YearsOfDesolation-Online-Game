@@ -82,8 +82,10 @@ public class TutorialManager : MonoBehaviour
         GameManager.Instance.localPlayerRef.transform.position = spawnPoint.position;
         GameManager.Instance.localPlayerRef.transform.rotation= Quaternion.Euler(0,-180,0);
         playerRef = GameManager.Instance.localPlayerRef;
+        AudioManager.instance.menuListener.enabled = false;
+        yield return new WaitForSeconds(2.0f);
+        GameManager.Instance.ActivateLoadingScreen(false);
         
-        yield return new WaitForSeconds(1.0f);
         tutorialStagesHandler.Init();
     }
     public void NextHUB()
@@ -110,7 +112,9 @@ public class TutorialManager : MonoBehaviour
         PlayerComponentsHandler.IsCurrentDeviceMouse = false;
         HUBCounter = 0;
         TutorialStagesHandler.instance.FinishDialogs();
+        AudioManager.instance.EventSucceded();
         F_In_F_Out_Obj.OnCleanScreen?.Invoke();
+        
 
     }
     public void FinishUIIntruction()

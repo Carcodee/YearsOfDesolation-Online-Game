@@ -59,6 +59,7 @@ public class TutorialStagesHandler : MonoBehaviour
             currentStage.wasStageCompleted = true;
             stagesDone.Add(currentStage);
             currentStage = newStage;
+            AudioManager.instance.PlayNewStepSound();
             currentStage.OnDialogDisplayed();
         }
     }

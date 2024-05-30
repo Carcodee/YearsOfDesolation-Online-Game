@@ -25,6 +25,8 @@ public class GameManager : MonoBehaviour
     public string localPlayerName="";
 
 
+    public float sensBeforeStart= 1.0f;
+    
     public string DisconnectNotificationText = "";
     private void Awake()
     {

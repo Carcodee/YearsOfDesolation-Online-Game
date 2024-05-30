@@ -41,7 +41,7 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
     public StateMachineController stateMachineController;
 
     [Header("TargetConfigs")]
-    public float mouseSensitivity = 100f;
+    public float mouseSensitivity = 1f;
     public float offset = 20.0f;
     public Transform targetPos;
     public Transform headAim;
@@ -160,6 +160,7 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
             playerStats.OnWeaponChanged+= SetSpawnPoint;
             playerComponentsHandler.CreateCanvas(cam);
             airTimeToPlane = 1;
+            mouseSensitivity = GameManager.Instance.sensBeforeStart;
         }
 
     }

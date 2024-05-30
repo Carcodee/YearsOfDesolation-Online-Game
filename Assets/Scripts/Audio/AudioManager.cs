@@ -19,11 +19,15 @@ public class AudioManager : MonoBehaviour
     public AudioClip mainMenuSound;
     public AudioClip inGameSound;
     public AudioClip waitingScreenSound;
+    public AudioClip newStageSound;
+    public AudioClip displayTutorialDataSound;
+    
     [Header("Player")]
     public AudioClip eventSuccedSound;
     public AudioClip eventCanceledSound;
     public AudioClip openShopSound;
     public AudioClip openPauseSound;
+    public AudioClip dangerSound;
 
     public void Awake()
     {
@@ -92,6 +96,11 @@ public class AudioManager : MonoBehaviour
     {
         UIAudioSource.PlayOneShot(eventCanceledSound);
     }
+    
+    public void DangerSound()
+    {
+        UIAudioSource.PlayOneShot(dangerSound);
+    }
 
     public void OpenShopSound()
     {
@@ -101,6 +110,28 @@ public class AudioManager : MonoBehaviour
     public void OpenPauseSound()
     {
         UIAudioSource.PlayOneShot(openPauseSound);
+    }
+
+    public void PlayNewStage()
+    {
+        UIAudioSource.PlayOneShot(newStageSound);
+    }
+    public void PlayNewStepSound()
+    {
+        UIAudioSource.PlayOneShot(displayTutorialDataSound);
+    }
+    
+    public void SetBackgroundSound(float val)
+    {
+        mixer.SetFloat("EnvironmentVolume",Mathf.Log(val) *20);
+    }
+    public void SetGameplaySound(float val)
+    {
+        mixer.SetFloat("PlayerVolume",Mathf.Log(val) * 20);
+    }
+    public void SetMasterSound(float val)
+    {
+        mixer.SetFloat("MasterVolume",Mathf.Log(val) * 20);
     }
     
 }

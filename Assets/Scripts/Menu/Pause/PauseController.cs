@@ -8,14 +8,14 @@ using NetworkingHandling;
 using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.UI;
 using Dropdown = Michsky.UI.Heat.Dropdown;
 
-public class PauseController : MonoBehaviour
+public class PauseController : MonoBehaviour, INetObjectToClean
 {
-    
-    
-    
+
+    public static Action<bool> OnAlertActivated;
     [Header("Main Menu")]
     public GameObject pauseMenu;
     
@@ -26,10 +26,9 @@ public class PauseController : MonoBehaviour
     public CrosshairCreator crosshairCreator;
     
     public OptionObjectManager sensitivity;
-    public OptionObjectManager volume;
-    public OptionObjectManager brightness;
-    
-    
+    public OptionObjectManager playerVolume;
+    public OptionObjectManager backGroundVolume;
+    public OptionObjectManager masterVolume;
     
     [Header("Croshair")]
     //Crosshair
@@ -55,12 +54,21 @@ public class PauseController : MonoBehaviour
     [Header("Ref")]
     public PlayerController playerAssigned;
     public CrosshairCreator playerCrosshair;
-    
     public GameObject SkillPanel;
 
+    [Header("Ref")]
+    public GameObject alertPanel;
+
+    public TextMeshProUGUI alertText;
+    
+    public AudioMixer mixer;
     // Update is called once per frame
     void Update()
     {
+        if (alertPanel.activeSelf)
+        {
+            alertText.text = $"Come back Soldier!\n (TIME TO DIE: {(playerAssigned.playerStats.outsideOfMapTickTime-playerAssigned.playerStats.currentOutsideOfMapTimer).ToString("0.0")})";
+        }
         if(Input.GetKeyDown(KeyCode.Escape) && !pauseMenu.activeSelf)
         {
             PlayerComponentsHandler.IsCurrentDeviceMouse = true;
@@ -92,14 +100,29 @@ public class PauseController : MonoBehaviour
         }
 
     }
+
+    private void Start()
+    {
+        
+        INetObjectToClean objectToClean = GetComponent<INetObjectToClean>();
+        CleanerController.instance.AddObjectToList(objectToClean);
+
+    }
+
     public void ConfirmChanges()
     {
         playerCrosshair.crossHair.CopyCrosshair(crosshairCreator.crossHair);
     }
 
-    
+    private void OnEnable()
+    {
+        OnAlertActivated += ActivateAlert;
+    }
 
-
+    public void ActivateAlert(bool val)
+    {
+        alertPanel.SetActive(val);
+    }
     public void TogleStatic()
     {
         crosshairCreator.crossHair.isStatic = !staticToggle.isOn;
@@ -115,21 +138,24 @@ public class PauseController : MonoBehaviour
         gapText.text = crosshairGap.value.ToString("0.00");
         
         
-        Debug.Log("Crosshair: " + crosshairCreator.crossHair.width + " " + crosshairCreator.crossHair.length + " " + crosshairCreator.crossHair.gap);
-        
-        
-        // crosshairCreator.crossHair.color = ;
     }
     
 
-    public void SetBrightness()
+    public void SetBackgroundSound()
     {
+        mixer.SetFloat("EnvironmentVolume",Mathf.Log(backGroundVolume.slider.mainSlider.value) *20);
     }
-    public void SetVolume()
+    public void SetGameplaySound()
     {
+        mixer.SetFloat("PlayerVolume",Mathf.Log(playerVolume.slider.mainSlider.value) * 20);
+    }
+    public void SetMasterSound()
+    {
+        mixer.SetFloat("MasterVolume",Mathf.Log(masterVolume.slider.mainSlider.value) * 20);
     }
     public void SetSensitivity()
     {
+        playerAssigned.mouseSensitivity = sensitivity.slider.mainSlider.value;
     }
     
 
@@ -179,5 +205,15 @@ public class PauseController : MonoBehaviour
         optionsAnimator.SetBool("FadeIn", value);
     }
 
-    
+
+    public void CleanData()
+    {
+        OnAlertActivated -= ActivateAlert;
+    }
+
+    public void OnSpawn()
+    {
+    }
+
+    public bool shutingDown { get; set; }
 }

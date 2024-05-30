@@ -49,6 +49,9 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
     public string[] statHolderNames;
     public int[] statHolder;
     public bool isPlayerInsideTheZone;
+    public bool isPlayerInsideOfMap;
+    public bool dangerSoundPlayed;
+    public bool outsideOffZoneSoundPlayed;
 
     public string lastEnemyKilledName = "";
     public string instigatorName = "";
@@ -61,6 +64,9 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
     public PlayerZoneController playerZoneController;
     public float currentOutsideTimerTick;
     public float outsideTimerTick=1;
+    
+    public float currentOutsideOfMapTimer= 0.0f;
+    public float outsideOfMapTickTime = 8.0f;
     private bool _IsInitizalized=false;
     private bool _isInNetwork=false;
     public CoinBehaivor coin;
@@ -93,6 +99,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
     [Header("Netcode")]
     public NetworkVariable<ulong> clientIdInstigator;
 
+    private Transform playerTransform;
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
@@ -144,6 +151,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
             OnLevelUp += LevelUp;
             iDamageable = GetComponent<IDamageable>();
             isPlayerInsideTheZone = true;
+            isPlayerInsideOfMap = true;
             _isInNetwork = true;
             OnSpawnPlayer();
 
@@ -193,6 +201,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
         if (AudioManager.instance.backGroundAudioSource.clip.loadState != AudioDataLoadState.Loaded) await Task.Yield();
         
         GameManager.Instance.ReadyToStart = true;
+        PlayerComponentsHandler.IsCurrentDeviceMouse = false;
         callback.Invoke(true);
     }
     public void SelectBuild(PlayerBuild build)
@@ -230,6 +239,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
     void InitializateStats()
     {
         SetTemplate(0);
+        playerTransform = transform;
         playerObj = GetComponent<NetworkObject>();
         if (playerSoundController==null)
         {
@@ -359,10 +369,46 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
     }
     public void OutsideZoneDamage()
     {
+        if (Vector3.Distance(GameController.instance.mapCenter.position, playerTransform.position) > GameController.instance.mapLimitRadius)
+        {
+            currentOutsideOfMapTimer += Time.deltaTime;
+            isPlayerInsideOfMap = false;
+            if (!dangerSoundPlayed)
+            {
+                AudioManager.instance.DangerSound();
+                dangerSoundPlayed = true;
+            }
+            PauseController.OnAlertActivated.Invoke(isPlayerInsideTheZone);
+            PostProccesingManager.instance.ApplyPostProcessing(true);
+            if (currentOutsideOfMapTimer>= outsideOfMapTickTime)
+            {
+                currentOutsideOfMapTimer = 0.0f;
+                TakeDamage(maxHealth.Value);
+            }
+            return;
+        }
+        else
+        {
+            if (dangerSoundPlayed)
+            {
+                AudioManager.instance.UIAudioSource.Stop();
+                dangerSoundPlayed = false;
+            } 
+            PauseController.OnAlertActivated.Invoke(false);
+            PostProccesingManager.instance.ApplyPostProcessing(false);
+            currentOutsideOfMapTimer = 0.0f;
+            isPlayerInsideOfMap = true;
+        }
+        
         if (health.Value >= 0)
         {
             if (!isPlayerInsideTheZone)
             {
+                if (!outsideOffZoneSoundPlayed)
+                {
+                    playerSoundController.PlayActionSound(playerSoundController.outsideOffZoneDamage);
+                    outsideOffZoneSoundPlayed = true;
+                }
                 currentOutsideTimerTick += Time.deltaTime;
                 if (currentOutsideTimerTick > outsideTimerTick)
                 {
@@ -374,6 +420,11 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
             }
             else
             {
+                if (!outsideOffZoneSoundPlayed)
+                {
+                    playerSoundController.actionsAudioSource.Stop();
+                    outsideOffZoneSoundPlayed = false;
+                }
                 PostProccesingManager.instance.ApplyPostProcessing(false);
             }
         }

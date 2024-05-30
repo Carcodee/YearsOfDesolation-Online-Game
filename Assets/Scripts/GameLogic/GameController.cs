@@ -26,7 +26,9 @@ public class GameController : NetworkBehaviour,INetObjectToClean
     public NetworkVariable<int> numberOfPlayersAlive = new NetworkVariable<int>();
     public NetworkVariable <Vector3> randomPoint = new NetworkVariable<Vector3>();
     public Transform sphereRadiusMesh;
-    
+
+    public Transform mapCenter;
+    public float mapLimitRadius;
     public int timeToFarm=120;
     public float reduceZoneSpeed=2.0f;
     public float zoneRadius=2.0f;
@@ -42,9 +44,14 @@ public class GameController : NetworkBehaviour,INetObjectToClean
     public PlayerZoneController zoneControllerPrefab;
     public List<PlayerZoneController> zoneControllers;
     zoneColors[] zoneColors;
-    
-    
-    
+
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color= Color.red;
+        Gizmos.DrawWireSphere(mapCenter.position, mapLimitRadius);
+    }
+
     private void OnEnable()
     {
         // CoinBehaivor.OnCoinCollected += MoveCoin;
@@ -175,6 +182,7 @@ public class GameController : NetworkBehaviour,INetObjectToClean
     public void StartGame()
     {
         NetworkingHandling.HostManager.instance.CloseLobby();
+        AudioManager.instance.PlayNewStage();
         started.Value = true;
         for (int i = 0; i < numberOfPlayers.Value; i++)
         {
@@ -228,6 +236,7 @@ public class GameController : NetworkBehaviour,INetObjectToClean
         if (netTimeToStart.Value > waitingTime && !started.Value)
         {
             StartGame();
+            
         }
         if (started.Value && !mapLogic.Value.isBattleRoyale)
         {
@@ -238,6 +247,7 @@ public class GameController : NetworkBehaviour,INetObjectToClean
                 {
                     mapLogic.Value.isBattleRoyale = true;
                     SendMapBattleRoyaleValueClientRpc(true);
+                    AudioManager.instance.PlayNewStage();
                 }
                 
             }

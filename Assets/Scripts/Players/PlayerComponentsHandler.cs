@@ -206,9 +206,9 @@ public class PlayerComponentsHandler : NetworkBehaviour, INetObjectToClean
 
             float deltaTimeMultiplier =(!IsCurrentDeviceMouse) ? 1.0f : Time.deltaTime;
 
-            _cinemachineTargetYaw += look.x * deltaTimeMultiplier;
-            _cinemachineTargetPitch += look.y * deltaTimeMultiplier;
-            rotationDetector += look.x * deltaTimeMultiplier;
+            _cinemachineTargetYaw += look.x * deltaTimeMultiplier * playerController.mouseSensitivity;
+            _cinemachineTargetPitch += look.y * deltaTimeMultiplier * playerController.mouseSensitivity;
+            rotationDetector += look.x * deltaTimeMultiplier * playerController.mouseSensitivity;
         }
         // clamp our rotations so our values are limited 360 degrees
 

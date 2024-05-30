@@ -18,6 +18,10 @@ public class NotificationItem : MonoBehaviour
     {
 
         OnTextDisplay += DisplayText;
+        if (!GameManager.Instance.isOnTutorial)
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     private void Update()
