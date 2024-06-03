@@ -1379,6 +1379,9 @@ MonoBehaviour:
   statHolderNames: []
   statHolder: 
   isPlayerInsideTheZone: 0
+  isPlayerInsideOfMap: 0
+  dangerSoundPlayed: 0
+  outsideOffZoneSoundPlayed: 0
   lastEnemyKilledName: 
   instigatorName: 
   weaponSpawnPoint:
@@ -1390,6 +1393,8 @@ MonoBehaviour:
   playerZoneController: {fileID: 0}
   currentOutsideTimerTick: 0
   outsideTimerTick: 1
+  currentOutsideOfMapTimer: 0
+  outsideOfMapTickTime: 8
   coin: {fileID: 331007805235256181, guid: 8d81f148e89dcad4bbd1e53767679d49, type: 3}
   playerObj: {fileID: 0}
   playerBuildSelected:
@@ -1960,6 +1965,8 @@ MonoBehaviour:
   hitToEnemySound: {fileID: 8300000, guid: dee247b65331a1e42a47713bc0894bb6, type: 3}
   killDoneSound: {fileID: 8300000, guid: 9025c38115940024d84df0cff66863e2, type: 3}
   pickAmmoSound: {fileID: 8300000, guid: be0b1e95d4a470d4883c9a7217ffba45, type: 3}
+  outsideOffZoneDamage: {fileID: 8300000, guid: 3e7cd6a7a75e86f4d8f02ac3404c3832,
+    type: 3}
   currentWeaponShoot: {fileID: 0}
   currentStartReload: {fileID: 0}
   currentEndReload: {fileID: 0}

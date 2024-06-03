@@ -26,6 +26,9 @@ public class GameManager : MonoBehaviour
 
 
     public float sensBeforeStart= 1.0f;
+    public float masterSoundBeforeStart= 1.0f;
+    public float backgroundSoundBeforeStart= 1.0f;
+    public float gameplaySoundBeforeStart= 1.0f;
     
     public string DisconnectNotificationText = "";
     private void Awake()

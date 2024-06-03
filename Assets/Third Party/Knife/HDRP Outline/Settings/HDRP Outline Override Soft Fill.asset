@@ -1,0 +1,72 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8964826622913680279
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec08c789f09cebf47b9dfa879f470851, type: 3}
+  m_Name: MegaOutline
+  m_EditorClassIdentifier: 
+  active: 1
+  m_AdvancedMode: 0
+  mode:
+    m_OverrideState: 1
+    m_Value: 2
+  width:
+    m_OverrideState: 1
+    m_Value: 4.16
+  fillAmount:
+    m_OverrideState: 1
+    m_Value: 0.064
+    min: 0
+    max: 1
+  patternTexture:
+    m_OverrideState: 1
+    m_Value: {fileID: 2800000, guid: f4ffff85d7cd3b94e90a79fd1b54cac9, type: 3}
+  patternFillAmount:
+    m_OverrideState: 1
+    m_Value: 0
+    min: 0
+    max: 1
+  patternTile:
+    m_OverrideState: 1
+    m_Value: {x: 1.2, y: 0.675}
+  iterations:
+    m_OverrideState: 1
+    m_Value: 1
+  blurRadius:
+    m_OverrideState: 1
+    m_Value: 2
+  blurIterations:
+    m_OverrideState: 1
+    m_Value: 1
+  overglow:
+    m_OverrideState: 1
+    m_Value: 1
+  softnessEnabled:
+    m_OverrideState: 1
+    m_Value: 0
+  softness:
+    m_OverrideState: 1
+    m_Value: 1
+    min: 0.001
+    max: 1
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7fd9488000d3734a9e00ee676215985, type: 3}
+  m_Name: HDRP Outline Override Soft Fill
+  m_EditorClassIdentifier: 
+  components:
+  - {fileID: -8964826622913680279}

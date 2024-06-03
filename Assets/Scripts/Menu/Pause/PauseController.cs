@@ -18,6 +18,8 @@ public class PauseController : MonoBehaviour, INetObjectToClean
     public static Action<bool> OnAlertActivated;
     [Header("Main Menu")]
     public GameObject pauseMenu;
+
+    public GameObject controlsPanel;
     
     [Header("Options")]
 
@@ -26,7 +28,7 @@ public class PauseController : MonoBehaviour, INetObjectToClean
     public CrosshairCreator crosshairCreator;
     
     public OptionObjectManager sensitivity;
-    public OptionObjectManager playerVolume;
+    public OptionObjectManager gameplayVolume;
     public OptionObjectManager backGroundVolume;
     public OptionObjectManager masterVolume;
     
@@ -48,7 +50,6 @@ public class PauseController : MonoBehaviour, INetObjectToClean
     
     [Header("Controls")]
     public Animator controlsAnimator;
-    public GameObject helpMenu;
     //Options
     
     [Header("Ref")]
@@ -128,6 +129,16 @@ public class PauseController : MonoBehaviour, INetObjectToClean
         crosshairCreator.crossHair.isStatic = !staticToggle.isOn;
 
     }
+
+    public void LoadOptions()
+    {
+        
+    }
+    
+    public void OpenControls(bool val)
+    {
+        controlsPanel.gameObject.SetActive(val);
+    }
     public void SetCrosshair()
     {
         crosshairCreator.crossHair.width =math.clamp(crosshairThickness.value*50, 1, crosshairThickness.value*50);
@@ -144,14 +155,17 @@ public class PauseController : MonoBehaviour, INetObjectToClean
     public void SetBackgroundSound()
     {
         mixer.SetFloat("EnvironmentVolume",Mathf.Log(backGroundVolume.slider.mainSlider.value) *20);
+        GameManager.Instance.backgroundSoundBeforeStart = backGroundVolume.slider.mainSlider.value;
     }
     public void SetGameplaySound()
     {
-        mixer.SetFloat("PlayerVolume",Mathf.Log(playerVolume.slider.mainSlider.value) * 20);
+        mixer.SetFloat("PlayerVolume",Mathf.Log(gameplayVolume.slider.mainSlider.value) * 20);
+        GameManager.Instance.gameplaySoundBeforeStart = gameplayVolume.slider.mainSlider.value;
     }
     public void SetMasterSound()
     {
         mixer.SetFloat("MasterVolume",Mathf.Log(masterVolume.slider.mainSlider.value) * 20);
+        GameManager.Instance.masterSoundBeforeStart = masterVolume.slider.mainSlider.value;
     }
     public void SetSensitivity()
     {
@@ -159,6 +173,22 @@ public class PauseController : MonoBehaviour, INetObjectToClean
     }
     
 
+    public void GetBackgroundSound()
+    {
+        backGroundVolume.slider.mainSlider.value = GameManager.Instance.backgroundSoundBeforeStart;
+    }
+    public void GetGameplaySound()
+    {
+        gameplayVolume.slider.mainSlider.value =  GameManager.Instance.gameplaySoundBeforeStart;
+    }
+    public void GetMasterSound()
+    {
+        masterVolume.slider.mainSlider.value = GameManager.Instance.masterSoundBeforeStart;
+    }
+    public void GetSensitivity()
+    {
+        sensitivity.slider.mainSlider.value = playerAssigned.mouseSensitivity;
+    }
     
     
     public void ExitGame()
@@ -178,12 +208,15 @@ public class PauseController : MonoBehaviour, INetObjectToClean
     public void PauseGame()
     {
         pauseMenu.SetActive(true);
+        GetSensitivity();
+        GetMasterSound();
+        GetGameplaySound();
+        GetBackgroundSound();
         PostProccesingManager.instance.ActivateBlur(1);
     }
     public void ResumeGame()
     {
         optionsMenu.SetActive(false);
-        helpMenu.SetActive(false);
         pauseMenu.SetActive(false);
         PostProccesingManager.instance.ActivateBlur(0);
 
@@ -193,14 +226,6 @@ public class PauseController : MonoBehaviour, INetObjectToClean
         if (!optionsMenu.activeSelf)
         {
             optionsMenu.SetActive(true);
-        }
-        optionsAnimator.SetBool("FadeIn", value);
-    }
-    public void OpenControls(bool value)
-    {
-        if (!helpMenu.activeSelf)
-        {
-            helpMenu.SetActive(true);
         }
         optionsAnimator.SetBool("FadeIn", value);
     }

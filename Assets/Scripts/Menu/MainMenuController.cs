@@ -30,9 +30,11 @@ using System.Collections.Generic;
         public CustomInputField usernameInputField;
         public GameObject mainMap;
         public GameObject optionsPanel;
+        public GameObject controlsPanel;
+        
         
         public OptionObjectManager sensitivity;
-        public OptionObjectManager playerVolume;
+        public OptionObjectManager gameplayVolume;
         public OptionObjectManager backGroundVolume;
         public OptionObjectManager masterVolume;
         
@@ -62,6 +64,10 @@ using System.Collections.Generic;
         public void ActivateOptions(bool val)
         {
             optionsPanel.SetActive(val);
+            GetSensitivity();
+            GetBackgroundSound();
+            GetMasterSound();
+            GetGameplaySound();
         }
         
         public void LoadTutorial()
@@ -189,20 +195,44 @@ using System.Collections.Generic;
     public void SetBackgroundSound()
     {
         AudioManager.instance.SetBackgroundSound(backGroundVolume.slider.mainSlider.value);
+        GameManager.Instance.backgroundSoundBeforeStart = backGroundVolume.slider.mainSlider.value;
     }
     public void SetGameplaySound()
     {
-        AudioManager.instance.SetGameplaySound(playerVolume.slider.mainSlider.value);
+        AudioManager.instance.SetGameplaySound(gameplayVolume.slider.mainSlider.value);
+        GameManager.Instance.gameplaySoundBeforeStart = gameplayVolume.slider.mainSlider.value;
     }
     public void SetMasterSound()
     {
         AudioManager.instance.SetMasterSound(masterVolume.slider.mainSlider.value);
+        GameManager.Instance.masterSoundBeforeStart = masterVolume.slider.mainSlider.value;
     }
     public void SetSensitivity()
     {
         GameManager.Instance.sensBeforeStart = sensitivity.slider.mainSlider.value;
     }
 
+    public void GetBackgroundSound()
+    {
+        backGroundVolume.slider.mainSlider.value = GameManager.Instance.backgroundSoundBeforeStart;
+    }
+    public void GetGameplaySound()
+    {
+        gameplayVolume.slider.mainSlider.value =  GameManager.Instance.gameplaySoundBeforeStart;
+    }
+    public void GetMasterSound()
+    {
+        masterVolume.slider.mainSlider.value = GameManager.Instance.masterSoundBeforeStart;
+    }
+    public void GetSensitivity()
+    {
+         sensitivity.slider.mainSlider.value = GameManager.Instance.sensBeforeStart;
+    }
+
+    public void OpenControls(bool val)
+    {
+        controlsPanel.gameObject.SetActive(val);
+    }
     public void QuitApp()
     {
         Application.Quit();
