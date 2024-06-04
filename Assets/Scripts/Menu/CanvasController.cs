@@ -38,6 +38,9 @@ public class CanvasController : MonoBehaviour, INetObjectToClean
     public TextMeshProUGUI exp;
 
     [Header("HUD")]
+    public GameObject WinObject;
+    public GameObject lookingAtObject;
+    public TextMeshProUGUI lookingAtText;
     public TextMeshProUGUI currentBullets;
     public QuestItem weaponName;
     public RadialSlider expSlider;
@@ -124,6 +127,7 @@ public class CanvasController : MonoBehaviour, INetObjectToClean
     public TextMeshProUGUI indicatorText;
         
     public GameObject [] ObjectsToDeactivateOnTutorial;
+    public GameObject [] objectsToDeactivateOnDead;
     void Start()
     {
     
@@ -595,11 +599,14 @@ public class CanvasController : MonoBehaviour, INetObjectToClean
     {
         if (!GameController.instance.started.Value)
         {
-            playersConnected.text = "Players Connected: " + GameController.instance.numberOfPlayers.Value.ToString();
+           playersConnected.text = "Players Connected: " + GameController.instance.numberOfPlayers.Value.ToString();
+           playersAlive.gameObject.SetActive(false); 
         }
         else
         {
-            playersConnected.text = "Players Alive: " + GameController.instance.numberOfPlayersAlive.Value.ToString();
+           playersConnected.gameObject.SetActive(false); 
+           playersAlive.gameObject.SetActive(true); 
+           playersAlive.text = GameController.instance.numberOfPlayersAlive.Value.ToString();
         }
     }
     public void DisplayBullets()
@@ -615,7 +622,24 @@ public class CanvasController : MonoBehaviour, INetObjectToClean
 
 
     }
-    
+
+    public void HideUI()
+    {
+
+        for (int i = 0; i < objectsToDeactivateOnDead.Length; i++)
+        {
+            objectsToDeactivateOnDead[i].SetActive(false);
+        }
+        lookingAtObject.gameObject.SetActive(true);
+        if (playerAssigned.playerControllerKillerRef!=null)
+        {
+            lookingAtText.text= $"LOOKING AT: {playerAssigned.playerControllerKillerRef.playerStats.userName.Value.ToString()}";
+        }
+        else
+        {
+            lookingAtText.text= $"CANT FIND NAME OF THE KILLER";
+        } 
+    }
     
     
     private void DisplayLevel()
@@ -639,6 +663,7 @@ public class CanvasController : MonoBehaviour, INetObjectToClean
 
         public Texture2D texture;
     }
+
 
     public void CleanData()
     {

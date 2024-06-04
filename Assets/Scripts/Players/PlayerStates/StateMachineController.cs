@@ -26,6 +26,7 @@ namespace Players.PlayerStates
         public JetpackState jetpackState;
         public DeadState deadState;
         public IdleState idleState;
+        public ViewerState viewerState;
         
         [Header("Weapon States")]
         public ChangingWeaponState changingWeaponState;
@@ -47,6 +48,7 @@ namespace Players.PlayerStates
             jetpackState = new JetpackState("Jetpack", this);
             deadState = new DeadState("Dead", this);
             idleState = new IdleState("Idle", this);
+            viewerState = new ViewerState("Viewer", this);
             
             
             changingWeaponState = new ChangingWeaponState("ChangingWeapon", this);
@@ -54,7 +56,7 @@ namespace Players.PlayerStates
             
 
 
-            states =new StateMachineBase[10];
+            states =new StateMachineBase[11];
             states[0]=movementState;
             states[1]=jumpState;
             states[2]=sprintState;
@@ -65,6 +67,7 @@ namespace Players.PlayerStates
             states[7]=jetpackState;
             states[8]=deadState;
             states[9]=idleState;
+            states[10]=viewerState;
             
             weaponStates = new StateMachineBase[2];
             

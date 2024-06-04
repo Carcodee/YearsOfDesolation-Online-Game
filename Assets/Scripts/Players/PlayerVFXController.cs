@@ -90,8 +90,8 @@ public class PlayerVFXController : NetworkBehaviour, INetObjectToClean
         playerController = GetComponent<PlayerController>();
         playerStatsController = GetComponent<PlayerStatsController>();
         playerStatsController.OnLevelUp += LevelUpEffect;
-        hpObject.SetActive(!IsOwner);
-        followHpObject.SetActive(!IsOwner);
+        hpObject.SetActive(false);
+        followHpObject.SetActive(false);
         if (IsOwner)
         {
             // playerController.OnBulletHit += BulletHitEffect;

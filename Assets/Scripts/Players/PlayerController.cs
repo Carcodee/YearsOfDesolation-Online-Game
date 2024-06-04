@@ -172,6 +172,8 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
         if (shutingDown)return;
         if (IsOwner)
         {
+            
+            if (stateMachineController.currentState.stateName=="Viewer")return;
             isGroundedCheck();
             //be care
             Reloading();
@@ -212,8 +214,6 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
                 ActivateAim(0);
                 rotationSmoothTime = 0.1f;
             }
-
-
             StartCurrentWeaponReload();
             
         }
@@ -364,12 +364,9 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
     
     public void DeactivatePlayer()
     {
-
             characterController.enabled = false;
             // DoRagdoll(false);
             body.gameObject.SetActive(false);
-
-
     }
     public void ActivatePlayer()
     {
@@ -677,6 +674,7 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
         }
     }
 
+    
     #region ServerRpc
 
     
@@ -733,14 +731,31 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
     }
 
     [ServerRpc]
-    void SetSprintFactorServerRpc(float sprintFactor)
+    public void NotifyPlayerDeactivatedServerRpc(ulong clientId, bool val)
     {
+  
+        DeactivatePlayerClientRpc(clientId, val);
     }
-
     #endregion
 
     #region ClientRpc
 
+    [ClientRpc]
+    public void DeactivatePlayerClientRpc(ulong clientId, bool val)
+    {
+      if (clientId == OwnerClientId)
+      {
+          if (val== true)
+          {
+             ActivatePlayer(); 
+          }
+          else
+          {
+            DeactivatePlayer();
+          }
+      }
+         
+    }
     [ClientRpc]
     void SetMainCameraClientRpc(ulong networkID)
     {

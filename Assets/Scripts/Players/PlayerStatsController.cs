@@ -79,6 +79,8 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
     
     [Header("NetCode")]
     public NetworkObject playerObj;
+    public PlayerController playerControllerKillerRef = null;
+    
     [Header("PlayerBuild")]
     public PlayerBuild playerBuildSelected;
     public bool hasPlayerSelectedBuild=false;
@@ -178,9 +180,9 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
                 OnSpawnPlayer?.Invoke();
                 _IsInitizalized = true;
             }
-            
-            OutsideZoneDamage();
 
+            if (stateMachineController.currentState.stateName=="Viewer")return;
+            OutsideZoneDamage();
             HandleWeaponChange();
 
             
@@ -394,8 +396,8 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
                 AudioManager.instance.UIAudioSource.Stop();
                 dangerSoundPlayed = false;
             } 
-            PauseController.OnAlertActivated.Invoke(false);
-            PostProccesingManager.instance.ApplyPostProcessing(false);
+            // PauseController.OnAlertActivated.Invoke(false);
+            // PostProccesingManager.instance.ApplyPostProcessing(false);
             currentOutsideOfMapTimer = 0.0f;
             isPlayerInsideOfMap = true;
         }
@@ -406,7 +408,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
             {
                 if (!outsideOffZoneSoundPlayed)
                 {
-                    playerSoundController.PlayActionSound(playerSoundController.outsideOffZoneDamage);
+                    // playerSoundController.PlayActionSound(playerSoundController.outsideOffZoneDamage);
                     outsideOffZoneSoundPlayed = true;
                 }
                 currentOutsideTimerTick += Time.deltaTime;
@@ -422,7 +424,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
             {
                 if (!outsideOffZoneSoundPlayed)
                 {
-                    playerSoundController.actionsAudioSource.Stop();
+                    // playerSoundController.actionsAudioSource.Stop();
                     outsideOffZoneSoundPlayed = false;
                 }
                 PostProccesingManager.instance.ApplyPostProcessing(false);
@@ -439,7 +441,19 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
             Destroy(gameObject);
         }
     }
-   
+
+    public void Disconnect()
+    {
+        if (IsServer) {
+           NetworkingHandling.HostManager.instance.DisconnectHost();
+        }
+        else
+        { 
+            GameManager.Instance.gameEnded = true;
+            ClientManager.instance.DisconnectClient(NetworkObject.OwnerClientId);
+        }
+ 
+    }
     public void TakeDamage(float damage)
     {
         if (IsOwner)
@@ -449,42 +463,43 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
                 
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
-                if (IsServer)
+                if (GameManager.Instance.isOnTutorial)
                 {
-                    NetworkingHandling.HostManager.instance.DisconnectHost();
+                    Disconnect();
+                    return;
                 }
-                else
-                { 
-                    GameManager.Instance.gameEnded = true;
-                   ClientManager.instance.DisconnectClient(NetworkObject.OwnerClientId);
-                }
-
                 Debug.Log("Dead");
-                Destroy(gameObject);
+                playerComponentsHandler.setViewer(clientIdInstigator.Value);
+                playerController.DeactivatePlayer();
+                playerController.NotifyPlayerDeactivatedServerRpc(OwnerClientId, false);
+                stateMachineController.SetState("Viewer");
+                // Destroy(gameObject);
                 return;
             }
-            if (stateMachineController.currentState.stateName == "Dead" || health.Value<=0)return;
+
+            if (stateMachineController.currentState.stateName == "Dead" || health.Value <= 0 ||
+                stateMachineController.currentState.stateName == "Viewer")
+            {
+                return;
+            }
+            if (IsServer)
+            {
+                //this is wrong stat holder is controlling the health
+                health.Value -= (damage);
+                StartCoroutine(playerComponentsHandler.ShakeCamera(0.3f, 5, 5));
+                playerVFXController.bloodEffectHandle.CreateVFX(takeDamagePosition.position,  Quaternion.identity,IsServer);
+                
+            }
             else
             {
-                if (IsServer)
-                {
-                    //this is wrong stat holder is controlling the health
-                    health.Value -= (damage);
-                    StartCoroutine(playerComponentsHandler.ShakeCamera(0.3f, 5, 5));
-                    playerVFXController.bloodEffectHandle.CreateVFX(takeDamagePosition.position,  Quaternion.identity,IsServer);
-                    
-                }
-                else
-                {
-                    SetHealthServerRpc(health.Value - (damage));  
-                    StartCoroutine(playerComponentsHandler.ShakeCamera(0.3f, 5, 5));
-                    playerVFXController.bloodEffectHandle.CreateVFX(takeDamagePosition.position,  Quaternion.identity,IsServer);
-                }
-                playerVFXController.BodyDamageVFX();
-                CanvasController.OnUpdateUI?.Invoke();
-                playerSoundController.PlayActionSound(playerSoundController.damageTakeSound);
-                OnStatsChanged?.Invoke();
+                SetHealthServerRpc(health.Value - (damage));  
+                StartCoroutine(playerComponentsHandler.ShakeCamera(0.3f, 5, 5));
+                playerVFXController.bloodEffectHandle.CreateVFX(takeDamagePosition.position,  Quaternion.identity,IsServer);
             }
+            playerVFXController.BodyDamageVFX();
+            CanvasController.OnUpdateUI?.Invoke();
+            playerSoundController.PlayActionSound(playerSoundController.damageTakeSound);
+            OnStatsChanged?.Invoke();
         }
     }
 
@@ -544,7 +559,28 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
             {
                 return;
             }
-            if (stateMachineController.currentState.stateName == "Dead" || health.Value<=0)
+            if ((stateMachineController.currentState.stateName == "Dead" && GameController.instance.mapLogic.Value.isBattleRoyale) || (health.Value-myDamage<=0 && GameController.instance.mapLogic.Value.isBattleRoyale))
+            {
+                
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+       
+                Debug.Log("Dead");
+                if (GameManager.Instance.isOnTutorial)
+                {
+                    Disconnect();
+                    return;
+                }
+                playerComponentsHandler.setViewer(clientIdInstigator.Value);
+                playerController.DeactivatePlayer();
+                playerController.NotifyPlayerDeactivatedServerRpc(OwnerClientId, false);
+                CallServerOnDeadServerRpc((int)zoneAsigned.Value);
+                GameController.instance.PlayerDeadForeverServerRpc();
+                stateMachineController.SetState("Viewer");
+                return;
+            }
+
+            if (stateMachineController.currentState.stateName == "Dead" || health.Value<=0 || stateMachineController.currentState.stateName == "Viewer" )
             {
                 return;
             }
@@ -554,7 +590,6 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
             if (IsServer)
             {
                 clientIdInstigator.Value = playerClientID;
-                //this is wrong stat holder is controlling the health
                 health.Value -= (myDamage);
                 StartCoroutine(playerComponentsHandler.ShakeCamera(0.3f, 5, 5));
                 playerVFXController.bloodEffectHandle.CreateVFX(takeDamagePosition.position, Quaternion.identity ,IsServer);
@@ -690,7 +725,8 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
         statsTemplateSelected.Value = index;
     }
     //Stats
-    
+
+
     [ServerRpc (RequireOwnership = false)]
     public void SetHealthServerRpc(float healthPoint)
     {

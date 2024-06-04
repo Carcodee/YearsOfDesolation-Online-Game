@@ -61,6 +61,8 @@ public class GameManager : MonoBehaviour
         gameControllerReady = false;
         isOnTutorial = false;
 
+        PostProccesingManager.instance.ActivateBlur(0.0f);
+        PostProccesingManager.instance.ActivateMenuBlur(1.0f);
         PlayerInMenuSettings();
         // if (!sceneAsync.isDone)await Task.Yield();
         // sceneAsync.allowSceneActivation = true;

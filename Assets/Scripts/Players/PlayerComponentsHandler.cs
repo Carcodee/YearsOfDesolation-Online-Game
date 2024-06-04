@@ -89,6 +89,7 @@ public class PlayerComponentsHandler : NetworkBehaviour, INetObjectToClean
         
     }
 
+    
     void Update()
     {
         if (shutingDown)return;
@@ -134,6 +135,25 @@ public class PlayerComponentsHandler : NetworkBehaviour, INetObjectToClean
             CameraRotation(input.look);
         }
         // Handle other actions as needed
+    }
+
+    public void setViewer(ulong clientId)
+    {
+        Transform viewPlayer= GameController.instance.players.Find(x => x.GetComponent<NetworkObject>().OwnerClientId == clientId);
+
+        playerController.playerStats.playerControllerKillerRef = viewPlayer.GetComponent<PlayerController>();
+        cinemachineVirtualCameraInstance.Follow= viewPlayer;
+        cinmachineCloseLookCameraIntance.Follow= viewPlayer;
+        cinmachineSprintCameraIntance.Follow= viewPlayer;
+        
+        cinemachineVirtualCameraInstance.LookAt= viewPlayer;
+        cinmachineCloseLookCameraIntance.LookAt= viewPlayer;
+        cinmachineSprintCameraIntance.LookAt= viewPlayer;
+
+        // viewPlayer.GetComponent<PlayerController>().cam.enabled = true;
+
+
+
     }
 
     public bool IsPlayerLocked()
@@ -236,7 +256,11 @@ public class PlayerComponentsHandler : NetworkBehaviour, INetObjectToClean
     }
     private void TransitionCamera()
     {
-        
+
+        if (playerController.stateMachineController.currentState.stateName=="Viewer")
+        {
+            return;
+        }
         if (Input.GetKeyDown(KeyCode.Mouse1)&& !playerController.isSprinting)
         {
             cinmachineCloseLookCameraIntance.Priority = 25;

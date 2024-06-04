@@ -26,6 +26,9 @@ public class GameController : NetworkBehaviour,INetObjectToClean
     public NetworkVariable<int> numberOfPlayersAlive = new NetworkVariable<int>();
     public NetworkVariable <Vector3> randomPoint = new NetworkVariable<Vector3>();
     public Transform sphereRadiusMesh;
+    public float currentTimeToDisconnectEveryoneAfterEnd = 0.0f;
+    public NetworkVariable<bool> disconnectAll = new NetworkVariable<bool>();
+    public float timeToDisconnectEveryoneAfterEnd = 7.0f;
 
     public Transform mapCenter;
     public float mapLimitRadius;
@@ -252,13 +255,27 @@ public class GameController : NetworkBehaviour,INetObjectToClean
                 
             }
         }
-
+        if (mapLogic.Value.isBattleRoyale && numberOfPlayersAlive.Value<=1)
+        {
+            currentTimeToDisconnectEveryoneAfterEnd += Time.deltaTime;
+            if (currentTimeToDisconnectEveryoneAfterEnd> timeToDisconnectEveryoneAfterEnd)
+            {
+                if (IsServer)
+                {
+                    disconnectAll.Value = true;
+                }
+            }
+            Debug.Log("You win");
+        }
+        if (disconnectAll.Value && IsServer)
+        {
+            NetworkingHandling.HostManager.instance.DisconnectHost();
+        }
     }
 
     [ServerRpc(RequireOwnership = false)]
     public void AddPointsOnKillerServerRpc(int points, ulong instigatorClientId,ServerRpcParams serverRpcParams = default)
     {
-        
         NetworkManager.Singleton.ConnectedClients[instigatorClientId].PlayerObject.GetComponent<PlayerStatsController>().AddAvaliblePoint(points); 
         
     }
@@ -330,8 +347,14 @@ public class GameController : NetworkBehaviour,INetObjectToClean
         numberOfPlayersAlive.Value--;
         numberOfPlayers.Value--;
     }
-
-
+    [ServerRpc (RequireOwnership = false)]
+    public void PlayerDeadForeverServerRpc()
+    {
+        Debug.Log($"Before; {numberOfPlayersAlive.Value}" );
+        numberOfPlayersAlive.Value--;
+        Debug.Log($"After; {numberOfPlayersAlive.Value}" );
+    }
+    
     /// <summary>
     /// Spawn the zones on the network
     /// </summary>
