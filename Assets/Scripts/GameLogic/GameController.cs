@@ -21,6 +21,7 @@ public class GameController : NetworkBehaviour,INetObjectToClean
     [Header("MapLogic")] 
     public float currentFarmStageTimer=0;
     public List<Transform> players=new List<Transform>();
+    public List<ulong> playersKilledOrRemoved=new List<ulong>();
     public NetworkVariable<MapLogic> mapLogic = new NetworkVariable<MapLogic>();
     public NetworkVariable<int> numberOfPlayers = new NetworkVariable<int>();
     public NetworkVariable<int> numberOfPlayersAlive = new NetworkVariable<int>();
@@ -28,6 +29,7 @@ public class GameController : NetworkBehaviour,INetObjectToClean
     public Transform sphereRadiusMesh;
     public float currentTimeToDisconnectEveryoneAfterEnd = 0.0f;
     public NetworkVariable<bool> disconnectAll = new NetworkVariable<bool>();
+    public NetworkVariable<bool> gameEnded = new NetworkVariable<bool>();
     public float timeToDisconnectEveryoneAfterEnd = 7.0f;
 
     public Transform mapCenter;
@@ -257,6 +259,10 @@ public class GameController : NetworkBehaviour,INetObjectToClean
         }
         if (mapLogic.Value.isBattleRoyale && numberOfPlayersAlive.Value<=1)
         {
+            if (!gameEnded.Value && IsServer)
+            {
+                gameEnded.Value = true;
+            }
             currentTimeToDisconnectEveryoneAfterEnd += Time.deltaTime;
             if (currentTimeToDisconnectEveryoneAfterEnd> timeToDisconnectEveryoneAfterEnd)
             {
@@ -348,8 +354,11 @@ public class GameController : NetworkBehaviour,INetObjectToClean
         numberOfPlayers.Value--;
     }
     [ServerRpc (RequireOwnership = false)]
-    public void PlayerDeadForeverServerRpc()
+    public void PlayerDeadForeverServerRpc(ulong clientId)
     {
+        if (playersKilledOrRemoved.Contains(clientId))return;
+        
+        playersKilledOrRemoved.Add(clientId);
         Debug.Log($"Before; {numberOfPlayersAlive.Value}" );
         numberOfPlayersAlive.Value--;
         Debug.Log($"After; {numberOfPlayersAlive.Value}" );

@@ -323,6 +323,10 @@ public class CanvasController : MonoBehaviour, INetObjectToClean
     void Update()
     {
         stageObjectPlaying = stagesObject.activeSelf;
+        if (playerAssigned.health.Value>0 && GameController.instance.numberOfPlayersAlive.Value<=1 && GameController.instance.mapLogic.Value.isBattleRoyale)
+        {
+            WinObject.gameObject.SetActive(true);
+        }
         ShowTimeToShoot();
         SetTimer();
         DisplayPlayersConnected();

@@ -24,6 +24,7 @@ namespace Players.PlayerStates.States
             //    playerRef.playerStats.GoMenuOnDead(); 
             // }
  
+            GameController.instance.PlayerDeadForeverServerRpc(playerRef.OwnerClientId);
             playerSoundPlayed = false;
             playerRef.lockShoot = true;
             playerRef.sprintFactor = 1f;

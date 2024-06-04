@@ -458,6 +458,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
     {
         if (IsOwner)
         {
+            if (GameController.instance.gameEnded.Value)return;
             if ((stateMachineController.currentState.stateName == "Dead" && GameController.instance.mapLogic.Value.isBattleRoyale) || (health.Value-damage<=0 && GameController.instance.mapLogic.Value.isBattleRoyale))
             {
                 
@@ -555,6 +556,8 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
         if (IsOwner)
         {
             instigatorName = name;
+            
+            if (GameController.instance.gameEnded.Value)return;
             if (!GameController.instance.started.Value)
             {
                 return;
@@ -575,7 +578,6 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
                 playerController.DeactivatePlayer();
                 playerController.NotifyPlayerDeactivatedServerRpc(OwnerClientId, false);
                 CallServerOnDeadServerRpc((int)zoneAsigned.Value);
-                GameController.instance.PlayerDeadForeverServerRpc();
                 stateMachineController.SetState("Viewer");
                 return;
             }
