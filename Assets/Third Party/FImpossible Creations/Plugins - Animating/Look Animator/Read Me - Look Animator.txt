@@ -1,0 +1,149 @@
+﻿__________________________________________________________________________________________
+
+Package "Look Animator"
+Version 2.0.1.3
+
+Made by FImpossible Creations - Filip Moeglich
+https://www.FilipMoeglich.pl
+FImpossibleGames@Gmail.com or Filip.Moeglich@Gmail.com
+
+__________________________________________________________________________________________
+
+Unity Connect: https://connect.unity.com/u/5b2e9407880c6425c117fab1
+Youtube: https://www.youtube.com/channel/UCDvDWSr6MAu1Qy9vX4w8jkw
+Facebook: https://www.facebook.com/FImpossibleCreations
+Twitter (@FimpossibleC): https://twitter.com/FImpossibleC
+Google+: https://plus.google.com/u/3/115325467674876785237
+Discord: https://www.discord.gg/Y3WrzQp
+
+__________________________________________________________________________________________
+Description:
+
+Look Animator is component which animates procedurally head and other lower bones to simulate
+real behaviour of body for looking at choosed position or object.
+
+Component works with all the rigs in unity including, Generic, Humanoid and Legacy.
+With visual friendly inspector and helper buttons you can set whole component in few clicks!
+__________________________________________________________________________________________
+
+Package Contests: Look Animator - Demo Scenes.unitypackage
+Package contains example demo scenes of Look Animator component, there are many .fbx files
+used in example scenes and shared monobehaviours from my free package fBasicAssets.
+__________________________________________________________________________________________
+
+Main features:
+-Includes interactive demo scene
+-Includes full source code
+-Scripts are commented in detailed way
+
+- Just assign object to follow in inspector or use code
+- Easy setting component up with auto-finding head bone and visual friendly inspector window
+- One method to set "moment target" for component to focus on extra target for choosed amount of time
+- Possibility to blend main component animation weight and others
+- Define how many bones you want use and animator gets them automatically
+- Spread power of rotation over additional bones with curve
+- Correct wrong model's skeleton rotation axes with few clicks (also support for 3ds max skeletons) or use default automatic solving algorithm
+- Use "Bones' compensation" feature to prevent unnatural arms rotation when looking up or down
+- Use "Rotations as offsets" feature to keep whole animations motion, very helpful when you need to aim at target and play hit/shot animation, also using it during run or even idle animation makes it look more natural
+- Turn off/on component with smooth transition by using one method
+- Simple eyes following feature
+- Full code commented in a very detailed way - you can even learn how everything works
+__________________________________________________________________________________________
+Version History:
+
+Since V2.0.0: ! Warning ! To make update be proceed without any errors, please remove directory 'Look Animator' from project and import new version again
+
+2.0.1.3
+- Fixed base rotation compensation head flip issue
+- Added "Multiple Targets" demo script
+
+2.0.1.2
+- Added override rotations slider in "Hidden Rare Settings" tab
+
+2.0.1.1
+- Re-arranged GUI window to be less vertical long (categories in horizontal selector)
+
+2.0.1
+- Updated and upgraded back bones tab with new features
+- Added possibility to dynamically change value of compensation when look angle is bigger
+- [Inspector] Above renderer to optimize field, during playmode box with look animator visibility state will be shown 
+
+2.0.0
+- Refreshed GUI and UI images to fit better with new unity versions and different skin versions
+- Now tabs inside inspector window will be much better categorized and easier to work with
+- Added support for languages (just inspector titles to give a hint, not all variables) English, Polish, Russian (translator - t), Japanese (t), Chinese (t), Korean (t)
+- FLookAnimatorWEyes.cs is removed, instead of two components eyes functionality is built in main component and available to turn on under new tab "Additional Features"
+- Big change if you was using code to modify look animator, "Blend To Original" changed name to "Look Animator Amount" and is working in reversed way, 0: No Look Animator Motion  1: Full Look Animator Motion (You can still use BlendToOriginal through code but it is marked as obsolete and will be removed in next versions )
+- Many variables changed name in new version, they are marked as obsolete, if you was using them in your code please replace them with new naming
+- Upgraded Gizmos on scene view with many new controls to better understand parameters
+- Added slider for "Compensate Positions"
+- Now you can easily replace "Back bones" with drag & drop other bones onto list
+- Scripts managed into partial classes, full code reworked, better optimized and improved
+- Upgraded 'Max Distance' feature with new parameters 
+- Added possibility to correct rotation of each bone in chain
+- Now you can adjust Back Bones count in playmode
+- Added possibility to set custom weight values on BackBones (Enable Curve -> Toggle on the right)
+- Backbones weights falloff now have advanced settings, you can adjust its values when character is looking on target which is far behind him
+- Animation frames without baked keyframes will be detected and fixed automatically (you can disable automatic detection with 'DetectZeroKeyframes' toggle)
+- Now looking animation is using SmoothDamp transition, meaning rotation speed is accelerating then decelerating instead of starting fast and then slowing down (you can go back to this style with 'AnimationStyle' parameter under '"Additional Modules" Motion Settings')
+- Added elastic start look range feature
+- Added max rotation speed parameter
+- Added many small parameters which will help solve many custom behaviour conditions
+- Upgraded and fixed a lot of smaller features
+- Added many new small features to easily design needed behaviour for look animation
+- Simplified bird mode
+- Added button next to "Auto Find" which displays bones from skinned mesh renderer in popup menu
+
+
+V1.1.1
+- Added "Nodding Transition" animation feature to add some movement to head when starting looking at new targets giving much more life, but try to not overdo it
+- Added possibility to cull component calculations when choosed mesh stops being visible in camera view - OptimizeWithMesh inside "Optional Parameters"
+- Added possibility to freeze head rotation when loosing target to follow (can be helpful when doing custom blending fade animations) variable 'NoTargetHeadStops'
+
+V1.1.0
+-Added "MinAngle" variable for eyes component, to make eye-follow behaviour more realistic - first eyes are following target and when needed, head is starting to rotate
+- Some optimizations
+- Instant rotation behavior when Rotation Speed set to max and Ultra Smoother to zero
+- Some code factoring, new mothods like "TryFindHeadPositionInTarget()"
+- Few fixes inside inspector windows
+- New example for NPCs prioritizing player's presence to look at
+- New example for gun aiming type of look at animation
+- Added yellow highlight when component will not detect any animator and "Animate with source" is toggled
+- Upgraded eyes rotation fixing algorithm
+
+v1.0.9
+- Fixed animation of going back to default pose when target was changed to null or in other situations
+- Added toggle "Aniamte Physics" (optional parameters tab) to support "Animate Physics" option in Unity's Animator
+- Added new demo example component for focusing on target object within trigger area, with queue feature
+
+v1.0.8
+- Added icons inside hierarchy on the right to easily find objects with look animator attached
+- Added component menu so you can find look animator after clicking "Add Component" > "FImpossible Creations" > "Look Animator"
+
+v1.0.7
+- Added "Bird Mode" feature and example scene for this mode
+
+v1.0.6
+- Added simple solution for eyes follow movement, new component: "FLookAnimatorWEyes"
+
+v1.0.5
+- Fixed trouble with some models, head was rapidly rotating to forward direction when target look object flies behing character's back
+
+v1.0.4
+- Added example scene with dragon-like "Fockatrice" model and second example scene with biped dog-like creature
+- Added example scene of using look animator for pointing arm on target
+- Added "Max Distance" parameter
+- Some polishes in code
+
+v1.0.3
+- Upgraded anchoring look position so now it should work right with object scalling
+- Added slider "Slower Big Rotation" to slow down head rotation when it have big angle to rotate
+
+V1.0.1
+- Fixed last back bone no weight error using Spread Value and upgraded it's formula
+- Added compensate positions option for bones compensation
+- Added Backbones rotation offset parameter in correction tab
+- Now when you exceed max rotation angle by clamping range it will highlight in red in the inspector window
+- Some minor upgrades in algorithm
+- Added "Prevent 180 Error" option now for testing, but later it will be probably default enabled option
+- Added "Change Target Speed" option under "Limiting" tab, when your character is rotating head too fast or too slow when changing / loosing target you can adjust it here

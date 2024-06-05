@@ -30,7 +30,6 @@ public class ChangingWeaponState : PlayerStateBase
             layerIndex = networkAnimator.Animator.GetLayerIndex(weaponToChange.weapon.weaponAnimation.LayerName);
             oldWeapon = playerRef.playerStats.currentWeaponSelected;
             playerRef.playerStats.SetWeapon(weaponToChange);
-            
             networkAnimator.Animator.Play(weaponToChange.weapon.weaponAnimation.weaponChange);
             
             playerRef.playerStats.playerSoundController.PlayWeaponSound(playerRef.playerStats.playerSoundController.weaponChangeStart, true);

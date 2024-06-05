@@ -350,6 +350,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
             onBagWeapon = playerBuildSelected.second_weapon;
             onBagWeapon.weaponObjectController.gameObject.SetActive(false);
             OnWeaponChanged.Invoke(currentWeaponSelected.weapon.weaponObjectController.weaponBulletSpawnPoints);
+            Debug.Log(currentWeaponSelected.weapon.weaponName);
             playerSoundController.UpdateWeaponSound(currentWeaponSelected);
             F_In_F_Out_Obj.OnWeapontChangedAnim?.Invoke();
             CanvasController.OnReloadFinished?.Invoke();
@@ -362,6 +363,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
             onBagWeapon = playerBuildSelected.first_weapon;
             onBagWeapon.weaponObjectController.gameObject.SetActive(false);
             OnWeaponChanged.Invoke(currentWeaponSelected.weapon.weaponObjectController.weaponBulletSpawnPoints);
+            Debug.Log(currentWeaponSelected.weapon.weaponName);
             playerSoundController.UpdateWeaponSound(currentWeaponSelected);
             F_In_F_Out_Obj.OnWeapontChangedAnim?.Invoke();
             CanvasController.OnReloadFinished?.Invoke();

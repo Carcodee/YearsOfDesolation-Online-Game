@@ -285,7 +285,9 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
 
     public void SetSpawnPoint(Transform transform)  
     {
+        //this is made because it breaks when I set the new transform
         spawnBulletPoint.localPosition = transform.localPosition;
+        Debug.Log(spawnBulletPoint.localPosition);
     }
     public bool isFallingGrounded()
     {
