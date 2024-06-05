@@ -2,20 +2,26 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!21 &2100000
 Material:
-  serializedVersion: 6
+  serializedVersion: 8
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: TitleFX_V12
   m_Shader: {fileID: 4800000, guid: 5aeb7503c199c794b8e8a713c03678d7, type: 3}
-  m_ShaderKeywords: _UPDOWNDIRECTION_ON
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - _INVERSEDIRECTION_ON
+  - _UPDOWNDIRECTION_ON
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -32,7 +38,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Main:
-        m_Texture: {fileID: 2800000, guid: 34de50cf6ca011947934be8912cde9ba, type: 3}
+        m_Texture: {fileID: 2800000, guid: bde7606a806718d4faaedc40b5f22747, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainMASK:
@@ -48,7 +54,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Outline:
-        m_Texture: {fileID: 2800000, guid: 5134b3a1e5f04d04e90c4913010a32ca, type: 3}
+        m_Texture: {fileID: 2800000, guid: 3a3a1483cc479a34f8a018b14cda1694, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Texture0:
@@ -91,13 +97,16 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    m_Ints: []
     m_Floats:
     - PixelSnap: 0
+    - _Animation_Factor: 2
+    - _AutoManualAnimation: 0
     - _ColorMask: 15
-    - _DetailsMaskDistortionMult: 1
+    - _DetailsMaskDistortionMult: 2.4
     - _DetailsMaskDit: 1
     - _Float2: -0.14
-    - _InverseDirection: 0
+    - _InverseDirection: 1
     - _MainMask_Dist: 1
     - _Speed: 5
     - _Stencil: 0
@@ -105,15 +114,18 @@ Material:
     - _StencilOp: 0
     - _StencilReadMask: 255
     - _StencilWriteMask: 255
-    - _TransitionFactor: 1
+    - _TransitionFactor: 0.66
     - _TransitionSpeed: 5
     - _UpDownDirection: 1
     - _UseUIAlphaClip: 0
+    - _VignetteMaskFallof: 0.25
+    - _VignetteMaskSize: 0.4
     - _XTiling: 1.2
     - _YTiling: 1
     - __dirty: 0
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Color0: {r: 1, g: 0.235066, b: 0, a: 0}
-    - _MainColor: {r: 1.1246667, g: 0.05299473, b: 0.18243943, a: 1}
-    - _OutlineColor: {r: 73.924644, g: 292.01572, b: 51.98185, a: 1}
+    - _MainColor: {r: 1.4980391, g: 0.07058819, b: 0.24300659, a: 1}
+    - _OutlineColor: {r: 4.928527, g: 19.468573, b: 3.4656093, a: 1}
+  m_BuildTextureStacks: []
