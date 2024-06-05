@@ -42,8 +42,8 @@ namespace Players.PlayerStates.States
             float targetDirX= (x<0)? -2*Mathf.Abs(x):2*Mathf.Abs(x);
             float lerpX = Mathf.Lerp(playerRef.move.x,targetDirX, easeOutQuart(lerpTimeToSprint));
             float lerpY = Mathf.Lerp(playerRef.move.z,targetDirY, easeOutQuart(lerpTimeToSprint));
-            this.networkAnimator.Animator.SetFloat("X", lerpX);
-            this.networkAnimator.Animator.SetFloat("Y", lerpY);
+            this.networkAnimator.Animator.SetFloat("X", lerpX * playerRef.blendedWithCurveAccelerationTime);
+            this.networkAnimator.Animator.SetFloat("Y", lerpY * playerRef.blendedWithCurveAccelerationTime);
         }
 
         public override void StateUpdate()

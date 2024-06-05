@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.ComponentModel;
+using FIMSpace;
 using Players.PlayerStates;
 using Unity.Mathematics;
 using Unity.Netcode;
@@ -61,6 +62,9 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
     public Vector3 move;
 
     public AnimationCurve currentAnimationCurve;
+    public float currentAccelerationBlendTime = 0.0f;
+    public float blendedWithCurveAccelerationTime = 0.0f;
+    public float accelerationBlendTime = 1.0f;
     public float currentSpeed;
     public float rotationFactor;
     public float rotationSmoothTime = 0.1f;
@@ -77,6 +81,8 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
     public bool isAiming;
     public bool isShooting;
     public bool isRotating=false;
+    public LeaningAnimator leaningAnimator;
+    
     
     [Header("Camera Direction")]
     private int distanceFactor = 100;
@@ -107,12 +113,12 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
     [Header("GroundCheck")]
     [Range(0.1f, 50f)] public float sphereCastRadius;
     [Range(0.1f, 100f)] public float range;
+    public bool normalMovementGrounded;
     
     public LayerMask GroundLayer;
     public bool isGrounded;
     public Vector3 sphereOffset;
     public Vector3 [] jumpRaycastOffset;
-    public bool fallingGrounded;
     public float closeToGroundOffset=0.01f;
     
     [Header("Reload")]
@@ -160,7 +166,11 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
             playerStats.OnWeaponChanged+= SetSpawnPoint;
             playerComponentsHandler.CreateCanvas(cam);
             airTimeToPlane = 1;
-            mouseSensitivity = GameManager.Instance.sensBeforeStart;
+            mouseSensitivity = GameManager.Instance.sensBeforeStart; 
+            leaningAnimator.User_DeliverIsAccelerating(move != Vector3.zero);
+            leaningAnimator.User_DeliverAccelerationSpeed(playerStats.GetSpeed() * sprintFactor);
+            leaningAnimator.User_DeliverIsGrounded(normalMovementGrounded);
+            leaningAnimator.User_RotateSpineStart(Vector3.zero);
         }
 
     }
@@ -175,6 +185,7 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
             
             if (stateMachineController.currentState.stateName=="Viewer")return;
             isGroundedCheck();
+            normalMovementGrounded = isFallingGrounded();
             //be care
             Reloading();
             playerStats.currentWeaponSelected.weapon.shootTimer += Time.deltaTime;
@@ -383,9 +394,9 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
     
     public void ApplyMovement(Vector3 movement)
     {
-        motionSpeed= movement * playerStats.GetSpeed() * sprintFactor * Time.deltaTime;
+        motionSpeed= movement * (playerStats.GetSpeed() * sprintFactor* Time.deltaTime) * blendedWithCurveAccelerationTime;
         motionSpeed=transform.rotation * motionSpeed;
-        characterController.Move(motionSpeed );
+        characterController.Move(motionSpeed);
 
     }
 
@@ -393,6 +404,24 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
     public void Move(float x, float y)
     {
         // x= currentAnimationCurve.Evaluate(x); 
+        if (x != 0 || y != 0)
+        {
+            currentAccelerationBlendTime += Time.deltaTime;
+            blendedWithCurveAccelerationTime =
+                Mathf.Lerp(0, 1.0f, currentAnimationCurve.Evaluate(currentAccelerationBlendTime));
+            if (currentAccelerationBlendTime> accelerationBlendTime)
+            {
+                currentAccelerationBlendTime = 1.0f;
+            }
+        }
+        else
+        {
+            currentAccelerationBlendTime -= Time.deltaTime * 3;
+            if (currentAccelerationBlendTime<= -0.2f)
+            {
+                currentAccelerationBlendTime = -0.2f;
+            }
+        }
         move = new Vector3(x, 0, y).normalized;
     }
 

@@ -1090,6 +1090,7 @@ GameObject:
   - component: {fileID: 1977235701088479022}
   - component: {fileID: 6812764082803794279}
   - component: {fileID: 3567344566275613699}
+  - component: {fileID: 5692071481652116479}
   m_Layer: 2
   m_Name: Player
   m_TagString: Player
@@ -1222,8 +1223,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: 0
-      value: 0
+      time: 0.00083856285
+      value: 0.393793
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -1231,19 +1232,10 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
-      time: 0.89179575
-      value: 0.104180634
-      inSlope: 0.10106749
-      outSlope: 0.10106749
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.119197786
-      outWeight: 0.5292722
-    - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 2
-      outSlope: 2
+      inSlope: 0
+      outSlope: 0
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
@@ -1251,6 +1243,9 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  currentAccelerationBlendTime: 0
+  blendedWithCurveAccelerationTime: 0
+  accelerationBlendTime: 1
   currentSpeed: 0
   rotationFactor: 25
   rotationSmoothTime: 0.1
@@ -1266,6 +1261,7 @@ MonoBehaviour:
   isAiming: 0
   isShooting: 0
   isRotating: 0
+  leaningAnimator: {fileID: 5692071481652116479}
   ground:
     serializedVersion: 2
     m_Bits: 256
@@ -1282,6 +1278,7 @@ MonoBehaviour:
   moveAnimationSpeed: 5
   sphereCastRadius: 0.1
   range: 0.5
+  normalMovementGrounded: 0
   GroundLayer:
     serializedVersion: 2
     m_Bits: 256
@@ -1292,7 +1289,6 @@ MonoBehaviour:
   - {x: 0.1, y: 0, z: -0.1}
   - {x: -0.1, y: 0, z: 0.1}
   - {x: -0.1, y: 0, z: -0.1}
-  fallingGrounded: 0
   closeToGroundOffset: 0.1
 --- !u!114 &6344872551529989650
 MonoBehaviour:
@@ -1397,6 +1393,7 @@ MonoBehaviour:
   outsideOfMapTickTime: 8
   coin: {fileID: 331007805235256181, guid: 8d81f148e89dcad4bbd1e53767679d49, type: 3}
   playerObj: {fileID: 0}
+  playerControllerKillerRef: {fileID: 0}
   playerBuildSelected:
     first_weapon:
       weapon:
@@ -1987,6 +1984,135 @@ MonoBehaviour:
     audioClip: {fileID: 8300000, guid: d156a87f68168a4409141b83b2517427, type: 3}
   - groundType: 3
     audioClip: {fileID: 8300000, guid: 5a665f75553c7cb49b1966b23b4c8209, type: 3}
+--- !u!114 &5692071481652116479
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3940185642830209463}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 163d2c8446aa6ae42a718abaa805b8f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _EditorDrawSetup: 0
+  Leaning:
+    UpdateMode: 0
+    Calibrate: 1
+    SideSwayPower: 1
+    ClampSideSway: 25
+    ForwardSwayPower: 0.5
+    BrakeRapidity: 0.485
+    RootBlend: 1
+    FootsOrigin: {fileID: 2181576866198182118}
+    RootRapidity: 0.425
+    RootSideSway: 1
+    RootForwardSway: 0.5
+    RootStrafeSway: 0.75
+    RootBrakeSway: 0.5
+    RootBackwardSway: 0.5
+    SpineBlend: 0.5
+    ClampSpineSway: 25
+    SpineRapidity: 0.5
+    SpineForwardSway: {x: 5, y: 0, z: 0}
+    SpineSideLean: -0.125
+    SpineRightSway: {x: 0, y: -0.75, z: 1.25}
+    SpineBrakeSway: 0.85
+    StartRunPush: 1
+    NeckCompensation: 0.75
+    ConstantAddRotation: {x: 0, y: 0, z: 0}
+    ArmsBlend: 0.5
+    ArmsSideSway: 0.5
+    ArmsForwardSway: -0.225
+    ObjSpeedWhenBraking: 0.2
+    ObjSpeedWhenRunning: 3
+    AccelerationDetection: 2
+    TryAutoDetectGround: 1
+    UseMuscles: 0
+    MuscleSettings:
+      DesiredPosition: {x: 0, y: 0, z: 0}
+      Acceleration: 10000
+      AccelerationLimit: 5000
+      Damping: 10
+      BrakePower: 0.2
+    AllEffectsBlend: 1
+    IsMovingAnimatorParam: 
+    IsGroundedAnimatorParam: 
+    FadeOffLeaningParam: 
+    FadeOffSpeed: 0.5
+    GroundAlignBlend: 0
+    GroundAlignRapidity: 0.6
+    AlignOnlyWhenMoving: 0
+    ClampGroundAlign: 25
+    MutiplyGroundAxisRotation: {x: 1, y: 1}
+    AlignAmountOnSpeed:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0.1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.3
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    GroundMask:
+      serializedVersion: 2
+      m_Bits: 4294967295
+    GroundCastLength: 0.2
+    BoxCastSize: 0
+    _UserUseCustomRaycast: 0
+    ResetOnUngrounded: 1
+    BaseTransform: {fileID: 372611058870039632}
+    SpineStart: {fileID: 5132941625883069868}
+    SpineMiddle: {fileID: 345224155829769497}
+    Chest: {fileID: 0}
+    Neck: {fileID: 0}
+    LeftUpperArm: {fileID: 0}
+    LeftForearm: {fileID: 9152738623694922490}
+    RightUpperArm: {fileID: 0}
+    RightForearm: {fileID: 3844296634656039049}
+    SpineGroundAlign: 0
+    SpineGrAdjustDuration: 0.15
+    SlopeSpineLean:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 10
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 75
+        value: 1.25
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    AdjustForwAndSide: {x: 1, y: 0.75}
 --- !u!1 &4187337389087298589
 GameObject:
   m_ObjectHideFlags: 0
@@ -2307,7 +2433,7 @@ Transform:
   m_GameObject: {fileID: 5743769336294010465}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.1, z: 0}
+  m_LocalPosition: {x: 0, y: -0.068, z: 0}
   m_LocalScale: {x: 0.85858, y: 0.85858, z: 0.85858}
   m_ConstrainProportionsScale: 0
   m_Children:

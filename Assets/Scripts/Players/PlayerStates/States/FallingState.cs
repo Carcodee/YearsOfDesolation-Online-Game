@@ -77,7 +77,7 @@ namespace Players.PlayerStates.States
                     stateMachineController.SetState("Sprint");
                     playerRef.playerStats.playerSoundController.PlayMovementSound(playerRef.playerStats.playerSoundController.landSound);
                     networkAnimator.Animator.Play("Movement");
-                playerRef._bodyVelocity= Vector3.zero;
+                    playerRef._bodyVelocity= Vector3.zero;
                     return;
                 }
                 playerRef.playerStats.playerSoundController.PlayMovementSound(playerRef.playerStats.playerSoundController.landSound);

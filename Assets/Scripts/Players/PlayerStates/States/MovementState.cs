@@ -78,8 +78,8 @@ namespace Players.PlayerStates.States
             }
 
 
-            this.networkAnimator.Animator.SetFloat("X", animInput.x);
-            this.networkAnimator.Animator.SetFloat("Y", animInput.y);
+            this.networkAnimator.Animator.SetFloat("X", animInput.x * playerRef.blendedWithCurveAccelerationTime);
+            this.networkAnimator.Animator.SetFloat("Y", animInput.y * playerRef.blendedWithCurveAccelerationTime);
             this.networkAnimator.Animator.SetFloat("Speed",  this.playerRef.sprintFactor);
 
 
