@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿#if UNITY_EDITOR
+
+using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 namespace FIMSpace.FEditor
@@ -48,9 +51,7 @@ namespace FIMSpace.FEditor
 
                     if (mec.runtimeAnimatorController == null)
                     {
-#if UNITY_EDITOR
-                        UnityEditor.EditorGUILayout.HelpBox("  No 'Animator Controller' inside Animator ("+FoundAnimator.transform.name+")", UnityEditor.MessageType.Warning);
-#endif
+                        EditorGUILayout.HelpBox("  No 'Animator Controller' inside Animator ("+FoundAnimator.transform.name+")", MessageType.Warning);
                         drawInactiveWarning = false;
                         working = false;
                     }
@@ -63,11 +64,9 @@ namespace FIMSpace.FEditor
                     {
                         if (!working)
                         {
-#if UNITY_EDITOR
                             GUILayout.Space(-4);
                             FGUI_Inspector.DrawWarning(" ANIMATOR IS DISABLED! ");
                             GUILayout.Space(2);
-#endif
                         }
                     }
                 }
@@ -78,11 +77,9 @@ namespace FIMSpace.FEditor
                 {
                     if (clicks < clicksTohide)
                     {
-#if UNITY_EDITOR
                         GUILayout.Space(-4);
                         if (FGUI_Inspector.DrawWarning(" ANIMATOR NOT FOUND! ")) clicks++;
                         GUILayout.Space(2);
-#endif
                     }
                 }
             }
@@ -258,3 +255,4 @@ namespace FIMSpace.FEditor
     }
 }
 
+#endif

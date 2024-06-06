@@ -35,18 +35,6 @@ namespace FIMSpace.FEditor
             FitToBottom(t);
         }
 
-        [MenuItem("CONTEXT/Transform/Hide Transform In The Inspector View (Use Components Hider to unhide)")]
-        private static void HideTransformInInspector(MenuCommand menuCommand)
-        {
-            Transform t = (Transform)menuCommand.context;
-
-            if (t)
-            {
-                t.hideFlags = HideFlags.HideInInspector;
-                EditorUtility.SetDirty(t);
-            }
-        }
-
         private static void FitToBottom(Transform t)
         {
             if (t.childCount > 0)
@@ -152,35 +140,6 @@ namespace FIMSpace.FEditor
             go.transform.position = Vector3.zero;
             go.transform.rotation = Quaternion.identity;
             go.transform.localScale = Vector3.one;
-        }
-
-        [MenuItem("CONTEXT/MeshFilter/Save Mesh As Asset")]
-        private static void SaveFilterMeshAsAsset(MenuCommand menuCommand)
-        {
-            MeshFilter targetComponent = (MeshFilter)menuCommand.context;
-
-            if (targetComponent == null) return;
-            if (targetComponent.sharedMesh == null) return;
-
-            Mesh newMesh = GameObject.Instantiate(targetComponent.sharedMesh) as Mesh;
-
-            string nameFormatted = targetComponent.sharedMesh.name.Replace(":", "-");
-            nameFormatted = nameFormatted.Replace("=", "_");
-
-            string path = EditorUtility.SaveFilePanel("Select Directory", Application.dataPath, nameFormatted, "");
-            if (path == "") return;
-
-            if (path.StartsWith(Application.dataPath))
-            {
-                path = "Assets" + path.Substring(Application.dataPath.Length);
-            }
-
-            AssetDatabase.CreateAsset(newMesh, path + ".asset");
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
-
-            var obj = AssetDatabase.LoadAssetAtPath(path + ".asset", typeof(Mesh));
-            if (obj) EditorGUIUtility.PingObject(obj);
         }
 
     }

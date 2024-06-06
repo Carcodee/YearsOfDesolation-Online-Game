@@ -1,7 +1,6 @@
 ﻿#if UNITY_2019_4_OR_NEWER
 using System.IO;
 using UnityEditor;
-using UnityEditor.Hardware;
 using UnityEngine;
 
 namespace FIMSpace.FEditor
@@ -40,7 +39,7 @@ namespace FIMSpace.FEditor
                 MeshFilter f = toSave.GetComponentInChildren<MeshFilter>();
                 if (f == null) f = FTransformMethods.FindComponentInAllChildren<MeshFilter>(toSave.transform);
 
-                if (f)
+                if (f) 
                     f.gameObject.AddComponent<BoxCollider>();
                 else
                     toSave.AddComponent<BoxCollider>();
@@ -113,55 +112,6 @@ namespace FIMSpace.FEditor
 
             }
         }
-
-        [MenuItem("Assets/Utilities/Sub-Assets/Destroy Sub Asset", true)]
-        private static bool DestroySubAssetCheck(MenuCommand menuCommand)
-        { return AssetDatabase.IsSubAsset(Selection.objects[0]); }
-
-        [MenuItem("Assets/Utilities/Sub-Assets/Destroy Sub Asset", false)]
-        private static void DestroySubAsset(MenuCommand menuCommand)
-        {
-            if (Selection.objects.Length == 0) return;
-            if (AssetDatabase.IsSubAsset(Selection.objects[0]) == false) return;
-            GameObject.DestroyImmediate(Selection.objects[0], true);
-        }
-
-        [MenuItem("Assets/Utilities/Sub-Assets/Unhide All Sub Assets", false)]
-        private static void UnhideSubAssets(MenuCommand menuCommand)
-        {
-            if (Selection.objects.Length == 0) return;
-            var allAtPath = AssetDatabase.LoadAllAssetsAtPath(AssetDatabase.GetAssetPath(Selection.objects[0]));
-
-            for (int i = 0; i < allAtPath.Length; i++)
-            {
-                if (allAtPath[i].hideFlags != HideFlags.HideInHierarchy) continue;
-                //if (AssetDatabase.IsSubAsset(allAtPath[i]) == false) continue;
-                allAtPath[i].hideFlags = HideFlags.None;
-                EditorUtility.SetDirty(allAtPath[i]);
-            }
-
-            EditorUtility.SetDirty(Selection.objects[0]);
-            AssetDatabase.SaveAssets();
-        }
-
-
-        [MenuItem("Assets/Utilities/Sub-Assets/Hide All Sub Assets", false)]
-        private static void HideSubAssets(MenuCommand menuCommand)
-        {
-            if (Selection.objects.Length == 0) return;
-            var allAtPath = AssetDatabase.LoadAllAssetsAtPath(AssetDatabase.GetAssetPath(Selection.objects[0]));
-
-            for (int i = 0; i < allAtPath.Length; i++)
-            {
-                if (AssetDatabase.IsSubAsset(allAtPath[i]) == false) continue;
-                allAtPath[i].hideFlags = HideFlags.HideInHierarchy;
-                EditorUtility.SetDirty(allAtPath[i]);
-            }
-
-            EditorUtility.SetDirty(Selection.objects[0]);
-            AssetDatabase.SaveAssets();
-        }
-
 
         private static string ClearMaterialTypeNames(string name)
         {

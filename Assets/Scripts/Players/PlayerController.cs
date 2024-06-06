@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.ComponentModel;
 using FIMSpace;
+using FIMSpace.FLook;
 using Players.PlayerStates;
 using Unity.Mathematics;
 using Unity.Netcode;
@@ -199,33 +200,7 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
                 return;
             }
             stateMachineController.StateUpdate();
-            if (playerComponentsHandler.IsPlayerLocked())
-            {
-                isAiming = false;
-                return;
-            }
-//NO SHOOT
-            Shoot();
-            if (Input.GetKeyDown(KeyCode.Mouse1)&& !isSprinting)
-            {
-                isAiming=true;
-                this.stateMachineController.networkAnimator.Animator.SetFloat("X", this.move.x);
-                this.stateMachineController.networkAnimator.Animator.SetFloat("Y", this.move.z);
-                ActivateAim(1);
-                playerStats.playerSoundController.PlayActionSound(playerStats.playerSoundController.aimOnSound,0.3f, 1.0f);
-                rotationSmoothTime = 0.025f;
-            }
-            if (Input.GetKeyUp(KeyCode.Mouse1)&& isAiming)
-            {
-                playerStats.playerSoundController.PlayActionSound(playerStats.playerSoundController.aimOffSound,0.3f, 1.0f);
-            }
-            if (Input.GetKeyUp(KeyCode.Mouse1)|| isSprinting)
-            {
-                isAiming = false;
-                ActivateAim(0);
-                rotationSmoothTime = 0.1f;
-            }
-            StartCurrentWeaponReload();
+         
             
         }
     }
@@ -265,6 +240,36 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
             ApplyMovement(move);
             stateMachineController.StateLateUpdate();
             CheckIsShootingAnimPlaying();
+            
+            if (playerComponentsHandler.IsPlayerLocked())
+            {
+                isAiming = false;
+                return;
+            }
+//NO SHOOT
+
+             leaningAnimator.Parameters.LateUpdate();
+            Shoot();
+            if (Input.GetKeyDown(KeyCode.Mouse1)&& !isSprinting)
+            {
+                isAiming=true;
+                this.stateMachineController.networkAnimator.Animator.SetFloat("X", this.move.x);
+                this.stateMachineController.networkAnimator.Animator.SetFloat("Y", this.move.z);
+                ActivateAim(1);
+                playerStats.playerSoundController.PlayActionSound(playerStats.playerSoundController.aimOnSound,0.3f, 1.0f);
+                rotationSmoothTime = 0.025f;
+            }
+            if (Input.GetKeyUp(KeyCode.Mouse1)&& isAiming)
+            {
+                playerStats.playerSoundController.PlayActionSound(playerStats.playerSoundController.aimOffSound,0.3f, 1.0f);
+            }
+            if (Input.GetKeyUp(KeyCode.Mouse1)|| isSprinting)
+            {
+                isAiming = false;
+                ActivateAim(0);
+                rotationSmoothTime = 0.1f;
+            }
+            StartCurrentWeaponReload();
         }
 
     }
@@ -286,7 +291,7 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
     public void SetSpawnPoint(Transform transform)  
     {
         //this is made because it breaks when I set the new transform
-        spawnBulletPoint.localPosition = transform.localPosition;
+        spawnBulletPoint= transform;
         Debug.Log(spawnBulletPoint.localPosition);
     }
     public bool isFallingGrounded()
@@ -584,6 +589,8 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
             {
                 
                 PlayerVFXController.hitEffectHandle.CreateVFX(hit.point, transform.rotation ,IsServer);
+                Debug.Log(spawnBulletPoint.position);
+                Debug.Log(spawnBulletPoint.localPosition);
                 BulletController bullet = Instantiate(bulletPrefab, spawnBulletPoint.position,
                     cinemachineCameraTarget.rotation);
                 bullet.Direction =  (spawnBulletPoint.transform.position - hit.point).normalized;
@@ -832,7 +839,7 @@ public class Weapon
     public WeaponAnimations weaponAnimation;
     public Sprite weaponImage;
     public AmmoBehaviour ammoBehaviour;
-    public WeaponObjectController weaponObjectController;
+    public WeaponObjectController weaponPrefab;
     public float weaponDamage;
     public string weaponName;
     public float shootTimer;
@@ -852,7 +859,7 @@ public class Weapon
         this.shootTimer = weaponTemplate.shootTimer;
         this.shootRefraction = weaponTemplate.shootRefraction;
         this.currentShootRefraction = weaponTemplate.currentShootRefraction;
-        this.weaponObjectController = weaponTemplate.weaponObjectController;
+        this.weaponPrefab = weaponTemplate.weaponObjectController;
         this.minShootRefraction.statValue = weaponTemplate.minShootRefraction;
         shootRate.upgradeType = UpgradeType.FireRate;
         minShootRefraction.upgradeType = UpgradeType.recoil;

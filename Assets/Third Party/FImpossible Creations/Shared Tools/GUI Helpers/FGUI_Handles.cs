@@ -44,12 +44,11 @@ namespace FIMSpace.FEditor
                 Handles.DrawAAPolyLine(width, points);
         }
 
-        public static void DrawBoneHandle(Vector3 from, Vector3 to, Vector3 forward, float fatness = 1f, float width = 1f, float arrowOffset = 1f)
+        public static void DrawBoneHandle(Vector3 from, Vector3 to, Vector3 forward, float fatness = 1f)
         {
             Vector3 dir = (to - from);
             float ratio = dir.magnitude / 7f; ratio *= fatness;
-            float baseRatio = ratio * 0.75f * arrowOffset;
-            ratio *= width;
+            float baseRatio = ratio * 0.75f;
             Quaternion rot = (dir == Vector3.zero ? rot = Quaternion.identity : rot = Quaternion.LookRotation(dir, forward));
             dir.Normalize();
             Handles.DrawLine(from, to);
@@ -61,18 +60,18 @@ namespace FIMSpace.FEditor
             Handles.DrawLine(from, p - rot * Vector3.right * ratio);
         }
 
-        public static void DrawBoneHandle(Vector3 from, Vector3 to, float fatness = 1f, bool faceCamera = false, float width = 1f, float arrowOffset = 1f)
+        public static void DrawBoneHandle(Vector3 from, Vector3 to, float fatness = 1f, bool faceCamera = false)
         {
-            Vector3 forw = (to - from).normalized;
+            Vector3 forw =  (to - from).normalized;
 
-            if (faceCamera)
+            if ( faceCamera)
             {
                 if (SceneView.lastActiveSceneView != null)
                     if (SceneView.lastActiveSceneView.camera)
                         forw = (to - SceneView.lastActiveSceneView.camera.transform.position).normalized;
             }
 
-            DrawBoneHandle(from, to, forw, fatness, width, arrowOffset);
+            DrawBoneHandle(from, to, forw, fatness);
         }
 
         public static void DrawRay(Vector3 pos, Vector3 dir)

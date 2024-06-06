@@ -225,14 +225,6 @@ namespace FIMSpace
             return true;
         }
 
-        public static bool ContainsIndex<T>(this List<T> list, int i) where T : struct
-        {
-            if (list == null) return false;
-            if (i < 0) return false;
-            if (i >= list.Count) return false;
-            return true;
-        }
-
         public static bool ContainsIndex<T>(this T[] list, int i, bool falseIfNull) where T : class
         {
             if (list == null) return false;

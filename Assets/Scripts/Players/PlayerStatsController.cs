@@ -214,13 +214,13 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
         onBagWeapon = playerBuildSelected.second_weapon;
         playerBuildSelected.CreateDataBuild();
         
-        playerBuildSelected.first_weapon.weaponObjectController=Instantiate(playerBuildSelected.first_weapon.weapon.weaponObjectController, weaponSpawnPoint[0].position, Quaternion.identity, weaponSpawnPoint[0]);
-        playerBuildSelected.first_weapon.weaponObjectController.transform.localPosition =  playerBuildSelected.first_weapon.weapon.weaponObjectController.transform.localPosition;
-        playerBuildSelected.first_weapon.weaponObjectController.transform.localRotation= playerBuildSelected.first_weapon.weapon.weaponObjectController.transform.localRotation;
+        playerBuildSelected.first_weapon.weaponObjectController=Instantiate(playerBuildSelected.first_weapon.weapon.weaponPrefab, weaponSpawnPoint[0].position, Quaternion.identity, weaponSpawnPoint[0]);
+        playerBuildSelected.first_weapon.weaponObjectController.transform.localPosition =  playerBuildSelected.first_weapon.weapon.weaponPrefab.transform.localPosition;
+        playerBuildSelected.first_weapon.weaponObjectController.transform.localRotation= playerBuildSelected.first_weapon.weapon.weaponPrefab.transform.localRotation;
       
-        playerBuildSelected.second_weapon.weaponObjectController=Instantiate(playerBuildSelected.second_weapon.weapon.weaponObjectController, weaponSpawnPoint[1].position, Quaternion.identity, weaponSpawnPoint[0]);
-        playerBuildSelected.second_weapon.weaponObjectController.transform.localPosition = playerBuildSelected.second_weapon.weapon.weaponObjectController.transform.localPosition;
-        playerBuildSelected.second_weapon.weaponObjectController.transform.localRotation = playerBuildSelected.second_weapon.weapon.weaponObjectController.transform.localRotation;
+        playerBuildSelected.second_weapon.weaponObjectController=Instantiate(playerBuildSelected.second_weapon.weapon.weaponPrefab, weaponSpawnPoint[1].position, Quaternion.identity, weaponSpawnPoint[0]);
+        playerBuildSelected.second_weapon.weaponObjectController.transform.localPosition = playerBuildSelected.second_weapon.weapon.weaponPrefab.transform.localPosition;
+        playerBuildSelected.second_weapon.weaponObjectController.transform.localRotation = playerBuildSelected.second_weapon.weapon.weaponPrefab.transform.localRotation;
 
         playerBuildSelected.second_weapon.weaponObjectController.gameObject.SetActive(false);
         
@@ -230,7 +230,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
         currentWeaponSelected.weaponObjectController.gameObject.SetActive(true);
         onBagWeapon = playerBuildSelected.second_weapon;
         onBagWeapon.weaponObjectController.gameObject.SetActive(false);
-        OnWeaponChanged.Invoke(currentWeaponSelected.weapon.weaponObjectController.weaponBulletSpawnPoints);
+        OnWeaponChanged.Invoke(currentWeaponSelected.weaponObjectController.weaponBulletSpawnPoints);
         playerSoundController.UpdateWeaponSound(currentWeaponSelected);
     }
 
@@ -349,7 +349,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
             currentWeaponSelected.weaponObjectController.gameObject.SetActive(true);
             onBagWeapon = playerBuildSelected.second_weapon;
             onBagWeapon.weaponObjectController.gameObject.SetActive(false);
-            OnWeaponChanged.Invoke(currentWeaponSelected.weapon.weaponObjectController.weaponBulletSpawnPoints);
+            OnWeaponChanged.Invoke(currentWeaponSelected.weaponObjectController.weaponBulletSpawnPoints);
             Debug.Log(currentWeaponSelected.weapon.weaponName);
             playerSoundController.UpdateWeaponSound(currentWeaponSelected);
             F_In_F_Out_Obj.OnWeapontChangedAnim?.Invoke();
@@ -362,7 +362,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
             currentWeaponSelected.weaponObjectController.gameObject.SetActive(true);
             onBagWeapon = playerBuildSelected.first_weapon;
             onBagWeapon.weaponObjectController.gameObject.SetActive(false);
-            OnWeaponChanged.Invoke(currentWeaponSelected.weapon.weaponObjectController.weaponBulletSpawnPoints);
+            OnWeaponChanged.Invoke(currentWeaponSelected.weaponObjectController.weaponBulletSpawnPoints);
             Debug.Log(currentWeaponSelected.weapon.weaponName);
             playerSoundController.UpdateWeaponSound(currentWeaponSelected);
             F_In_F_Out_Obj.OnWeapontChangedAnim?.Invoke();

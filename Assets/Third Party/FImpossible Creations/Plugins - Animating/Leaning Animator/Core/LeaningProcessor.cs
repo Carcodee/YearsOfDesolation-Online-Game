@@ -9,6 +9,7 @@ namespace FIMSpace
     {
         public MonoBehaviour Owner { get; private set; }
 
+        private bool lateUpdateDone = false;
         // Cofiguration Params
         //public bool ResetSwayWhenUngrounded = false;
         [Tooltip("When your character's animator have 'Update Mode' set to AniamtePhysics, then enable this option")]
@@ -237,6 +238,7 @@ namespace FIMSpace
 
         internal void Update()
         {
+            lateUpdateDone = false;
             if (AllEffectsBlend <= 0f) return;
 
             CheckForForcingTransformBasedVelocity();
@@ -381,8 +383,10 @@ namespace FIMSpace
 
         internal void LateUpdate()
         {
+            if (lateUpdateDone)return;
             LateUpdate_Bones();
             LateUpdate_Post();
+            lateUpdateDone = true;
         }
 
 

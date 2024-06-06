@@ -307,6 +307,7 @@ namespace FIMSpace.FLook
 
         #endregion
 
+        public bool lateUpdateDone = false;
 
         // THIS IS PARTIAL CLASS: REST OF THE CODE INSIDE "Scripts" directory
 
@@ -388,6 +389,7 @@ namespace FIMSpace.FLook
             #endregion
 
             if (!AnimatePhysics) PreCalibrateBones();
+            lateUpdateDone = false;
         }
 
         void FixedUpdate()
@@ -400,7 +402,7 @@ namespace FIMSpace.FLook
         public virtual void LateUpdate()
         {
             if (!updateLookAnimator) return;
-
+            lateUpdateDone = true;
             CalibrateBones();
             TargetingUpdate();
             BeginStateCheck();

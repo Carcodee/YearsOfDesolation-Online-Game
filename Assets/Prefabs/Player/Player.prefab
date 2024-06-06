@@ -545,8 +545,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1874250046363828081}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.23014437, y: 0.000002830009, z: -0.0000006692764, w: 0.9731565}
-  m_LocalPosition: {x: 0, y: 3.12, z: -3.42}
+  m_LocalRotation: {x: -0.2097927, y: -0.24009094, z: -0.053226877, w: 0.94631404}
+  m_LocalPosition: {x: 2.9860573, y: -1.7661601, z: 0.2016778}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1051,7 +1051,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70b342d8ce5c2fd48b8fa3147d48d1d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Weight: 1
+  m_Weight: 0
   m_Effectors: []
 --- !u!1 &3940185642830209463
 GameObject:
@@ -1402,7 +1402,7 @@ MonoBehaviour:
             tier: 0
             upgradeType: 0
           reloadCurrentTime: 0
-        weaponObjectController: {fileID: 0}
+        weaponPrefab: {fileID: 0}
         weaponDamage: 0
         weaponName: 
         shootTimer: 0
@@ -1453,7 +1453,7 @@ MonoBehaviour:
             tier: 0
             upgradeType: 0
           reloadCurrentTime: 0
-        weaponObjectController: {fileID: 0}
+        weaponPrefab: {fileID: 0}
         weaponDamage: 0
         weaponName: 
         shootTimer: 0
@@ -1510,7 +1510,7 @@ MonoBehaviour:
           tier: 0
           upgradeType: 0
         reloadCurrentTime: 0
-      weaponObjectController: {fileID: 0}
+      weaponPrefab: {fileID: 0}
       weaponDamage: 0
       weaponName: 
       shootTimer: 0
@@ -1561,7 +1561,7 @@ MonoBehaviour:
           tier: 0
           upgradeType: 0
         reloadCurrentTime: 0
-      weaponObjectController: {fileID: 0}
+      weaponPrefab: {fileID: 0}
       weaponDamage: 0
       weaponName: 
       shootTimer: 0
@@ -1612,7 +1612,7 @@ MonoBehaviour:
           tier: 0
           upgradeType: 0
         reloadCurrentTime: 0
-      weaponObjectController: {fileID: 0}
+      weaponPrefab: {fileID: 0}
       weaponDamage: 0
       weaponName: 
       shootTimer: 0
@@ -1663,7 +1663,7 @@ MonoBehaviour:
           tier: 0
           upgradeType: 0
         reloadCurrentTime: 0
-      weaponObjectController: {fileID: 0}
+      weaponPrefab: {fileID: 0}
       weaponDamage: 0
       weaponName: 
       shootTimer: 0
@@ -2140,7 +2140,7 @@ MonoBehaviour:
   ParentalReferenceBone: {fileID: 0}
   DestroyMomentTargetOnMaxDistance: 1
   OverrideRotations: 0
-  BackBonesCount: 2
+  BackBonesCount: 4
   _preBackBonesCount: 0
   LookBones:
   - Transform: {fileID: 364159028665839681}
@@ -2180,9 +2180,9 @@ MonoBehaviour:
     initLocalRot: {x: 0.000000005370175, y: 0.000000072857205, z: 0.20371085, w: 0.9790311}
     targetDelayPosition: {x: 0, y: 0, z: 0}
     animatedDelayPosition: {x: 0, y: 0, z: 0}
-    lookWeight: 0.48904362
+    lookWeight: 0.73749995
     lookWeightB: 1
-    motionWeight: 0.48904362
+    motionWeight: 0.48749998
   - Transform: {fileID: 364159029751941096}
     animatedStaticRotation: {x: 0, y: 0, z: 0, w: 0}
     targetStaticRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -2200,9 +2200,49 @@ MonoBehaviour:
     initLocalRot: {x: 0.0000000124227215, y: 0.000000100713365, z: -0.12241954, w: 0.9924785}
     targetDelayPosition: {x: 0, y: 0, z: 0}
     animatedDelayPosition: {x: 0, y: 0, z: 0}
-    lookWeight: 0.33127192
+    lookWeight: 0.50750005
     lookWeightB: 1
-    motionWeight: 0.33127192
+    motionWeight: 0.30750003
+  - Transform: {fileID: 364159029723964689}
+    animatedStaticRotation: {x: 0, y: 0, z: 0, w: 0}
+    targetStaticRotation: {x: 0, y: 0, z: 0, w: 0}
+    localStaticRotation: {x: 0, y: 0, z: 0, w: 0}
+    animatedTargetRotation: {x: 0, y: 0, z: 0, w: 0}
+    targetRotation: {x: 0, y: 0, z: 0, w: 0}
+    correctionOffset: {x: 0, y: 0, z: 0}
+    finalRotation: {x: 0, y: 0, z: 0, w: 0}
+    lastKeyframeRotation: {x: 0, y: 0, z: 0, w: 0}
+    lastFinalLocalRotation: {x: 0, y: 0, z: 0, w: 0}
+    forward: {x: 0.12815908, y: 0.99175364, z: 0.000009723008}
+    right: {x: 0.0000011919986, y: -0.000009709579, z: -0.99999994}
+    up: {x: 0.9917536, y: 0.12815905, z: 9.193205e-10}
+    initLocalPos: {x: -0.10808891, y: -0.008514151, z: -3.6397636e-14}
+    initLocalRot: {x: 0.000000013263084, y: 0.000000059317937, z: 0.062388618, w: 0.99805194}
+    targetDelayPosition: {x: 0, y: 0, z: 0}
+    animatedDelayPosition: {x: 0, y: 0, z: 0}
+    lookWeight: 0.098000005
+    lookWeightB: 1
+    motionWeight: 0.12300001
+  - Transform: {fileID: 364159028884759389}
+    animatedStaticRotation: {x: 0, y: 0, z: 0, w: 0}
+    targetStaticRotation: {x: 0, y: 0, z: 0, w: 0}
+    localStaticRotation: {x: 0, y: 0, z: 0, w: 0}
+    animatedTargetRotation: {x: 0, y: 0, z: 0, w: 0}
+    targetRotation: {x: 0, y: 0, z: 0, w: 0}
+    correctionOffset: {x: 0, y: 0, z: 0}
+    finalRotation: {x: 0, y: 0, z: 0, w: 0}
+    lastKeyframeRotation: {x: 0, y: 0, z: 0, w: 0}
+    lastFinalLocalRotation: {x: 0, y: 0, z: 0, w: 0}
+    forward: {x: 0.0036541894, y: 0.9999933, z: 0.000009773632}
+    right: {x: -0.00000011930453, y: -0.000009759097, z: -1.0000001}
+    up: {x: 0.9999933, y: 0.003654182, z: -0.00000011920928}
+    initLocalPos: {x: -0.000000001131717, y: 0.010561501, z: 0.96750593}
+    initLocalRot: {x: 0.0012954458, y: 0.7071056, z: 0.001288545, w: 0.70710564}
+    targetDelayPosition: {x: 0, y: 0, z: 0}
+    animatedDelayPosition: {x: 0, y: 0, z: 0}
+    lookWeight: 1
+    lookWeightB: 1
+    motionWeight: 1
   NoTargetHeadStops: 0
   _editor_hideEyes: 0
   _editor_displayName: Look Animator 2
@@ -2213,11 +2253,11 @@ MonoBehaviour:
   _gizmosDrawingGuides: 1
   LeadBone: {fileID: 364159028665839681}
   BaseTransform: {fileID: 7049848071880572033}
-  FaloffValue: 0.09879226
+  FaloffValue: 0
   FaloffValueB: 1.1
   BigAngleAutomation: 0
   BigAngleAutomationCompensation: 0
-  AutoBackbonesWeights: 1
+  AutoBackbonesWeights: 0
   CurveSpread: 0
   BackBonesFalloff:
     serializedVersion: 2
@@ -2312,6 +2352,7 @@ MonoBehaviour:
   DebugRays: 1
   AnimationStyle: 0
   ConstantParentalAxisUpdate: 1
+  lateUpdateDone: 0
 --- !u!1 &4168793067670702245
 GameObject:
   m_ObjectHideFlags: 0
@@ -2336,8 +2377,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4168793067670702245}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.06186939, y: -0.12508444, z: -0.08079233, w: 0.9869137}
-  m_LocalPosition: {x: 0.11603785, y: 0.05380024, z: -0.0077614756}
+  m_LocalRotation: {x: 0.06186927, y: -0.12508424, z: -0.08079216, w: 0.98691374}
+  m_LocalPosition: {x: 0.11603764, y: 0.0538007, z: -0.0077611925}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3151,7 +3192,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3c430f382484144e925c097c2d33cfe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Weight: 0
+  m_Weight: 1
   m_Data:
     m_ConstrainedObject: {fileID: 364159028884759389}
     m_SourceObjects:
@@ -3224,52 +3265,52 @@ PrefabInstance:
     - target: {fileID: 7702755714387758210, guid: 1dc5dd27654b1ad4daa8173a0dc42ed1,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.13599986
+      value: 0.1141
       objectReference: {fileID: 0}
     - target: {fileID: 7702755714387758210, guid: 1dc5dd27654b1ad4daa8173a0dc42ed1,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.06599981
+      value: -0.0983
       objectReference: {fileID: 0}
     - target: {fileID: 7702755714387758210, guid: 1dc5dd27654b1ad4daa8173a0dc42ed1,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.055000108
+      value: -0.0014
       objectReference: {fileID: 0}
     - target: {fileID: 7702755714387758210, guid: 1dc5dd27654b1ad4daa8173a0dc42ed1,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.630672
+      value: 0.46325925
       objectReference: {fileID: 0}
     - target: {fileID: 7702755714387758210, guid: 1dc5dd27654b1ad4daa8173a0dc42ed1,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.4363321
+      value: 0.5509604
       objectReference: {fileID: 0}
     - target: {fileID: 7702755714387758210, guid: 1dc5dd27654b1ad4daa8173a0dc42ed1,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.5243044
+      value: 0.6406701
       objectReference: {fileID: 0}
     - target: {fileID: 7702755714387758210, guid: 1dc5dd27654b1ad4daa8173a0dc42ed1,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.37009734
+      value: 0.2671615
       objectReference: {fileID: 0}
     - target: {fileID: 7702755714387758210, guid: 1dc5dd27654b1ad4daa8173a0dc42ed1,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 9.339
+      value: 9.68
       objectReference: {fileID: 0}
     - target: {fileID: 7702755714387758210, guid: 1dc5dd27654b1ad4daa8173a0dc42ed1,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 85.965
+      value: 115.735
       objectReference: {fileID: 0}
     - target: {fileID: 7702755714387758210, guid: 1dc5dd27654b1ad4daa8173a0dc42ed1,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 69.517
+      value: 75.301
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

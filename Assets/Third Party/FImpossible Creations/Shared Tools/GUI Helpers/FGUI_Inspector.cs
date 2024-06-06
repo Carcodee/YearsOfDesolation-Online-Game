@@ -1,5 +1,6 @@
 ﻿#if UNITY_EDITOR
 
+using System.IO;
 using UnityEditor;
 using UnityEngine;
 
@@ -126,7 +127,7 @@ namespace FIMSpace.FEditor
         {
             bool clicked = false;
             EditorGUILayout.BeginVertical(Style(new Color(.6f, .6f, .3f, .075f), 0));
-            if (GUILayout.Button(new GUIContent(title, EditorGUIUtility.IconContent("console.warnicon.sml").image), EditorStyles.boldLabel)) clicked = true;
+            if ( GUILayout.Button(new GUIContent(title, EditorGUIUtility.IconContent("console.warnicon.sml").image), EditorStyles.boldLabel)) clicked = true;
             //EditorGUILayout.LabelField(new GUIContent(title, EditorGUIUtility.IconContent("console.warnicon.sml").image), EditorStyles.boldLabel);
             EditorGUILayout.EndVertical();
             return clicked;
@@ -260,76 +261,6 @@ namespace FIMSpace.FEditor
         }
 
 
-        /// <summary> 
-        /// Reading custom inspector editor drawer for the provided unity monoBehaviour or scriptable object.
-        /// Can be used for Editor.CreateEditor(this, GetCustomEditorType) 
-        /// </summary>
-        public static System.Type GetCustomEditorType(UnityEngine.Object uObject)
-        {
-            System.Type behaviourType = uObject.GetType();
-
-            foreach (var customEditor in System.Attribute.GetCustomAttributes(behaviourType, typeof(CustomEditor), true))
-            {
-                var editor = customEditor as CustomEditor;
-                if (editor != null && editor.GetType().IsAssignableFrom(typeof(Editor)))
-                {
-                    return editor.GetType();
-                }
-            }
-
-            return null;
-        }
-
-        /// <summary> Generates Editor for provided unity object </summary>
-        public static UnityEditor.Editor GetEditorOf(UnityEngine.Object obj)
-        {
-            System.Type customEditorType = GetCustomEditorType(obj);
-
-            if (customEditorType != null)
-                return Editor.CreateEditor(obj, customEditorType);
-            else
-                return Editor.CreateEditor(obj);
-        }
-
-        public static void DrawObjectProperties(SerializedObject obj, int skipFirstProperties = 0)
-        {
-            var props = obj.GetIterator();
-            props.NextVisible(true);
-
-            for (int s = 0; s < skipFirstProperties; s++)
-            {
-                if (props.NextVisible(false) == false) return; // No more properties
-            }
-
-            while (props.NextVisible(false))
-            {
-                EditorGUILayout.PropertyField(props);
-            }
-        }
-
-
-        public static void UnfocusControl()
-        {
-#if UNITY_EDITOR
-            GUI.FocusControl(null);
-#endif
-        }
-
-        public static readonly Color Color_RemoveRed = new Color(1f, 0.6f, 0.6f, 1f);
-        public static void RedGUIBackground()
-        {
-            GUI.backgroundColor = Color_RemoveRed;
-        }
-
-        public static void RestoreGUIBackground()
-        {
-            GUI.backgroundColor = Color.white;
-        }
-
-        public static void RestoreGUIColor()
-        {
-            GUI.color = Color.white;
-        }
     }
 }
 
