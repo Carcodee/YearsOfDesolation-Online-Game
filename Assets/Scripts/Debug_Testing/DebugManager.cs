@@ -8,7 +8,7 @@ public class DebugManager : MonoBehaviour
 {
     public static DebugManager instance;
     public PlayerStatsController playerStatsController;
-    
+    public PostProccesingManager postProccesingManager;
     
     private void Awake()
     {

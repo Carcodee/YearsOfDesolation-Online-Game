@@ -52,24 +52,24 @@ public class AnimationRiggingController : MonoBehaviour, INetObjectToClean
         }
         if (playerStatsController.isSprinting)
         {
-            // multiAimConstraint.weight = 0;
-            // twoBoneIKConstraint.weight = 0;
+            multiAimConstraint.weight = 0;
+            twoBoneIKConstraint.weight = 0;
         }
         else
         {
-            // multiAimConstraint.weight = 1;
-            // twoBoneIKConstraint.weight = 1;
+            multiAimConstraint.weight = 1;
+            twoBoneIKConstraint.weight = 1;
         }
         if (!playerStatsController.playerStats.hasPlayerSelectedBuild)
         {
-            // handLTarget.position = playerStatsController.playerStats.weaponNoBuildGripPoint.position;
-            // handLTarget.rotation = playerStatsController.playerStats.weaponNoBuildGripPoint.rotation;
+            handLTarget.position = playerStatsController.playerStats.weaponNoBuildGripPoint.position;
+            handLTarget.rotation = playerStatsController.playerStats.weaponNoBuildGripPoint.rotation;
             return;
         }
         if (currentHandLTarget != null)
         {
-            // handLTarget.position = currentHandLTarget.position;
-            // handLTarget.rotation = currentHandLTarget.rotation;
+            handLTarget.position = currentHandLTarget.position;
+            handLTarget.rotation = currentHandLTarget.rotation;
 
         }
         
@@ -79,7 +79,7 @@ public class AnimationRiggingController : MonoBehaviour, INetObjectToClean
         }
         if (playerStatsController.playerStats.currentWeaponSelected.weaponObjectController.useTwoBoneIK)
         {
-           // twoBoneIKConstraint.weight = 1;
+           twoBoneIKConstraint.weight = 1;
         }
         else if (!playerStatsController.playerStats.currentWeaponSelected.weaponObjectController.useTwoBoneIK)
         {

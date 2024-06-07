@@ -962,7 +962,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3c430f382484144e925c097c2d33cfe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Weight: 0
+  m_Weight: 1
   m_Data:
     m_ConstrainedObject: {fileID: 364159029142258054}
     m_SourceObjects:
@@ -1075,7 +1075,8 @@ GameObject:
   - component: {fileID: 6812764082803794279}
   - component: {fileID: 3567344566275613699}
   - component: {fileID: 5692071481652116479}
-  - component: {fileID: 4705380987657247695}
+  - component: {fileID: 3360020341601467312}
+  - component: {fileID: 2464958775494194186}
   m_Layer: 2
   m_Name: Player
   m_TagString: Player
@@ -1208,10 +1209,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: 0.00083856285
-      value: 0.393793
-      inSlope: 0
-      outSlope: 0
+      time: 0.00002670288
+      value: 0.3394165
+      inSlope: 2
+      outSlope: 2
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
@@ -2067,10 +2068,10 @@ MonoBehaviour:
     SpineMiddle: {fileID: 0}
     Chest: {fileID: 0}
     Neck: {fileID: 364159028992987420}
-    LeftUpperArm: {fileID: 0}
-    LeftForearm: {fileID: 0}
-    RightUpperArm: {fileID: 0}
-    RightForearm: {fileID: 0}
+    LeftUpperArm: {fileID: 364159030125028856}
+    LeftForearm: {fileID: 364159030066306836}
+    RightUpperArm: {fileID: 364159030578116777}
+    RightForearm: {fileID: 364159029170256833}
     SpineGroundAlign: 0
     SpineGrAdjustDuration: 0.15
     SlopeSpineLean:
@@ -2098,7 +2099,178 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     AdjustForwAndSide: {x: 1, y: 0.75}
---- !u!114 &4705380987657247695
+--- !u!114 &3360020341601467312
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3940185642830209463}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e83668c454b4396488081147cb5c9176, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BirdMode: 0
+  LagRotation: 0.85
+  LagEvery: 0.285
+  DelayPosition: 0
+  DelayMaxDistance: 0.25111
+  DelayGoSpeed: 0.6
+  BirdTargetPosition: {x: 0, y: 0, z: 1}
+  UseEyes: 0
+  EyesTarget: {fileID: 0}
+  LeftEye: {fileID: 0}
+  InvertLeftEye: 0
+  RightEye: {fileID: 0}
+  InvertRightEye: 0
+  HeadReference: {fileID: 0}
+  EyesOffsetRotation: {x: 0, y: 0, z: 0}
+  LeftEyeOffsetRotation: {x: 0, y: 0, z: 0}
+  RightEyeOffsetRotation: {x: 0, y: 0, z: 0}
+  EyesSpeed: 0.5
+  EyesBlend: 1
+  EyesXRange: {x: -60, y: 60}
+  EyesYRange: {x: -50, y: 50}
+  EyesNoKeyframes: 1
+  CustomEyesLogics: 0
+  NoddingTransitions: 0
+  NodAxis: {x: 1, y: 0, z: 0}
+  BackBonesNod: 0.15
+  ParentalOffsetsV: 2
+  ParentalReferenceBone: {fileID: 0}
+  DestroyMomentTargetOnMaxDistance: 1
+  OverrideRotations: 0
+  BackBonesCount: 0
+  _preBackBonesCount: 0
+  LookBones:
+  - Transform: {fileID: 364159028884759389}
+    animatedStaticRotation: {x: 0, y: 0, z: 0, w: 0}
+    targetStaticRotation: {x: 0, y: 0, z: 0, w: 0}
+    localStaticRotation: {x: 0, y: 0, z: 0, w: 0}
+    animatedTargetRotation: {x: 0, y: 0, z: 0, w: 0}
+    targetRotation: {x: 0, y: 0, z: 0, w: 0}
+    correctionOffset: {x: 0, y: 0, z: 0}
+    finalRotation: {x: 0, y: 0, z: 0, w: 0}
+    lastKeyframeRotation: {x: 0, y: 0, z: 0, w: 0}
+    lastFinalLocalRotation: {x: 0, y: 0, z: 0, w: 0}
+    forward: {x: -0.44221237, y: -0.068825334, z: 0.8942658}
+    right: {x: 0.68746865, y: -0.61435854, z: 0.38723442}
+    up: {x: 0.576051, y: 0.7860198, z: -0.22436152}
+    initLocalPos: {x: 0.2697525, y: 0.00000020980835, z: 0}
+    initLocalRot: {x: -0.61789525, y: -0.019372376, z: -0.01065372, w: 0.7859495}
+    targetDelayPosition: {x: 0, y: 0, z: 0}
+    animatedDelayPosition: {x: 0, y: 0, z: 0}
+    lookWeight: 0.725
+    lookWeightB: 1
+    motionWeight: 1
+  NoTargetHeadStops: 0
+  _editor_hideEyes: 0
+  _editor_displayName: Look Animator 2
+  _Editor_Category: 0
+  _gizmosDrawMaxDist: 1
+  gizmosAlpha: 0.85
+  drawGizmos: 1
+  _gizmosDrawingGuides: 1
+  LeadBone: {fileID: 364159028884759389}
+  BaseTransform: {fileID: 372611058870039632}
+  FaloffValue: 0.35
+  FaloffValueB: 1.1
+  BigAngleAutomation: 0
+  BigAngleAutomationCompensation: 0
+  AutoBackbonesWeights: 1
+  CurveSpread: 0
+  BackBonesFalloff:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: -0.9
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0.1
+      inSlope: -0.9
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  CompensationBones: []
+  CompensationWeight: 0.5
+  CompensationWeightB: 0.5
+  CompensatePositions: 0
+  CompensatePositionsB: 0
+  StartAfterTPose: 1
+  AnimatePhysics: 0
+  OptimizeWithMesh: {fileID: 0}
+  ObjectToFollow: {fileID: 7816743174836133948}
+  FollowOffset: {x: 0, y: 0, z: 0}
+  FollowMode: 0
+  RotationSpeed: 0.65
+  UltraSmoother: 0
+  StopLookingAbove: 180
+  StopLookingAboveFactor: 1
+  ChangeTargetSmoothing: 0
+  AdvancedFalloff: 0
+  MaximumDistance: 0
+  HoldRotateToOppositeUntil: 0
+  MaxOutDistanceFactor: 0
+  Distance2D: 0
+  DistanceMeasurePoint: {x: 0, y: 0, z: 0}
+  LookWhenAbove: 0
+  LookWhenAboveVertical: 0
+  WhenAboveGoBackAfter: 0
+  WhenAboveGoBackAfterVertical: 0
+  WhenAboveGoBackDuration: 0.2
+  StartLookElasticRangeX: 0
+  StartLookElasticRangeY: 0
+  XRotationLimits: {x: -80, y: 80}
+  XElasticRange: 20
+  LimitHolder: 1
+  YRotationLimits: {x: -50, y: 50}
+  YElasticRange: 15
+  LookAnimatorAmount: 1
+  StartLookPointOffset: {x: 0, y: 0, z: 0}
+  AnchorStartLookPoint: 1
+  RefreshStartLookPoint: 1
+  SyncWithAnimator: 1
+  MonitorAnimator: 0
+  WeightsMultiplier: 1
+  MaxRotationSpeed: 2.5
+  BaseRotationCompensation: 0
+  DetectZeroKeyframes: 1
+  LookAtPositionSmoother: 0
+  DeltaType: 0
+  SimulationSpeed: 1
+  OverrideHeadForPerfectLookDirection: 0
+  Calibration: 1
+  FixingPreset: 0
+  ModelForwardAxis: {x: 0, y: 0, z: 1}
+  ModelUpAxis: {x: 0, y: 1, z: 0}
+  ManualFromAxis: {x: 0, y: 0, z: 1}
+  ManualToAxis: {x: 0, y: 0, z: 1}
+  FromAuto: {x: 0, y: 0, z: 0}
+  OffsetAuto: {x: 0, y: 0, z: 0}
+  parentalReferenceLookForward: {x: 0, y: 0, z: 0}
+  parentalReferenceUp: {x: 0, y: 0, z: 0}
+  DynamicReferenceUp: {x: 0, y: 0, z: 0}
+  RotationOffset: {x: -26, y: 0, z: 0}
+  BackBonesAddOffset: {x: 0, y: 0, z: 0}
+  RotCorrectionMultiplier: {x: 1, y: 1, z: 1}
+  DebugRays: 0
+  AnimationStyle: 0
+  ConstantParentalAxisUpdate: 1
+  lateUpdateDone: 0
+--- !u!114 &2464958775494194186
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2163,7 +2335,7 @@ MonoBehaviour:
     lookWeight: 1
     lookWeightB: 1
     motionWeight: 1
-  - Transform: {fileID: 364159029142258054}
+  - Transform: {fileID: 364159028992987420}
     animatedStaticRotation: {x: 0, y: 0, z: 0, w: 0}
     targetStaticRotation: {x: 0, y: 0, z: 0, w: 0}
     localStaticRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -2180,9 +2352,29 @@ MonoBehaviour:
     initLocalRot: {x: 0.000000005370175, y: 0.000000072857205, z: 0.20371085, w: 0.9790311}
     targetDelayPosition: {x: 0, y: 0, z: 0}
     animatedDelayPosition: {x: 0, y: 0, z: 0}
-    lookWeight: 0.73749995
-    lookWeightB: 1
+    lookWeight: 0.95
+    lookWeightB: 0.1609375
     motionWeight: 0.48749998
+  - Transform: {fileID: 364159029142258054}
+    animatedStaticRotation: {x: 0, y: 0, z: 0, w: 0}
+    targetStaticRotation: {x: 0, y: 0, z: 0, w: 0}
+    localStaticRotation: {x: 0, y: 0, z: 0, w: 0}
+    animatedTargetRotation: {x: 0, y: 0, z: 0, w: 0}
+    targetRotation: {x: 0, y: 0, z: 0, w: 0}
+    correctionOffset: {x: 0, y: 0, z: 0}
+    finalRotation: {x: 0, y: 0, z: 0, w: 0}
+    lastKeyframeRotation: {x: 0, y: 0, z: 0, w: 0}
+    lastFinalLocalRotation: {x: 0, y: 0, z: 0, w: 0}
+    forward: {x: -0.16469836, y: 0.986344, z: 0.000009730458}
+    right: {x: -0.0000016690226, y: -0.000009618673, z: -0.99999994}
+    up: {x: 0.98634404, y: -0.1646986, z: 0.00000008973575}
+    initLocalPos: {x: -0.13407348, y: 0.0042047785, z: 7.2759575e-14}
+    initLocalRot: {x: -0.0000000013861762, y: -0.00000005713904, z: -0.02425257, w: 0.9997059}
+    targetDelayPosition: {x: 0, y: 0, z: 0}
+    animatedDelayPosition: {x: 0, y: 0, z: 0}
+    lookWeight: 0.75750005
+    lookWeightB: 0.22843748
+    motionWeight: 0.30750003
   - Transform: {fileID: 364159029751941096}
     animatedStaticRotation: {x: 0, y: 0, z: 0, w: 0}
     targetStaticRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -2200,9 +2392,9 @@ MonoBehaviour:
     initLocalRot: {x: 0.0000000124227215, y: 0.000000100713365, z: -0.12241954, w: 0.9924785}
     targetDelayPosition: {x: 0, y: 0, z: 0}
     animatedDelayPosition: {x: 0, y: 0, z: 0}
-    lookWeight: 0.50750005
-    lookWeightB: 1
-    motionWeight: 0.30750003
+    lookWeight: 0.6
+    lookWeightB: 0.297625
+    motionWeight: 0.12300001
   - Transform: {fileID: 364159029723964689}
     animatedStaticRotation: {x: 0, y: 0, z: 0, w: 0}
     targetStaticRotation: {x: 0, y: 0, z: 0, w: 0}
@@ -2220,42 +2412,22 @@ MonoBehaviour:
     initLocalRot: {x: 0.000000013263084, y: 0.000000059317937, z: 0.062388618, w: 0.99805194}
     targetDelayPosition: {x: 0, y: 0, z: 0}
     animatedDelayPosition: {x: 0, y: 0, z: 0}
-    lookWeight: 0.098000005
-    lookWeightB: 1
-    motionWeight: 0.12300001
-  - Transform: {fileID: 364159028884759389}
-    animatedStaticRotation: {x: 0, y: 0, z: 0, w: 0}
-    targetStaticRotation: {x: 0, y: 0, z: 0, w: 0}
-    localStaticRotation: {x: 0, y: 0, z: 0, w: 0}
-    animatedTargetRotation: {x: 0, y: 0, z: 0, w: 0}
-    targetRotation: {x: 0, y: 0, z: 0, w: 0}
-    correctionOffset: {x: 0, y: 0, z: 0}
-    finalRotation: {x: 0, y: 0, z: 0, w: 0}
-    lastKeyframeRotation: {x: 0, y: 0, z: 0, w: 0}
-    lastFinalLocalRotation: {x: 0, y: 0, z: 0, w: 0}
-    forward: {x: 0.0036541894, y: 0.9999933, z: 0.000009773632}
-    right: {x: -0.00000011930453, y: -0.000009759097, z: -1.0000001}
-    up: {x: 0.9999933, y: 0.003654182, z: -0.00000011920928}
-    initLocalPos: {x: -0.000000001131717, y: 0.010561501, z: 0.96750593}
-    initLocalRot: {x: 0.0012954458, y: 0.7071056, z: 0.001288545, w: 0.70710564}
-    targetDelayPosition: {x: 0, y: 0, z: 0}
-    animatedDelayPosition: {x: 0, y: 0, z: 0}
-    lookWeight: 1
-    lookWeightB: 1
-    motionWeight: 1
+    lookWeight: 0.4742
+    lookWeightB: 0.3253
+    motionWeight: 0.049200002
   NoTargetHeadStops: 0
   _editor_hideEyes: 0
   _editor_displayName: Look Animator 2
-  _Editor_Category: 0
+  _Editor_Category: 1
   _gizmosDrawMaxDist: 1
   gizmosAlpha: 0.85
   drawGizmos: 1
   _gizmosDrawingGuides: 1
   LeadBone: {fileID: 364159028665839681}
-  BaseTransform: {fileID: 7049848071880572033}
+  BaseTransform: {fileID: 372611058870039632}
   FaloffValue: 0
   FaloffValueB: 1.1
-  BigAngleAutomation: 0
+  BigAngleAutomation: 1
   BigAngleAutomationCompensation: 0
   AutoBackbonesWeights: 0
   CurveSpread: 0
@@ -2283,18 +2455,14 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  CompensationBones:
-  - Transform: {fileID: 364159029699464504}
-  - Transform: {fileID: 364159028591506077}
-  - Transform: {fileID: 364159030125028856}
-  - Transform: {fileID: 364159030578116777}
+  CompensationBones: []
   CompensationWeight: 0.5
   CompensationWeightB: 0.5
   CompensatePositions: 0
   CompensatePositionsB: 0
   StartAfterTPose: 1
   AnimatePhysics: 0
-  OptimizeWithMesh: {fileID: 364159030233793169}
+  OptimizeWithMesh: {fileID: 0}
   ObjectToFollow: {fileID: 7816743174836133948}
   FollowOffset: {x: 0, y: 0, z: 0}
   FollowMode: 0
@@ -2316,10 +2484,10 @@ MonoBehaviour:
   WhenAboveGoBackDuration: 0.2
   StartLookElasticRangeX: 0
   StartLookElasticRangeY: 0
-  XRotationLimits: {x: -80, y: 75.784546}
+  XRotationLimits: {x: -80, y: 80}
   XElasticRange: 20
   LimitHolder: 1
-  YRotationLimits: {x: -90, y: 54.903976}
+  YRotationLimits: {x: -50, y: 50}
   YElasticRange: 15
   LookAnimatorAmount: 1
   StartLookPointOffset: {x: 0, y: 0, z: 0}
@@ -2349,7 +2517,7 @@ MonoBehaviour:
   RotationOffset: {x: 0, y: 0, z: 0}
   BackBonesAddOffset: {x: 0, y: 0, z: 0}
   RotCorrectionMultiplier: {x: 1, y: 1, z: 1}
-  DebugRays: 1
+  DebugRays: 0
   AnimationStyle: 0
   ConstantParentalAxisUpdate: 1
   lateUpdateDone: 0
@@ -3104,7 +3272,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aeda7bfbf984f2a4da5ab4b8967b115d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Weight: 0
+  m_Weight: 1
   m_Data:
     m_Root: {fileID: 364159030125028856}
     m_Mid: {fileID: 364159030066306836}
@@ -3265,52 +3433,52 @@ PrefabInstance:
     - target: {fileID: 7702755714387758210, guid: 1dc5dd27654b1ad4daa8173a0dc42ed1,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.1141
+      value: 0.156
       objectReference: {fileID: 0}
     - target: {fileID: 7702755714387758210, guid: 1dc5dd27654b1ad4daa8173a0dc42ed1,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.0983
+      value: -0.157
       objectReference: {fileID: 0}
     - target: {fileID: 7702755714387758210, guid: 1dc5dd27654b1ad4daa8173a0dc42ed1,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.0014
+      value: -0.003
       objectReference: {fileID: 0}
     - target: {fileID: 7702755714387758210, guid: 1dc5dd27654b1ad4daa8173a0dc42ed1,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.46325925
+      value: 0.5850784
       objectReference: {fileID: 0}
     - target: {fileID: 7702755714387758210, guid: 1dc5dd27654b1ad4daa8173a0dc42ed1,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.5509604
+      value: 0.5564467
       objectReference: {fileID: 0}
     - target: {fileID: 7702755714387758210, guid: 1dc5dd27654b1ad4daa8173a0dc42ed1,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.6406701
+      value: 0.5443654
       objectReference: {fileID: 0}
     - target: {fileID: 7702755714387758210, guid: 1dc5dd27654b1ad4daa8173a0dc42ed1,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.2671615
+      value: 0.22741301
       objectReference: {fileID: 0}
     - target: {fileID: 7702755714387758210, guid: 1dc5dd27654b1ad4daa8173a0dc42ed1,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 9.68
+      value: 23.8
       objectReference: {fileID: 0}
     - target: {fileID: 7702755714387758210, guid: 1dc5dd27654b1ad4daa8173a0dc42ed1,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 115.735
+      value: 103.393
       objectReference: {fileID: 0}
     - target: {fileID: 7702755714387758210, guid: 1dc5dd27654b1ad4daa8173a0dc42ed1,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 75.301
+      value: 72.358
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3912,12 +4080,6 @@ Transform:
 --- !u!4 &364159030217108450 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2376785425244616957, guid: 0eb8572d620e0b04fbf46b9c80c94a3b,
-    type: 3}
-  m_PrefabInstance: {fileID: 2734187953253290783}
-  m_PrefabAsset: {fileID: 0}
---- !u!137 &364159030233793169 stripped
-SkinnedMeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 2376785425194193294, guid: 0eb8572d620e0b04fbf46b9c80c94a3b,
     type: 3}
   m_PrefabInstance: {fileID: 2734187953253290783}
   m_PrefabAsset: {fileID: 0}

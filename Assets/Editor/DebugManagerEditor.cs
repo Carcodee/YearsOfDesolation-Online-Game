@@ -11,8 +11,21 @@ public class DebugManagerEditor : EditorWindow
 {
     
     DebugManager debugManager;
-    
-    
+
+
+    private void OnInspectorUpdate()
+    {
+
+        if (debugManager!=null)
+        {
+            if (debugManager.postProccesingManager==null)
+            {
+                
+                debugManager.postProccesingManager = FindObjectOfType<PostProccesingManager>();
+            }
+        }
+    }
+
     [MenuItem("Window/Game Debugger Window")]
     static void Init()
     {
@@ -59,6 +72,16 @@ public class DebugManagerEditor : EditorWindow
             if (GUILayout.Button("Level UP")&&debugManager.playerStatsController != null)
             {
                 debugManager.LevelUp();
+            }
+            EditorGUILayout.LabelField("Post Processing",EditorStyles.boldLabel);
+            if (GUILayout.Button("Remove menu blur")&&debugManager.postProccesingManager != null)
+            {
+                Debug.Log("hello");
+                debugManager.postProccesingManager.ActivateMenuBlur(0);
+            }
+            if (GUILayout.Button("Activate menu blur")&&debugManager.postProccesingManager != null)
+            {
+                debugManager.postProccesingManager.ActivateMenuBlur(1);
             }
             
         
