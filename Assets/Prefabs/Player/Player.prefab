@@ -2161,7 +2161,7 @@ MonoBehaviour:
     initLocalRot: {x: -0.61789525, y: -0.019372376, z: -0.01065372, w: 0.7859495}
     targetDelayPosition: {x: 0, y: 0, z: 0}
     animatedDelayPosition: {x: 0, y: 0, z: 0}
-    lookWeight: 0.725
+    lookWeight: 0.10000001
     lookWeightB: 1
     motionWeight: 1
   NoTargetHeadStops: 0
@@ -2233,10 +2233,10 @@ MonoBehaviour:
   WhenAboveGoBackDuration: 0.2
   StartLookElasticRangeX: 0
   StartLookElasticRangeY: 0
-  XRotationLimits: {x: -80, y: 80}
+  XRotationLimits: {x: -0.18867493, y: -0.18867493}
   XElasticRange: 20
   LimitHolder: 1
-  YRotationLimits: {x: -50, y: 50}
+  YRotationLimits: {x: -48.396225, y: 28.679245}
   YElasticRange: 15
   LookAnimatorAmount: 1
   StartLookPointOffset: {x: 0, y: 0, z: 0}
@@ -2312,7 +2312,7 @@ MonoBehaviour:
   ParentalReferenceBone: {fileID: 0}
   DestroyMomentTargetOnMaxDistance: 1
   OverrideRotations: 0
-  BackBonesCount: 4
+  BackBonesCount: 3
   _preBackBonesCount: 0
   LookBones:
   - Transform: {fileID: 364159028665839681}
@@ -2352,7 +2352,7 @@ MonoBehaviour:
     initLocalRot: {x: 0.000000005370175, y: 0.000000072857205, z: 0.20371085, w: 0.9790311}
     targetDelayPosition: {x: 0, y: 0, z: 0}
     animatedDelayPosition: {x: 0, y: 0, z: 0}
-    lookWeight: 0.95
+    lookWeight: 0.49843746
     lookWeightB: 0.1609375
     motionWeight: 0.48749998
   - Transform: {fileID: 364159029142258054}
@@ -2372,7 +2372,7 @@ MonoBehaviour:
     initLocalRot: {x: -0.0000000013861762, y: -0.00000005713904, z: -0.02425257, w: 0.9997059}
     targetDelayPosition: {x: 0, y: 0, z: 0}
     animatedDelayPosition: {x: 0, y: 0, z: 0}
-    lookWeight: 0.75750005
+    lookWeight: 0.31699017
     lookWeightB: 0.22843748
     motionWeight: 0.30750003
   - Transform: {fileID: 364159029751941096}
@@ -2392,40 +2392,20 @@ MonoBehaviour:
     initLocalRot: {x: 0.0000000124227215, y: 0.000000100713365, z: -0.12241954, w: 0.9924785}
     targetDelayPosition: {x: 0, y: 0, z: 0}
     animatedDelayPosition: {x: 0, y: 0, z: 0}
-    lookWeight: 0.6
+    lookWeight: 0.15
     lookWeightB: 0.297625
     motionWeight: 0.12300001
-  - Transform: {fileID: 364159029723964689}
-    animatedStaticRotation: {x: 0, y: 0, z: 0, w: 0}
-    targetStaticRotation: {x: 0, y: 0, z: 0, w: 0}
-    localStaticRotation: {x: 0, y: 0, z: 0, w: 0}
-    animatedTargetRotation: {x: 0, y: 0, z: 0, w: 0}
-    targetRotation: {x: 0, y: 0, z: 0, w: 0}
-    correctionOffset: {x: 0, y: 0, z: 0}
-    finalRotation: {x: 0, y: 0, z: 0, w: 0}
-    lastKeyframeRotation: {x: 0, y: 0, z: 0, w: 0}
-    lastFinalLocalRotation: {x: 0, y: 0, z: 0, w: 0}
-    forward: {x: 0.12815908, y: 0.99175364, z: 0.000009723008}
-    right: {x: 0.0000011919986, y: -0.000009709579, z: -0.99999994}
-    up: {x: 0.9917536, y: 0.12815905, z: 9.193205e-10}
-    initLocalPos: {x: -0.10808891, y: -0.008514151, z: -3.6397636e-14}
-    initLocalRot: {x: 0.000000013263084, y: 0.000000059317937, z: 0.062388618, w: 0.99805194}
-    targetDelayPosition: {x: 0, y: 0, z: 0}
-    animatedDelayPosition: {x: 0, y: 0, z: 0}
-    lookWeight: 0.4742
-    lookWeightB: 0.3253
-    motionWeight: 0.049200002
   NoTargetHeadStops: 0
   _editor_hideEyes: 0
   _editor_displayName: Look Animator 2
-  _Editor_Category: 1
+  _Editor_Category: 0
   _gizmosDrawMaxDist: 1
   gizmosAlpha: 0.85
   drawGizmos: 1
   _gizmosDrawingGuides: 1
   LeadBone: {fileID: 364159028665839681}
   BaseTransform: {fileID: 372611058870039632}
-  FaloffValue: 0
+  FaloffValue: 0.21578947
   FaloffValueB: 1.1
   BigAngleAutomation: 1
   BigAngleAutomationCompensation: 0
@@ -2466,7 +2446,7 @@ MonoBehaviour:
   ObjectToFollow: {fileID: 7816743174836133948}
   FollowOffset: {x: 0, y: 0, z: 0}
   FollowMode: 0
-  RotationSpeed: 0.65
+  RotationSpeed: 1.82
   UltraSmoother: 0
   StopLookingAbove: 180
   StopLookingAboveFactor: 1
@@ -2484,10 +2464,10 @@ MonoBehaviour:
   WhenAboveGoBackDuration: 0.2
   StartLookElasticRangeX: 0
   StartLookElasticRangeY: 0
-  XRotationLimits: {x: -80, y: 80}
+  XRotationLimits: {x: -0.18867493, y: -0.18867493}
   XElasticRange: 20
   LimitHolder: 1
-  YRotationLimits: {x: -50, y: 50}
+  YRotationLimits: {x: -47.877357, y: 29.198112}
   YElasticRange: 15
   LookAnimatorAmount: 1
   StartLookPointOffset: {x: 0, y: 0, z: 0}
@@ -2517,7 +2497,7 @@ MonoBehaviour:
   RotationOffset: {x: 0, y: 0, z: 0}
   BackBonesAddOffset: {x: 0, y: 0, z: 0}
   RotCorrectionMultiplier: {x: 1, y: 1, z: 1}
-  DebugRays: 0
+  DebugRays: 1
   AnimationStyle: 0
   ConstantParentalAxisUpdate: 1
   lateUpdateDone: 0
@@ -3415,70 +3395,55 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rifle
       objectReference: {fileID: 0}
-    - target: {fileID: 7038703105202001464, guid: 1dc5dd27654b1ad4daa8173a0dc42ed1,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7702755714387758210, guid: 1dc5dd27654b1ad4daa8173a0dc42ed1,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 4.8962984
-      objectReference: {fileID: 0}
-    - target: {fileID: 7702755714387758210, guid: 1dc5dd27654b1ad4daa8173a0dc42ed1,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 4.896299
-      objectReference: {fileID: 0}
     - target: {fileID: 7702755714387758210, guid: 1dc5dd27654b1ad4daa8173a0dc42ed1,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.156
+      value: 0.1533
       objectReference: {fileID: 0}
     - target: {fileID: 7702755714387758210, guid: 1dc5dd27654b1ad4daa8173a0dc42ed1,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.157
+      value: -0.1534
       objectReference: {fileID: 0}
     - target: {fileID: 7702755714387758210, guid: 1dc5dd27654b1ad4daa8173a0dc42ed1,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.003
+      value: -0.0288
       objectReference: {fileID: 0}
     - target: {fileID: 7702755714387758210, guid: 1dc5dd27654b1ad4daa8173a0dc42ed1,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.5850784
+      value: 0.5088201
       objectReference: {fileID: 0}
     - target: {fileID: 7702755714387758210, guid: 1dc5dd27654b1ad4daa8173a0dc42ed1,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.5564467
+      value: 0.5954643
       objectReference: {fileID: 0}
     - target: {fileID: 7702755714387758210, guid: 1dc5dd27654b1ad4daa8173a0dc42ed1,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.5443654
+      value: 0.59395826
       objectReference: {fileID: 0}
     - target: {fileID: 7702755714387758210, guid: 1dc5dd27654b1ad4daa8173a0dc42ed1,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.22741301
+      value: 0.18367906
       objectReference: {fileID: 0}
     - target: {fileID: 7702755714387758210, guid: 1dc5dd27654b1ad4daa8173a0dc42ed1,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 23.8
+      value: 22.816
       objectReference: {fileID: 0}
     - target: {fileID: 7702755714387758210, guid: 1dc5dd27654b1ad4daa8173a0dc42ed1,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 103.393
+      value: 116.739
       objectReference: {fileID: 0}
     - target: {fileID: 7702755714387758210, guid: 1dc5dd27654b1ad4daa8173a0dc42ed1,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 72.358
+      value: 75.976
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -80,20 +80,20 @@ namespace Menu.StatsPanel
         }
         public void DisplayData()
         {
-            shopButtonManager.buttonTitle = playerBuildObjectSelected.buildDescription;
-            shopButtonManager.buttonDescription = playerBuildObjectSelected.buildName;
+            // shopButtonManager.buttonTitle = playerBuildObjectSelected.buildDescription;
+            // shopButtonManager.buttonDescription = playerBuildObjectSelected.buildName;
             // Debug.Log("DisplayData");
             //Debug.Log(playerBuildObjectSelected.buildDescription);
             //Debug.Log(playerBuildObjectSelected.buildName);
             if (playerStatsController.GetLevel()<2)
             {
-                shopButtonManager.priceText = "UNLOCK AT LEVEL 2";
-                shopButtonManager.priceObj.color = Color.gray;
+                // shopButtonManager.priceText = "UNLOCK AT LEVEL 2";
+                // shopButtonManager.priceObj.color = Color.gray;
             }
             else
             {
-                shopButtonManager.priceText = "SET BUILD";
-                shopButtonManager.priceObj.color = Color.yellow;
+                // shopButtonManager.priceText = "SET BUILD";
+                // shopButtonManager.priceObj.color = Color.yellow;
             }
             shopButtonManager.UpdateUI();
             

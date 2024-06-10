@@ -96,7 +96,8 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
     float yRotation = 0f;
     public bool lockShoot=false;
     public bool canMove = true;
-    
+    private Vector2 lastInput; 
+
     [Header("Jumping")]
     [SerializeField] private float jumpHeight = 5f;
     [SerializeField] private Vector3 groundPos;
@@ -155,6 +156,7 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
         cam.enabled = IsOwner;
         if (IsOwner)
         {
+            lastInput = new Vector2(0, 0);
             WeaponItem currentWeapon= playerStats.currentWeaponSelected;
             SetSpeedStateServerRpc(5);
             stateMachineController= GetComponent<StateMachineController>();
@@ -411,8 +413,19 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
     public void Move(float x, float y)
     {
         // x= currentAnimationCurve.Evaluate(x); 
+        Vector2 moveInput = new Vector2(x, y);
+        float inputDirWithLastFrame = Vector2.Dot(moveInput.normalized, lastInput.normalized);
+        if (inputDirWithLastFrame <=0.0f)
+        {
+            currentAccelerationBlendTime = -0.2f;
+        }
+
+        lastInput = moveInput; 
+        
         if (x != 0 || y != 0)
         {
+            
+            
             currentAccelerationBlendTime += Time.deltaTime;
             blendedWithCurveAccelerationTime =
                 Mathf.Lerp(0, 1.0f, currentAnimationCurve.Evaluate(currentAccelerationBlendTime));
