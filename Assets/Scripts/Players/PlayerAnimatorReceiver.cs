@@ -22,6 +22,7 @@ public class PlayerAnimatorReceiver : MonoBehaviour
         playerSoundController.footSteepAudioSource.pitch = UnityEngine.Random.Range(0.8f, 1.2f);
         playerSoundController.footSteepAudioSource.volume = volumeToEmit;
         playerSoundController.footSteepAudioSource.PlayOneShot(playerSoundController.currentStepSound);
+        playerSoundController.playerRef.playerStats.playerVFXController.SpawnStepVfx(0);
 
     }
     

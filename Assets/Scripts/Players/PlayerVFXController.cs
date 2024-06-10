@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using Players.PlayerStates;
+using Unity.Mathematics;
 using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -26,10 +27,15 @@ public class PlayerVFXController : NetworkBehaviour, INetObjectToClean
     public float shaderVariableRate=0.1f;
     public float shaderVariableRefreshRate=0.05f;
 
+    public PlayerController playerController;
    
     public GameObject applyPointsEffectPrefabVFX;
     public GameObject levelUpEffectPrefabVFX;
 
+    [Header("Movement")]
+    public GameObject stepPrefabVFX;
+    public Transform rightFeetPos;
+    public Transform leftFeetPos;
     [Header("Jump")]
     public GameObject jumpEffectPrefab;
     public Transform jumpEffectPosition;
@@ -53,9 +59,6 @@ public class PlayerVFXController : NetworkBehaviour, INetObjectToClean
     [Header("Cartoon")]
     public Material cartoonMat;
     public Color enemyOutlineColor;
-    
-    public PlayerController playerController;
-    
     public SkinnedMeshRenderer skinnedMeshRenderer; 
     protected MaterialPropertyBlock mPB;
     
@@ -84,6 +87,7 @@ public class PlayerVFXController : NetworkBehaviour, INetObjectToClean
 
     public EmbededNetwork embededNetwork;
 
+    
 
     void Start()
     {
@@ -186,6 +190,18 @@ public class PlayerVFXController : NetworkBehaviour, INetObjectToClean
         isFollowing = true;
         followValTemp = followValue;
 
+    }
+
+    public void SpawnStepVfx(int feetNumber)
+    {
+        if (feetNumber == 0)
+        {
+            Instantiate(stepPrefabVFX, rightFeetPos.transform.position, quaternion.identity);
+        }
+        else
+        {
+            Instantiate(stepPrefabVFX, leftFeetPos.transform.position, quaternion.identity);
+        }
     }
 
     public void FollowHPBar()
