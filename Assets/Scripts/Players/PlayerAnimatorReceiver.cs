@@ -7,12 +7,12 @@ public class PlayerAnimatorReceiver : MonoBehaviour
 {
     public PlayerSoundController playerSoundController;
 
-    public void PlayFootStep(float volume)
+    public void PlayFootStep(int feetNumber)
     {
-        float volumeToEmit = volume;
+        float volumeToEmit = 0.03f;
         if (playerSoundController.IsOwner)
         {
-            volumeToEmit = UnityEngine.Random.Range(volume/1.5f, volume);
+            // volumeToEmit = UnityEngine.Random.Range(volume/1.5f, volume);
         }
         else
         {
@@ -22,7 +22,11 @@ public class PlayerAnimatorReceiver : MonoBehaviour
         playerSoundController.footSteepAudioSource.pitch = UnityEngine.Random.Range(0.8f, 1.2f);
         playerSoundController.footSteepAudioSource.volume = volumeToEmit;
         playerSoundController.footSteepAudioSource.PlayOneShot(playerSoundController.currentStepSound);
-        playerSoundController.playerRef.playerStats.playerVFXController.SpawnStepVfx(0);
+        if (feetNumber==-1)
+        {
+            return;
+        }
+        playerSoundController.playerRef.playerStats.playerVFXController.SpawnStepVfx(feetNumber);
 
     }
     

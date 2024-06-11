@@ -75,12 +75,16 @@ namespace Players.PlayerStates.States
                 if (Input.GetKey(KeyCode.LeftShift))
                 {
                     stateMachineController.SetState("Sprint");
-                    playerRef.playerStats.playerSoundController.PlayMovementSound(playerRef.playerStats.playerSoundController.landSound);
+                    playerRef.playerStats.playerSoundController.PlayMovementSound(playerRef.playerStats.playerSoundController.landSound); 
+                    playerRef.playerStats.playerVFXController.SpawnStepVfx(0);
+                    playerRef.playerStats.playerVFXController.SpawnStepVfx(1);
                     networkAnimator.Animator.Play("Movement");
                     playerRef._bodyVelocity= Vector3.zero;
                     return;
                 }
                 playerRef.playerStats.playerSoundController.PlayMovementSound(playerRef.playerStats.playerSoundController.landSound);
+                playerRef.playerStats.playerVFXController.SpawnStepVfx(0);
+                playerRef.playerStats.playerVFXController.SpawnStepVfx(1);
                 stateMachineController.SetState("Movement");
                 playerRef._bodyVelocity= Vector3.zero;
                 return;

@@ -36,6 +36,9 @@ public class PlayerVFXController : NetworkBehaviour, INetObjectToClean
     public GameObject stepPrefabVFX;
     public Transform rightFeetPos;
     public Transform leftFeetPos;
+    public GameObject FlyingStepsVFX;
+    public Transform rightFeetPosSFI;
+    public Transform leftFeetPosSFI;
     [Header("Jump")]
     public GameObject jumpEffectPrefab;
     public Transform jumpEffectPosition;
@@ -274,7 +277,10 @@ public class PlayerVFXController : NetworkBehaviour, INetObjectToClean
             takeDamageEffectPrefab.SetActive(true);
         }
         // takeDamageEffectVFX.transform.position = transform.position;
+        
+        takeDamageEffectVFX.SetVector3("PlayerPos", -transform.position);
         takeDamageEffectVFX.Play();
+        
     }
     public void RespawnVFX(Vector3 position, Quaternion rotation)
     {
@@ -335,14 +341,15 @@ public class PlayerVFXController : NetworkBehaviour, INetObjectToClean
     {
 
             timeActive -= meshTrailTick;
+            
 
             if (skinnedMeshRenderers == null)
             {
                 skinnedMeshRenderers = GetComponentsInChildren<SkinnedMeshRenderer>();
             }
+            
             for (int i = 0; i < skinnedMeshRenderers.Length; i++)
             {
-                Debug.Log("ActiveTrail");
                 GameObject meshObj = new GameObject();
                 meshObj.transform.SetPositionAndRotation(transform.position, transform.rotation);
                 MeshRenderer mr= meshObj.AddComponent<MeshRenderer>();
@@ -353,13 +360,21 @@ public class PlayerVFXController : NetworkBehaviour, INetObjectToClean
                 mr.material=mat;
                 StartCoroutine(AnimateMaterial(mr.material, 0, shaderVariableRate, shaderVariableRefreshRate, shaderVariableName));
                 Destroy(meshObj, destroyTime);
-
             }
+            
 
             yield return new WaitForSeconds(meshTrailTick);
            
         
         meshTrailActive=false;
+    }
+
+    public void SpawnSficSteps()
+    {
+        var leftStep= Instantiate(FlyingStepsVFX, leftFeetPosSFI.position, Quaternion.identity);
+        var rightStep=Instantiate(FlyingStepsVFX, rightFeetPosSFI.position, Quaternion.identity);
+        Destroy(leftStep, destroyTime);
+        Destroy(rightStep, destroyTime);
     }
     IEnumerator AnimateMaterial(Material mat, float goal, float rate, float refreshRate, string variableName)
     {
@@ -375,6 +390,8 @@ public class PlayerVFXController : NetworkBehaviour, INetObjectToClean
 
     public void CleanData()
     {
+        followHpMat.SetFloat("_HP",1);
+        hpMat.SetFloat("_HP", 1);
         playerStatsController.OnLevelUp -= LevelUpEffect;
         playerStatsController.health.OnValueChanged -= UpdateHealthEffect;
     }
