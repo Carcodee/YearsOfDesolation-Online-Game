@@ -63,12 +63,29 @@ public class PauseController : MonoBehaviour, INetObjectToClean
     public TextMeshProUGUI alertText;
     
     public AudioMixer mixer;
+
+    public GameObject openBuildSpamer; 
+    public GameObject startGameLayout; 
+    public TextMeshProUGUI startGameText;
+
+    private string startGameTextBuffer;
     // Update is called once per frame
     void Update()
     {
         if (alertPanel.activeSelf)
         {
             alertText.text = $"Come back Soldier!\n (TIME TO DIE: {(playerAssigned.playerStats.outsideOfMapTickTime-playerAssigned.playerStats.currentOutsideOfMapTimer).ToString("0.0")})";
+        }
+
+
+        StartGamePanel();
+
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            if (openBuildSpamer.gameObject.activeSelf)
+            {
+                openBuildSpamer.gameObject.SetActive(false);
+            }
         }
         if(Input.GetKeyDown(KeyCode.Escape) && !pauseMenu.activeSelf)
         {
@@ -102,12 +119,50 @@ public class PauseController : MonoBehaviour, INetObjectToClean
 
     }
 
+    public void StartGamePanel()
+    {
+        if (playerAssigned.IsSpawned &&playerAssigned.IsServer && !GameManager.Instance.isOnTutorial)
+        {
+            if (GameController.instance.started.Value)
+            {
+                if (startGameLayout.gameObject.activeSelf)
+                {
+                    startGameLayout.gameObject.SetActive(false);
+                }
+                return;
+            }
+            if (!GameController.instance.started.Value && GameController.instance.numberOfPlayers.Value <= 2 )
+            {
+                startGameLayout.gameObject.SetActive(true);
+                startGameText.text = "Waiting for <color=red>1</color> more player...";
+            }
+            if (!GameController.instance.started.Value && GameController.instance.numberOfPlayers.Value >= 2)
+            {
+                startGameLayout.gameObject.SetActive(true);
+                startGameText.text = startGameTextBuffer;
+                 
+            }           
+        }
+    }
     private void Start()
     {
         
         INetObjectToClean objectToClean = GetComponent<INetObjectToClean>();
         CleanerController.instance.AddObjectToList(objectToClean);
+        if (playerAssigned.IsServer && !GameManager.Instance.isOnTutorial)
+        {
+            StartCoroutine(SpawnGameObjectAfterSeconds(2.0f, openBuildSpamer));
+        }
 
+        startGameTextBuffer = startGameText.text;
+
+
+    }
+
+    public IEnumerator SpawnGameObjectAfterSeconds(float time, GameObject gameObject)
+    {
+        yield return new WaitForSeconds(time);
+        gameObject.SetActive(true);
     }
 
     public void ConfirmChanges()

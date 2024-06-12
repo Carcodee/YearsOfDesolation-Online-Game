@@ -602,8 +602,6 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
             {
                 
                 PlayerVFXController.hitEffectHandle.CreateVFX(hit.point, transform.rotation ,IsServer);
-                Debug.Log(spawnBulletPoint.position);
-                Debug.Log(spawnBulletPoint.localPosition);
                 BulletController bullet = Instantiate(bulletPrefab, spawnBulletPoint.position,
                     cinemachineCameraTarget.rotation);
                 bullet.Direction =  (spawnBulletPoint.transform.position - hit.point).normalized;

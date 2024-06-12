@@ -21,6 +21,7 @@ public class AudioManager : MonoBehaviour
     public AudioClip waitingScreenSound;
     public AudioClip newStageSound;
     public AudioClip displayTutorialDataSound;
+    public AudioClip winSound;
     
     [Header("Player")]
     public AudioClip eventSuccedSound;
@@ -96,7 +97,11 @@ public class AudioManager : MonoBehaviour
     {
         UIAudioSource.PlayOneShot(eventCanceledSound);
     }
-    
+
+    public void PlayWinSound()
+    {
+        UIAudioSource.PlayOneShot(winSound, 0.1f);
+    }
     public void DangerSound()
     {
         UIAudioSource.PlayOneShot(dangerSound);

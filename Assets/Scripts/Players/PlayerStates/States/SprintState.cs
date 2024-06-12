@@ -61,13 +61,20 @@ namespace Players.PlayerStates.States
                 return;
 
             }
-            if (Input.GetKeyDown(KeyCode.Mouse0)||Input.GetKeyDown(KeyCode.Mouse1))
+            if (Input.GetKeyDown(KeyCode.Mouse1))
+            {
+                stateMachineController.SetState("Aiming");
+                return;
+            }
+            if (Input.GetKeyDown(KeyCode.Mouse0))
             {
                 stateMachineController.SetState("Movement");
+                return;
             }
             if (Input.GetKeyUp(KeyCode.LeftShift))
             {
                 stateMachineController.SetState("Movement");
+                return;
             }
             if (Input.GetKeyDown(KeyCode.Space))
             {

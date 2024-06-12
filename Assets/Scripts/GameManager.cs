@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour
     public GameObject canvasObj;
     public string localPlayerName="";
 
+    public NetworkObject zoneNetObject;
 
     public float sensBeforeStart= 1.0f;
     public float masterSoundBeforeStart= 1.0f;
@@ -72,9 +73,11 @@ public class GameManager : MonoBehaviour
     {
         GameController gameController = Instantiate(gameControllerToSpawn);
         gameController.GetComponent<NetworkObject>().Spawn();
+        
+        
+    
         gameControllerReady = true;
         gameEnded = false;
-
     }
 
     public void PlayerInGameSettings()

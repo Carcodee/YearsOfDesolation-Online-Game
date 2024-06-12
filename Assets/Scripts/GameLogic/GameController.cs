@@ -15,6 +15,7 @@ public class GameController : NetworkBehaviour,INetObjectToClean
 
     [Header("Lobby")]
     public NetworkVariable<bool> started;
+    public NetworkVariable<bool> inFarmStage;
     public NetworkVariable<float> netTimeToStart = new NetworkVariable<float>();
     public float waitingTime;
 
@@ -26,11 +27,14 @@ public class GameController : NetworkBehaviour,INetObjectToClean
     public NetworkVariable<int> numberOfPlayers = new NetworkVariable<int>();
     public NetworkVariable<int> numberOfPlayersAlive = new NetworkVariable<int>();
     public NetworkVariable <Vector3> randomPoint = new NetworkVariable<Vector3>();
-    public Transform sphereRadiusMesh;
+    public Transform SphereMesh;
     public float currentTimeToDisconnectEveryoneAfterEnd = 0.0f;
     public NetworkVariable<bool> disconnectAll = new NetworkVariable<bool>();
     public NetworkVariable<bool> gameEnded = new NetworkVariable<bool>();
     public float timeToDisconnectEveryoneAfterEnd = 7.0f;
+    public float minZoneSizeRadius = 20.0f;
+    public Vector2 currentNextPointToGo = Vector2.zero;
+    public float zoneMoveSpeed = 5;
 
     public Transform mapCenter;
     public float mapLimitRadius;
@@ -38,10 +42,11 @@ public class GameController : NetworkBehaviour,INetObjectToClean
     public float reduceZoneSpeed=2.0f;
     public float zoneRadius=2.0f;
     public int respawnTime=5;
-    
+
+    public bool debugModeFarm =false;
     [Header("References")]
     [SerializeField] private CoinBehaivor coinPrefab;
-    public CapsuleCollider sphereRadius;
+    public CapsuleCollider Sphere;
     
     [Header("Zones")]
     public Transform[] spawnPoints;
@@ -92,6 +97,11 @@ public class GameController : NetworkBehaviour,INetObjectToClean
     {
         if (IsServer)
         {
+            NetworkObject sphereCapsulle = Instantiate(GameManager.Instance.zoneNetObject, Vector3.zero, Quaternion.identity);
+            sphereCapsulle.Spawn();
+            SphereMesh = sphereCapsulle.transform.GetChild(0).GetComponent<Transform>();
+            Sphere = sphereCapsulle.GetComponent<CapsuleCollider>();
+            currentNextPointToGo = new Vector2(Sphere.transform.position.x, Sphere.transform.position.z);
             numberOfPlayers.Value = 1;
             numberOfPlayersAlive.Value = 1;
         }
@@ -170,7 +180,8 @@ public class GameController : NetworkBehaviour,INetObjectToClean
 
     private void FixedUpdate()
     {
-        if (mapLogic.Value.isBattleRoyale && sphereRadius.radius>0)
+        if (!IsServer)return;
+        if (mapLogic.Value.isBattleRoyale && Sphere.radius>0)
         {
             ReduceSphereSize();
         }
@@ -188,23 +199,17 @@ public class GameController : NetworkBehaviour,INetObjectToClean
     {
         NetworkingHandling.HostManager.instance.CloseLobby();
         AudioManager.instance.PlayNewStage();
-        started.Value = true;
         for (int i = 0; i < numberOfPlayers.Value; i++)
         {
-
             if (IsOwner)
             {
-
                 CreateZonesOnNet(i);
-
             }
-
             if (IsServer)
             {
                 SetPlayerPosClientRpc(zoneControllers[i].playerSpawn.position, i);
             }
         }
-        // if (IsServer) SpawnCoins();
     }
 
     public void CreateZonesOnNet(int index)
@@ -229,19 +234,18 @@ public class GameController : NetworkBehaviour,INetObjectToClean
     private void UpdateTime()
     {
         // if (numberOfPlayers.Value<2)return;
-        if (IsServer && !started.Value)
+        if (IsServer && !started.Value && (numberOfPlayers.Value>1||debugModeFarm))
         {
-            netTimeToStart.Value += Time.deltaTime;
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                started.Value = true;
+            }
 
         }
-        else if (IsClient && !started.Value && IsOwner)
+        if (!inFarmStage.Value&&started.Value)
         {
-            SetTimeToStartServerRpc(Time.deltaTime);
-        }
-        if (netTimeToStart.Value > waitingTime && !started.Value)
-        {
+            inFarmStage.Value = true;
             StartGame();
-            
         }
         if (started.Value && !mapLogic.Value.isBattleRoyale)
         {
@@ -262,6 +266,7 @@ public class GameController : NetworkBehaviour,INetObjectToClean
             if (!gameEnded.Value && IsServer)
             {
                 gameEnded.Value = true;
+                AudioManager.instance.PlayWinSound();
             }
             currentTimeToDisconnectEveryoneAfterEnd += Time.deltaTime;
             if (currentTimeToDisconnectEveryoneAfterEnd> timeToDisconnectEveryoneAfterEnd)
@@ -302,19 +307,38 @@ public class GameController : NetworkBehaviour,INetObjectToClean
     }
     public void ReduceSphereSize()
     {
-        if (sphereRadius.radius>0)
+        if (!IsServer)return;
+        if (Sphere.radius>minZoneSizeRadius)
         {
-            sphereRadius.radius -= mapLogic.Value.zoneRadiusExpandSpeed * Time.fixedDeltaTime;
-            float currentRadius = sphereRadius.radius * 2;
-            sphereRadiusMesh.localScale = new Vector3(currentRadius,sphereRadiusMesh.localScale.y,currentRadius) ;
+            Sphere.radius -= mapLogic.Value.zoneRadiusExpandSpeed * Time.fixedDeltaTime;
+            float currentRadius = Sphere.radius * 2;
+            SphereMesh.localScale = new Vector3(currentRadius,SphereMesh.localScale.y,currentRadius) ;
+        }
+        else
+        {
+            Vector2 pos = new Vector2(Sphere.transform.position.x, Sphere.transform.position.z);
+            if (Vector2.Distance(pos,currentNextPointToGo)<0.1f)
+            {
+                currentNextPointToGo = GetNextPoint();
+            }
+            else
+            {
+                Vector2 dir = (currentNextPointToGo - pos).normalized;
+                Vector3 finalDir = new Vector3(dir.x, 0, dir.y);
+                Sphere.transform.position += finalDir * zoneMoveSpeed * Time.fixedDeltaTime;
+            }
+            
+            
         }
     }
-    #region ServerRpc
-    [ServerRpc]
-    public void SetTimeToStartServerRpc(float time)
+
+    public Vector2 GetNextPoint()
     {
-        netTimeToStart.Value += time;
+        float xPos = UnityEngine.Random.Range(-40, 40);
+        float yPos = UnityEngine.Random.Range(-40, 40);
+        return new Vector2(xPos, yPos);
     }
+    #region ServerRpc
 
     [ServerRpc]
     public void SetMapLogicClientServerRpc(int numberOfPlayers,int numberOfPlayersAlive,float zoneRadiusExpandSpeed,int totalTime,float enemiesSpawnRate,float zoneRadius)

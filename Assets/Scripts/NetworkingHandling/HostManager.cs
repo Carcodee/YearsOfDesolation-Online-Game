@@ -84,6 +84,7 @@ namespace NetworkingHandling
             NetworkManager.Singleton.Shutdown();
             currentTransport.Shutdown();
             var deleteLobbyAsync = Lobbies.Instance.DeleteLobbyAsync(lobbyId);
+            Destroy(GameController.instance.Sphere);
             Destroy(GameController.instance);
             if (NetworkManager.Singleton.ShutdownInProgress) await Task.Yield();
             GameManager.Instance.LoadMenuScene();
