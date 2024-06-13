@@ -222,7 +222,6 @@ public class PlayerComponentsHandler : NetworkBehaviour, INetObjectToClean
         // if there is an input and camera position is not fixed
         if (look.sqrMagnitude >= _threshold )
         {
-            //Don't multiply mouse input by Time.deltaTime;
 
             float deltaTimeMultiplier =(!IsCurrentDeviceMouse) ? 1.0f : Time.deltaTime;
 
@@ -230,7 +229,6 @@ public class PlayerComponentsHandler : NetworkBehaviour, INetObjectToClean
             _cinemachineTargetPitch += look.y * deltaTimeMultiplier * playerController.mouseSensitivity;
             rotationDetector += look.x * deltaTimeMultiplier * playerController.mouseSensitivity;
         }
-        // clamp our rotations so our values are limited 360 degrees
 
         _cinemachineTargetYaw = ClampAngle(_cinemachineTargetYaw, float.MinValue, float.MaxValue);
         _cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);

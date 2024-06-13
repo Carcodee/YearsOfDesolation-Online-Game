@@ -194,6 +194,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   started:
     m_InternalValue: 0
+  inFarmStage:
+    m_InternalValue: 0
   netTimeToStart:
     m_InternalValue: 0
   waitingTime: 25
@@ -226,12 +228,15 @@ MonoBehaviour:
   minZoneSizeRadius: 10
   currentNextPointToGo: {x: 0, y: 0}
   zoneMoveSpeed: 2.3
+  maxLobbyWaitingTime: 120
+  currentLobbyWaitingTime: 0
   mapCenter: {fileID: 826162900567607488}
   mapLimitRadius: 98
   timeToFarm: 120
   reduceZoneSpeed: 2
   zoneRadius: 5
   respawnTime: 5
+  debugModeFarm: 0
   coinPrefab: {fileID: 331007805235256181, guid: 8d81f148e89dcad4bbd1e53767679d49,
     type: 3}
   Sphere: {fileID: 0}

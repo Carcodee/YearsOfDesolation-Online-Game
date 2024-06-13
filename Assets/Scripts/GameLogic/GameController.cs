@@ -35,6 +35,8 @@ public class GameController : NetworkBehaviour,INetObjectToClean
     public float minZoneSizeRadius = 20.0f;
     public Vector2 currentNextPointToGo = Vector2.zero;
     public float zoneMoveSpeed = 5;
+    public float maxLobbyWaitingTime = 90;
+    public float currentLobbyWaitingTime = 90;
 
     public Transform mapCenter;
     public float mapLimitRadius;
@@ -234,6 +236,14 @@ public class GameController : NetworkBehaviour,INetObjectToClean
     private void UpdateTime()
     {
         // if (numberOfPlayers.Value<2)return;
+        if (IsServer && !started.Value)
+        {
+            currentLobbyWaitingTime += Time.deltaTime;
+            if (currentLobbyWaitingTime >= maxLobbyWaitingTime)
+            {
+                disconnectAll.Value = true;
+            }
+        }
         if (IsServer && !started.Value && (numberOfPlayers.Value>1||debugModeFarm))
         {
             if (Input.GetKeyDown(KeyCode.Return))

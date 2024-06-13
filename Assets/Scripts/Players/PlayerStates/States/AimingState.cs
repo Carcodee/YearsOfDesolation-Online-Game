@@ -38,7 +38,7 @@ namespace Players.PlayerStates.States
 
             }
             StateInput();
-            float inputMovementX =Mathf.Clamp(this.playerRef.move.x, 0.0f, 1.0f);
+            float inputMovementX =Mathf.Clamp(this.playerRef.move.x, -0.2f, 0.2f);
             float inputMovementY=Mathf.Clamp(this.playerRef.move.z, -0.2f, 0.2f);
             this.networkAnimator.Animator.SetFloat("X", inputMovementX);
             this.networkAnimator.Animator.SetFloat("Y", inputMovementY);
@@ -65,6 +65,7 @@ namespace Players.PlayerStates.States
         }
         public override void StatePhysicsUpdate()
         {
+            playerRef.GroundGravity();
         }   
         public override void StateLateUpdate()
         {

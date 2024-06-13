@@ -472,12 +472,8 @@ public class PlayerController : NetworkBehaviour, INetObjectToClean
     }
     public void RotatePlayer()
     {
-        Vector3 playerMovement = new Vector3(move.x, 0, move.z).normalized;
+        Vector3 playerMovement = new Vector3(move.x, 0, Mathf.Abs(move.z)).normalized;
 
-        if (playerMovement.z < 0)
-        {
-            return;
-        }
         float targetAngle = (Mathf.Atan2(0, playerMovement.z) * Mathf.Rad2Deg) + cinemachineCameraTarget.rotation.eulerAngles.y;
         float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref rotationVelocity, rotationSmoothTime);
         transform.rotation = Quaternion.Euler(0f, rotation, 0f);
