@@ -94,6 +94,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
     public Action OnWeaponChange;
     public GameObject noBuildWeapon;
     public Transform weaponNoBuildGripPoint;
+    public const int WEAPONLAYERINDEX_START = 2;
 
     //temporal variable
     public bool isChangingWeapon=false;
@@ -223,15 +224,15 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
         playerBuildSelected.second_weapon.weaponObjectController.transform.localRotation = playerBuildSelected.second_weapon.weapon.weaponPrefab.transform.localRotation;
 
         playerBuildSelected.second_weapon.weaponObjectController.gameObject.SetActive(false);
-        
         noBuildWeapon.SetActive(false);
-        
+        stateMachineController.networkAnimator.Animator.SetLayerWeight(WEAPONLAYERINDEX_START, 0);
         stateMachineController.SetChangingWeaponState(playerBuildSelected.first_weapon, "ChangingWeapon");
         currentWeaponSelected.weaponObjectController.gameObject.SetActive(true);
         onBagWeapon = playerBuildSelected.second_weapon;
         onBagWeapon.weaponObjectController.gameObject.SetActive(false);
         OnWeaponChanged.Invoke(currentWeaponSelected.weaponObjectController.weaponBulletSpawnPoints);
         playerSoundController.UpdateWeaponSound(currentWeaponSelected);
+        
     }
 
     public void UpdateWeaponSound()
@@ -267,7 +268,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
         health.OnValueChanged += SetPlayerOnPos;
         ak47 = new WeaponItem(weaponsData[(int)WeaponType.Ak99]);
         doublePistols = new WeaponItem(weaponsData[(int)WeaponType.Pistol]);
-        SetWeapon(ak47);
+        SetWeapon(doublePistols);
         onBagWeapon = doublePistols;
         playerController = transform.GetComponent<PlayerController>();
         playerController.SetSpeedStateServerRpc(statsTemplates[statsTemplateSelected.Value].speed);
@@ -850,7 +851,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
             if (other.CompareTag("Coin"))
             {
                     OnLevelUp?.Invoke();
-                    addAvaliblePointsServerRpc(1);
+                    addAvaliblePointsServerRpc(2);
                     int randomPlayer = UnityEngine.Random.Range(0, GameController.instance.numberOfPlayers.Value);
                     if (GameController.instance.players.Count>1)
                     { 

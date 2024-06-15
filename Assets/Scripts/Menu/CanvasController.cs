@@ -35,21 +35,18 @@ public class CanvasController : MonoBehaviour, INetObjectToClean
     
     [Header("Player")]
     public TextMeshProUGUI level;
-    public TextMeshProUGUI exp;
 
     [Header("HUD")]
     public GameObject WinObject;
     public GameObject lookingAtObject;
     public TextMeshProUGUI lookingAtText;
     public TextMeshProUGUI currentBullets;
-    public QuestItem weaponName;
-    public RadialSlider expSlider;
     public TextMeshProUGUI totalAmmo;
     public TextMeshProUGUI TotalOnBagAmmo;
+    public GameObject secondWeaponObject;
     public Image currentWeaponImage;
     public Image secondWeaponImage;
     public TextMeshProUGUI secondWeaponBullets;
-    // TODO: when a weapon have a cooldown bigger than 3 sec show this bar
     public GameObject weaponCooldown; 
     public Material weaponShootRateMat;
     
@@ -148,6 +145,7 @@ public class CanvasController : MonoBehaviour, INetObjectToClean
         secondWeaponImage.sprite = playerAssigned.onBagWeapon.weapon.weaponImage;
         healthsStack.Push(backgroundHealth);
         healthsStack.Push(greenHealth);
+        secondWeaponObject.SetActive(false);
         canvasRect = canvas.GetComponent<RectTransform>();
         coinImageGroup = coinUI.GetComponent<CanvasGroup>();
         // OnEnemyKilled += KillNotification; 
@@ -326,6 +324,14 @@ public class CanvasController : MonoBehaviour, INetObjectToClean
         if (playerAssigned.health.Value>0 && GameController.instance.numberOfPlayersAlive.Value<=1 && GameController.instance.mapLogic.Value.isBattleRoyale)
         {
             WinObject.gameObject.SetActive(true);
+        }
+
+        if (playerAssigned.hasPlayerSelectedBuild)
+        {
+            if (!secondWeaponObject.activeSelf)
+            {
+                secondWeaponObject.SetActive(true);
+            }
         }
         ShowTimeToShoot();
         SetTimer();
