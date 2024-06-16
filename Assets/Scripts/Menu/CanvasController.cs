@@ -245,6 +245,7 @@ public class CanvasController : MonoBehaviour, INetObjectToClean
         
         if (currentObjToFollow==null)
         {
+            indicatorCanvasGroup.alpha = 0;
             return;
         }
 

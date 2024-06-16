@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Michsky.UI.Heat;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class NotificationItem : MonoBehaviour
 {
@@ -67,6 +68,8 @@ public class NotificationItem : MonoBehaviour
     { 
         TutorialManager.instance.StepDone();
         textToDisplay.text = TutorialManager.instance.tutorialTextData.text; 
+        stepDoneButton.gameObject.SetActive(false);
+        EventSystem.current.SetSelectedGameObject(null);
     }
 
 }

@@ -83,11 +83,36 @@ using System.Collections.Generic;
         {
             if (GameManager.Instance.DisconnectNotificationText!="")
             {
-                notification.title = "Something happen";
-                notification.description = GameManager.Instance.DisconnectNotificationText;
-                notification.OpenNotification();
-                GameManager.Instance.DisconnectNotificationText = "";
+                Debug.Log(GameManager.Instance.DisconnectNotificationText);
+                if(GameManager.Instance.DisconnectNotificationText=="Congratulations!, You finished the tutorial")
+                {
+                    notification.title = "You are ready";
+                    notification.OpenNotification();
+                    notification.description = GameManager.Instance.DisconnectNotificationText;
+                    GameManager.Instance.DisconnectNotificationText = "";
+                }
+                else if(GameManager.Instance.DisconnectNotificationText=="Max waiting time was surpassed")
+                {
+                    notification.title = "Lobby Disconnection";
+                    notification.OpenNotification();
+                    notification.description = GameManager.Instance.DisconnectNotificationText;
+                    GameManager.Instance.DisconnectNotificationText = "";
+                }
+                else if(GameManager.Instance.DisconnectNotificationText=="YOU WIN")
+                {
+                    notification.title = "CONGRATULATIONS!";
+                    notification.OpenNotification();
+                    notification.description = GameManager.Instance.DisconnectNotificationText;
+                    GameManager.Instance.DisconnectNotificationText = "";
+                }else 
+                {
+                    notification.title = "Something happen";
+                    notification.OpenNotification();
+                    notification.description = GameManager.Instance.DisconnectNotificationText;
+                    GameManager.Instance.DisconnectNotificationText = "";
+                }
             }
+
         }
 
         public async Task HearthBeat()

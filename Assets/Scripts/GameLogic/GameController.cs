@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -241,6 +242,7 @@ public class GameController : NetworkBehaviour,INetObjectToClean
             currentLobbyWaitingTime += Time.deltaTime;
             if (currentLobbyWaitingTime >= maxLobbyWaitingTime)
             {
+                GameManager.Instance.DisconnectNotificationText = "Max waiting time was surpassed";
                 disconnectAll.Value = true;
             }
         }
@@ -283,10 +285,10 @@ public class GameController : NetworkBehaviour,INetObjectToClean
             {
                 if (IsServer)
                 {
+                    GameManager.Instance.DisconnectNotificationText = "YOU WIN";
                     disconnectAll.Value = true;
                 }
             }
-            Debug.Log("You win");
         }
         if (disconnectAll.Value && IsServer)
         {
@@ -294,6 +296,12 @@ public class GameController : NetworkBehaviour,INetObjectToClean
         }
     }
 
+    public IEnumerator DisconnectAfterSeconds(float time)
+    {
+        yield return new WaitForSeconds(time);
+        NetworkingHandling.HostManager.instance.DisconnectHost();
+
+    }
     [ServerRpc(RequireOwnership = false)]
     public void AddPointsOnKillerServerRpc(int points, ulong instigatorClientId,ServerRpcParams serverRpcParams = default)
     {
@@ -301,7 +309,6 @@ public class GameController : NetworkBehaviour,INetObjectToClean
         
     }
     
-   
     [ServerRpc(RequireOwnership = false)]
     public void NotifyKillServerRpc(ulong instigatorClientId,ServerRpcParams serverRpcParams = default)
     {

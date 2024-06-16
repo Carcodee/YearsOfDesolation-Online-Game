@@ -51,6 +51,10 @@ public class Stage_KillEnemy : MonoBehaviour, IStage
     {
         TaskList.instance.realTask.GetValueOrDefault("Kill the enemy").Done();
         TaskList.instance.tasksToCreate.RemoveAt(0);
+        GameController.instance.gameEnded.Value = true;
+        StartCoroutine(GameController.instance.DisconnectAfterSeconds(8.0f));
+        GameManager.Instance.DisconnectNotificationText = "Congratulations!, You finished the tutorial";
         CanvasController.currentObjToFollow = null;
     }
+    
 }

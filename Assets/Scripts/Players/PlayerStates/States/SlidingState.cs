@@ -125,8 +125,11 @@ namespace Players.PlayerStates.States
                 stateMachineController.SetState("Movement");
                 return;
             }  
-            this.networkAnimator.Animator.SetFloat("X", playerRef.move.x);
-            this.networkAnimator.Animator.SetFloat("Y", playerRef.move.z);
+            
+            float x = Input.GetAxis("Horizontal");
+            float y = Input.GetAxis("Vertical");
+            this.networkAnimator.Animator.SetFloat("X", x * playerRef.blendedWithCurveAccelerationTime);
+            this.networkAnimator.Animator.SetFloat("Y", y * playerRef.blendedWithCurveAccelerationTime);
             networkAnimator.Animator.SetBool("Crouch", true);
 
 
@@ -134,7 +137,7 @@ namespace Players.PlayerStates.States
         }
         public override void StatePhysicsUpdate()
         {
-
+            playerRef.GroundGravity();
         }
         public override void StateLateUpdate()
         {

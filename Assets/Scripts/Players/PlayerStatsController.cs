@@ -135,7 +135,10 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
     {
         if (!GameManager.Instance.gameEnded)
         {
-            GameManager.Instance.DisconnectNotificationText = "Host lost connection";
+            if (GameManager.Instance.DisconnectNotificationText=="")
+            {
+                GameManager.Instance.DisconnectNotificationText = "Host lost connection";
+            }
         }
         CleanerController.instance.Clean();
     }

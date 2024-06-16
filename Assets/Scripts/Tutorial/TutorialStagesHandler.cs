@@ -28,10 +28,10 @@ public class TutorialStagesHandler : MonoBehaviour
            currentStage.OnStageGoing(); 
         }
 
-        foreach (var stage in stagesDone)
-        {
-            Debug.Log(stage.stage);
-        }
+        // foreach (var stage in stagesDone)
+        // {
+            // Debug.Log(stage.stage);
+        // }
     }
 
     public void Init()

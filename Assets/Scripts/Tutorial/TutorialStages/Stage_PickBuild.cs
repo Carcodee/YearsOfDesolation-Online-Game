@@ -11,6 +11,7 @@ public class Stage_PickBuild : MonoBehaviour,IStage
     public int dialogCounter = 2;
     public TutorialStage stageToSet;
     public TutorialStage nextStage ;
+    public GameObject nextStageObjToFollow;
 
      private void Start()
      {
@@ -23,6 +24,7 @@ public class Stage_PickBuild : MonoBehaviour,IStage
         TutorialManager.instance.playerRef.canMove = false;
         TutorialManager.instance.playerRef.stateMachineController.SetState("Idle");
         PlayerComponentsHandler.IsCurrentDeviceMouse = true;
+        CanvasController.currentObjToFollow = null;
     }
 
     public void OnDialogFinished()
@@ -30,7 +32,7 @@ public class Stage_PickBuild : MonoBehaviour,IStage
         
         TutorialManager.instance.playerRef.canMove = true;
         TutorialManager.instance.playerRef.stateMachineController.SetState("Movement");
-        CanvasController.currentObjToFollow = null;
+        
     }
 
     public void OnUIInstruction()

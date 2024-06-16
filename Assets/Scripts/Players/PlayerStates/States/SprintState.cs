@@ -81,7 +81,7 @@ namespace Players.PlayerStates.States
                 stateMachineController.SetState("Jump");
                 return;
             }
-            if (Input.GetKeyDown(KeyCode.LeftAlt))
+            if (Input.GetKeyDown(KeyCode.LeftControl))
             {
                 stateMachineController.SetState("Sliding");
                 return;
