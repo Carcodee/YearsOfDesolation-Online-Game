@@ -85,6 +85,8 @@ MonoBehaviour:
   - {fileID: 9064904399433704062}
   - {fileID: -3173768351727209270}
   - {fileID: -3347965134908643446}
+  - {fileID: 1577583067055858967}
+  - {fileID: 8107003313009417392}
 --- !u!114 &371466364113548675
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -116,6 +118,59 @@ MonoBehaviour:
   fogType:
     m_OverrideState: 1
     m_Value: 0
+--- !u!114 &1577583067055858967
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec08c789f09cebf47b9dfa879f470851, type: 3}
+  m_Name: HDRPOutline
+  m_EditorClassIdentifier: 
+  active: 1
+  mode:
+    m_OverrideState: 1
+    m_Value: 1
+  width:
+    m_OverrideState: 1
+    m_Value: 2.3
+  fillAmount:
+    m_OverrideState: 1
+    m_Value: 0
+  patternTexture:
+    m_OverrideState: 1
+    m_Value: {fileID: 0}
+    dimension: 1
+  patternFillAmount:
+    m_OverrideState: 1
+    m_Value: 0.067
+  patternTile:
+    m_OverrideState: 1
+    m_Value: {x: 1, y: 1}
+  iterations:
+    m_OverrideState: 1
+    m_Value: 0
+  blurRadius:
+    m_OverrideState: 0
+    m_Value: 1
+  blurIterations:
+    m_OverrideState: 0
+    m_Value: 1
+  overglow:
+    m_OverrideState: 0
+    m_Value: 1
+  softnessEnabled:
+    m_OverrideState: 0
+    m_Value: 0
+  softness:
+    m_OverrideState: 0
+    m_Value: 0.5
+  singlePassInstanced:
+    m_OverrideState: 1
+    m_Value: 1
 --- !u!114 &4214102052576271444
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -204,6 +259,46 @@ MonoBehaviour:
   directionalLightsOnly:
     m_OverrideState: 0
     m_Value: 0
+--- !u!114 &8107003313009417392
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c1be1b6c95cd2e41b27903b9270817f, type: 3}
+  m_Name: Vignette
+  m_EditorClassIdentifier: 
+  active: 1
+  mode:
+    m_OverrideState: 1
+    m_Value: 0
+  color:
+    m_OverrideState: 1
+    m_Value: {r: 0, g: 0, b: 0, a: 1}
+  center:
+    m_OverrideState: 1
+    m_Value: {x: 0.5, y: 0.5}
+  intensity:
+    m_OverrideState: 1
+    m_Value: 0.42
+  smoothness:
+    m_OverrideState: 1
+    m_Value: 0.086
+  roundness:
+    m_OverrideState: 1
+    m_Value: 1
+  rounded:
+    m_OverrideState: 0
+    m_Value: 0
+  mask:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
+  opacity:
+    m_OverrideState: 0
+    m_Value: 1
 --- !u!114 &8771821517174457486
 MonoBehaviour:
   m_ObjectHideFlags: 3

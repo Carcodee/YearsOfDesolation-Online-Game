@@ -316,10 +316,3 @@ public class PlayerComponentsHandler : NetworkBehaviour, INetObjectToClean
     }
 
 }
-
-public enum CameraType 
-{
-    NormalCamera,
-    CloseLook,
-    Sprint
-}

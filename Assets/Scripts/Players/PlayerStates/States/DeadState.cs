@@ -23,15 +23,15 @@ namespace Players.PlayerStates.States
             // {
             //    playerRef.playerStats.GoMenuOnDead(); 
             // }
- 
             playerSoundPlayed = false;
             playerRef.lockShoot = true;
-            currentRespawnTimer= 0;
+            currentRespawnTimer = 0;
             playerRef.sprintFactor = 1f;
             playerRef.move = Vector3.zero;
             playerRef.playerStats.SetHealth(playerRef.playerStats.GetMaxHealth());
             playerRef.playerStats.playerSoundController.PlayActionSound(playerRef.playerStats.playerSoundController.DeathSound);
             PlayerVFXController.OnDeadEffectHandle.CreateVFX(playerRef.playerStats.deadPosition, playerRef.transform.rotation, playerRef.IsServer);
+            
             if (playerRef.playerStats.instigatorName!=string.Empty)
             {
                 playerRef.playerComponentsHandler.canvasController.DeadNotification();
@@ -52,6 +52,12 @@ namespace Players.PlayerStates.States
             CanvasController.OnUpdateUI?.Invoke();
             playerRef.lockShoot = false;
             playerRef.playerStats.playerSoundController.PlayActionSound(playerRef.playerStats.playerSoundController.playerRespawnedSound, 1.0f, 1.0f, true);
+            if (playerRef.playerStats.hasPlayerSelectedBuild)
+            {
+                playerRef.playerStats.SetMainWeapon();
+                playerRef.playerStats.stateMachineController.networkAnimator.Animator.SetLayerWeight(1, 1.0f);
+                playerRef.playerStats.stateMachineController.networkAnimator.Animator.SetLayerWeight(2, 0.0f);
+            }
         }
 
         public override void StateLateUpdate()

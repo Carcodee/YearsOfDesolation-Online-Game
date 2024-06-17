@@ -272,15 +272,17 @@ public class PlayerVFXController : NetworkBehaviour, INetObjectToClean
     
     public void BodyDamageVFX()
     {
-        if (!takeDamageEffectPrefab.activeSelf)
+        if (playerController.playerStats.health.Value>10)
         {
-            takeDamageEffectPrefab.SetActive(true);
+            if (!takeDamageEffectPrefab.activeSelf)
+            {
+                takeDamageEffectPrefab.SetActive(true);
+            }
+            // takeDamageEffectVFX.transform.position = transform.position;
+            takeDamageEffectVFX.SetVector3("PlayerPos", -transform.position);
+            takeDamageEffectVFX.Play();
+        
         }
-        // takeDamageEffectVFX.transform.position = transform.position;
-        
-        takeDamageEffectVFX.SetVector3("PlayerPos", -transform.position);
-        takeDamageEffectVFX.Play();
-        
     }
     public void RespawnVFX(Vector3 position, Quaternion rotation)
     {

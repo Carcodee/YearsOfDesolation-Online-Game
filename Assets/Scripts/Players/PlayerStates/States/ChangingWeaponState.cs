@@ -36,8 +36,10 @@ public class ChangingWeaponState : PlayerStateBase
             MyUtilities.SetDefaultUpperLayer(networkAnimator.Animator, weaponToChange.weapon.weaponAnimation.LayerName, 
                 oldWeapon.weapon.weaponAnimation.LayerName);
             
-            networkAnimator.Animator.GetLayerIndex(weaponToChange.weapon.weaponAnimation.LayerName);
             playerRef.playerStats.currentWeaponSelected = weaponToChange;
+
+            playerRef.playerStats.currentlayerIndex = layerIndex;
+
 
         }
 

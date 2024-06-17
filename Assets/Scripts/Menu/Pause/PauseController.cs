@@ -149,7 +149,7 @@ public class PauseController : MonoBehaviour, INetObjectToClean
         
         INetObjectToClean objectToClean = GetComponent<INetObjectToClean>();
         CleanerController.instance.AddObjectToList(objectToClean);
-        if (playerAssigned.IsServer && !GameManager.Instance.isOnTutorial)
+        if (!GameManager.Instance.isOnTutorial)
         {
             StartCoroutine(SpawnGameObjectAfterSeconds(2.0f, openBuildSpamer));
         }

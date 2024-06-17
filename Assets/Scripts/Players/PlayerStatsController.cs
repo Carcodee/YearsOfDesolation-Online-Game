@@ -95,6 +95,7 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
     public GameObject noBuildWeapon;
     public Transform weaponNoBuildGripPoint;
     public const int WEAPONLAYERINDEX_START = 2;
+    public int currentlayerIndex = 2;
 
     //temporal variable
     public bool isChangingWeapon=false;
@@ -374,6 +375,18 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
 
         }
 
+    }
+
+    public void SetMainWeapon()
+    {
+        stateMachineController.SetChangingWeaponState(playerBuildSelected.first_weapon, "ChangingWeapon");
+        currentWeaponSelected.weaponObjectController.gameObject.SetActive(true);
+        onBagWeapon = playerBuildSelected.second_weapon;
+        onBagWeapon.weaponObjectController.gameObject.SetActive(false);
+        OnWeaponChanged.Invoke(currentWeaponSelected.weaponObjectController.weaponBulletSpawnPoints);
+        playerSoundController.UpdateWeaponSound(currentWeaponSelected);
+        F_In_F_Out_Obj.OnWeapontChangedAnim?.Invoke();
+        CanvasController.OnReloadFinished?.Invoke();
     }
     public void OutsideZoneDamage()
     {

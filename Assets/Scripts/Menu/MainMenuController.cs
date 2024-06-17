@@ -58,6 +58,7 @@ using System.Collections.Generic;
             GameManager.Instance.canvasObj = networkSceneManager.canvas;
             GameManager.Instance.menuGameObject = networkSceneManager.menu;
             GameManager.Instance.ReadyToStart = false;
+            Cursor.visible = true;
             DisplayNotification();
         }
 
