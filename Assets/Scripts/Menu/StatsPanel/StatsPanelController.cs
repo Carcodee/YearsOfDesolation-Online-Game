@@ -66,6 +66,9 @@ namespace Menu.StatsPanel
         [Header("FadeIn_FadeOut")] 
         
         public F_In_F_Out_Obj[] f_In_F_Out_Obj;
+        
+        public float timeToOpenCloseShop = 2.0f;
+        public float currentTimeToOpenCloseShop = 0;
 
         public bool Ready=false;
         void Start()
@@ -106,6 +109,7 @@ namespace Menu.StatsPanel
         void Update()
         {
             if (shutingDown)return;
+            Debug.Log(currentTimeToOpenCloseShop);
             if (Input.GetKeyDown(KeyCode.B))
             {
                 isPanelOpen = !isPanelOpen;
@@ -120,6 +124,7 @@ namespace Menu.StatsPanel
                 }
                 else
                 {
+                    
                     hasBeenDeactivated = true;
                     F_In_F_Out_Obj.OnFadeOutSkillElements?.Invoke();
                     PlayerComponentsHandler.IsCurrentDeviceMouse = false;
@@ -189,8 +194,9 @@ namespace Menu.StatsPanel
             float xPos = Mathf.Lerp(startPos.x, endPos.x, animationFunction);
             transform.localPosition = new Vector3(xPos, transform.localPosition.y, 0);
             
-            if (animationTime<=0)
+            if (animationTime<=-1.0f)
             {
+                animationTime = 0.0f;
                 OnPanelClosed.Invoke();
             }
         }

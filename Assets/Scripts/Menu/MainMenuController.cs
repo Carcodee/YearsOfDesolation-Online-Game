@@ -62,6 +62,11 @@ using System.Collections.Generic;
             DisplayNotification();
         }
 
+        private void OnEnable()
+        {
+            Cursor.visible = true;
+        }
+
         public void ActivateOptions(bool val)
         {
             optionsPanel.SetActive(val);

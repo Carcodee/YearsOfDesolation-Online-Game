@@ -14,6 +14,7 @@ public class CoinBehaivor : MonoBehaviour
     public GameObject coinEffectPrefab;
     public PlayerStatsController playerStatsController;
     public Transform magPosition;
+    public int currentPos;
 
     void Start()
     {

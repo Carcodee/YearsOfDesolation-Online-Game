@@ -328,8 +328,10 @@ public class GameController : NetworkBehaviour,INetObjectToClean
         if (Sphere.radius>minZoneSizeRadius)
         {
             Sphere.radius -= mapLogic.Value.zoneRadiusExpandSpeed * Time.fixedDeltaTime;
+            ReduceZoneSizeClientRpc(Sphere.radius);
             float currentRadius = Sphere.radius * 2;
             SphereMesh.localScale = new Vector3(currentRadius,SphereMesh.localScale.y,currentRadius) ;
+            
         }
         else
         {
@@ -346,6 +348,16 @@ public class GameController : NetworkBehaviour,INetObjectToClean
             }
             
             
+        }
+    }
+
+
+
+    public void GetSphereMeshRef()
+    {
+        if (Sphere==null)
+        {
+            Sphere = GameObject.FindGameObjectWithTag("Zone").GetComponent<CapsuleCollider>();
         }
     }
 
@@ -490,6 +502,13 @@ public class GameController : NetworkBehaviour,INetObjectToClean
         }
     }
     
+    [ClientRpc]
+    public void ReduceZoneSizeClientRpc(float radius)
+    {
+        if (IsServer)return;
+        GetSphereMeshRef();
+        Sphere.radius = radius;
+    }
     [ClientRpc]
     public void SetCoinRandomPointClientRpc(Vector3 pos, ulong networkID)
     {

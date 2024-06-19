@@ -20,7 +20,7 @@ public class PauseController : MonoBehaviour, INetObjectToClean
     public GameObject pauseMenu;
 
     public GameObject controlsPanel;
-    
+
     [Header("Options")]
 
     public Animator optionsAnimator;
@@ -80,19 +80,20 @@ public class PauseController : MonoBehaviour, INetObjectToClean
 
         StartGamePanel();
 
-        if (Input.GetKeyDown(KeyCode.B))
+        if (GameManager.Instance.ReadyToStart==false)
         {
-            if (openBuildSpamer.gameObject.activeSelf)
-            {
-                openBuildSpamer.gameObject.SetActive(false);
-            }
+            return;
         }
+      
         if(Input.GetKeyDown(KeyCode.Escape) && !pauseMenu.activeSelf)
         {
             PlayerComponentsHandler.IsCurrentDeviceMouse = true;
             PauseGame();
+            SkillPanel.SetActive(false);
+            PostProccesingManager.instance.DeactivateMenuBlur();
             AudioManager.instance.OpenPauseSound();
         }
+        
         else if(Input.GetKeyDown(KeyCode.Escape) && pauseMenu.activeSelf)
         {
 
@@ -104,6 +105,17 @@ public class PauseController : MonoBehaviour, INetObjectToClean
 
         }
 
+        if (pauseMenu.activeSelf)
+        {
+            return;
+        }
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            if (openBuildSpamer.gameObject.activeSelf)
+            {
+                openBuildSpamer.gameObject.SetActive(false);
+            }
+        }
         if (Input.GetKeyDown(KeyCode.B)&& !SkillPanel.activeSelf)
         {
             

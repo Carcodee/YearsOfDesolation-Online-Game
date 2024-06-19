@@ -208,7 +208,9 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
         if (AudioManager.instance.backGroundAudioSource.clip.loadState != AudioDataLoadState.Loaded) await Task.Yield();
         
         GameManager.Instance.ReadyToStart = true;
+        
         PlayerComponentsHandler.IsCurrentDeviceMouse = false;
+        
         callback.Invoke(true);
     }
     public void SelectBuild(PlayerBuild build)
@@ -868,10 +870,11 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
             {
                     OnLevelUp?.Invoke();
                     addAvaliblePointsServerRpc(2);
-                    int randomPlayer = UnityEngine.Random.Range(0, GameController.instance.numberOfPlayers.Value);
+                    int randomPlayer = GetRandomPos(0);
                     if (GameController.instance.players.Count>1)
-                    { 
+                    {
                         coinPosition.transform.position = GameController.instance.players[randomPlayer].GetComponent<PlayerStatsController>().playerZoneController.spawnCoinPoint.position;
+                        coinPosition.currentPos = randomPlayer;
                     }
                     if (GameManager.Instance.isOnTutorial)
                     {
@@ -887,6 +890,22 @@ public class PlayerStatsController : NetworkBehaviour, IDamageable, INetObjectTo
         }
 
     }
+
+    public int GetRandomPos(int currentIteration)
+    {
+        int randomPlayer = UnityEngine.Random.Range(0, GameController.instance.numberOfPlayers.Value);
+        if (currentIteration>100)
+        {
+            return randomPlayer;
+        }
+        if (randomPlayer == coinPosition.currentPos)
+        {
+            return GetRandomPos(currentIteration + 1);
+        }
+
+        return randomPlayer;
+    }
+
     
     //EDITOR
 #if UNITY_EDITOR
